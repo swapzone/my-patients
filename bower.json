@@ -1,0 +1,29 @@
+{
+  "name": "my-patients",
+  "description": "A minimal patient administration solution for small doctor's offices.",
+  "main": "main.js",
+  "dependencies": {
+    "angular-material": "~0.11.4",
+    "angular-ui-router": "~0.2.15",
+    "moment": "~2.10.6"
+  },
+  "authors": [
+    "Sascha Gros"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "AngularJS",
+    "Electron.js"
+  ],
+  "homepage": "https://github.com/clowdfish/my-patients",
+  "moduleType": [
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

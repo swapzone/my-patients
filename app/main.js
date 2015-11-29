@@ -5,6 +5,8 @@ var app = require('app');
 var BrowserWindow = require('browser-window');
 var mainWindow = null;
 
+var liveReload = require('electron-livereload');
+
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
   if (process.platform != 'darwin') {
@@ -22,6 +24,8 @@ app.on('ready', function () {
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
+  liveReload.client(mainWindow);
+
   // Open the devtools.
   // mainWindow.openDevTools();
   // Emitted when the window is closed.
@@ -32,5 +36,4 @@ app.on('ready', function () {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-
 });
