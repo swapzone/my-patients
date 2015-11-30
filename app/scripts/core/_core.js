@@ -5,6 +5,7 @@
   angular
     .module('app.core', [
       'ui.router',
+      'ngMaterial',
       'pascalprecht.translate'
     ]);
 })();

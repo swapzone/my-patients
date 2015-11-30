@@ -4,9 +4,9 @@
 
   angular
     .module('app.invoice')
-    .controller('invoiceCtrl', ['invoiceService', '$q', '$mdDialog', InvoiceController]);
+    .controller('invoiceCtrl', ['invoiceService', '$q', InvoiceController]);
 
-  function InvoiceController(invoiceService, $q, $mdDialog) {
+  function InvoiceController(invoiceService, $q) {
     var self = this;
 
   }

@@ -1,0 +1,10 @@
+html, body, div, section, header, footer, nav, ul, ol, h1, h2, h3, h4, h5, h6, p, fieldset, dl, dt, dd {
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}

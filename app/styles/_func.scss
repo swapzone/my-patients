@@ -1,0 +1,23 @@
+@function breakpoint($breakpoint-name) {
+  @return map-get($breakpoints, $breakpoint-name);
+}
+
+@mixin respond-above($breakpoint-name) {
+  $breakpoint-value: breakpoint($breakpoint-name);
+
+  @if $breakpoint-value != null {
+    @media screen and (min-width: $breakpoint-value + 1) {
+      @content;
+    }
+  } @else {
+    @warn "Missing breakpoint '#{$breakpoint-name}'";
+  }
+}
+
+@mixin clearfix() {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}

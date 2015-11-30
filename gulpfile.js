@@ -12,7 +12,7 @@ var concat 		    = require('gulp-concat'),
     childProcess  = require('child_process'),
     electron      = require('electron-prebuilt'),
     sass 		      = require('gulp-ruby-sass'),
-    ngAnnotate  = require('gulp-ng-annotate'),
+    ngAnnotate    = require('gulp-ng-annotate'),
     angularTemplateCache
                   = require('gulp-angular-templatecache'),
     gulpSequence  = require('gulp-sequence'),
@@ -48,7 +48,12 @@ var liveServer = liveReload.server({
 // copy font awesome and compile styles
 gulp.task('styles', function() {
 
-  return sass('app/styles', { style: 'expanded' })
+  gulp.src([
+      'bower_components/font-awesome/fonts/*'
+    ])
+    .pipe(gulp.dest("build/fonts"));
+
+  return sass('app/styles/**/*.scss', { style: 'expanded' })
     .on('error', function (err) {
       console.error('Error during scss compilation: ', err.message);
     })
@@ -60,6 +65,8 @@ gulp.task('vendor-scripts', function() {
   return gulp.src([
       'bower_components/moment/moment.js',
       'bower_components/angular/angular.js',
+      'bower_components/angular-aria/angular-aria.js',
+      'bower_components/angular-material/angular-material.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
       'bower_components/angular-translate/angular-translate.js'
