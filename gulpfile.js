@@ -61,7 +61,8 @@ gulp.task('vendor-scripts', function() {
       'bower_components/moment/moment.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-animate/angular-animate.js',
-      'bower_components/angular-ui-router/release/angular-ui-router.js'
+      'bower_components/angular-ui-router/release/angular-ui-router.js',
+      'bower_components/angular-translate/angular-translate.js'
     ])
     .pipe(plumber(plumberErrorHandler))
     .pipe(concat('vendor.js'))
@@ -71,10 +72,10 @@ gulp.task('vendor-scripts', function() {
 gulp.task('custom-scripts', function(done) {
   return merge(
     gulp.src([
-        'app/scripts/**/*.tpl.html'
+        'app/scripts/templates/**/*.html'
       ])
       .pipe(angularTemplateCache('templates.js', {
-        root: 'app/templates/',
+        root: 'app/scripts/templates/',
         module: 'app.templates',
         standalone: true
       })),

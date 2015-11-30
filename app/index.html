@@ -1,14 +1,19 @@
-<html>
+<html lang="en" ng-app="app">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Patient Manager</title>
+  <link rel="stylesheet" href="styles/style.css" />
+</head>
 <body>
-<h1>Hello World!</h1>
-We are using Electron
-<script> document.write(process.versions['electron']) </script> on
-<script> document.write(process.platform) </script>
-<script type="text/javascript">
-  var fs = require('fs');
-  var file = fs.readFileSync('app/package.json');
-  document.write(file);
-</script>
+  <!-- holds the dynamic part of the application -->
+  <div ui-view>
+    <!-- content in here will be overwritten when dynamic part is loaded -->
+  </div>
 
+  <script src="scripts/vendor.js"></script>
+  <script src="scripts/script.js"></script>
 </body>
 </html>
