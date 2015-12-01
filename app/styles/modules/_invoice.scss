@@ -1,0 +1,7 @@
+%invoice {
+  display: block;
+}
+
+.invoice {
+  @extend %invoice;
+}

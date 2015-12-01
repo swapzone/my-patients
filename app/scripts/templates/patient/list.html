@@ -1,9 +1,35 @@
-<div>
-  <h1>Patient list</h1>
+<div class="patient container">
+  <h1 class="header">Alle Patienten</h1>
 
-  <ul>
+  <span class="patient-filter filter">
+    <input ng-class="{ show: showFilter }" ng-focus="showFilter" type="text" placeholder="Filter Begriff">
+    <a ng-click="toggleFilter()" class="fa" ng-class="{ 'fa-search' : !showFilter, 'fa-close' : showFilter }"></a>
+  </span>
+
+  <div class="patient-header-controls">
+    <nav class="patient-quick-links">
+      <ul class="clearfix">
+        <li class="label">Quick Links:</li>
+        <li><a href="#index-a">A</a></li>
+        <li><a href="#index-d">D</a></li>
+        <li><a href="#index-g">G</a></li>
+        <li><a href="#index-j">J</a></li>
+        <li><a href="#index-m">M</a></li>
+        <li><a href="#index-p">P</a></li>
+        <li><a href="#index-s">S</a></li>
+        <li><a href="#index-v">V</a></li>
+        <li><a href="#index-y">Y</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <ul class="patient-list">
     <li ng-repeat="patient in patients">
       {{ patient.name }}
     </li>
   </ul>
+
+  <div class="patient-footer">
+    <a class="button" ui-sref="patient.details">Neuer Patient</a>
+  </div>
 </div>

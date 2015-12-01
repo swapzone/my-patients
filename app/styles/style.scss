@@ -1,4 +1,4 @@
-$fa-font-path: "../fonts";
+$fa-font-path: "fonts";
 
 @import "../../bower_components/font-awesome/scss/font-awesome.scss";
 
@@ -7,6 +7,13 @@ $fa-font-path: "../fonts";
 @import "reset";
 @import "grid";
 
+@import "elements/colors";
+@import "elements/typography";
+@import "elements/inputs";
+@import "elements/buttons";
+@import "elements/global";
 @import "elements/ribbon";
 
-//@import "modules/header";
+@import "modules/patients";
+@import "modules/invoice";
+@import "modules/settings";

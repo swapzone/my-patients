@@ -15,7 +15,7 @@
 
   function routeConfig($stateProvider, $urlRouterProvider) {
 
-    $urlRouterProvider.otherwise("/");
+    $urlRouterProvider.otherwise("/patient/list");
 
     $stateProvider.state('root', {
       abstract: true,

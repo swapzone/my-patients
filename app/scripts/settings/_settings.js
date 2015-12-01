@@ -11,7 +11,7 @@
 
     $stateProvider.state('settings', {
       url: '/settings',
-      parent: 'root',
+      parent: 'index',
       templateUrl: 'app/scripts/templates/settings/settings.html',
       controller: 'settingsCtrl'
     });

@@ -1,11 +1,8 @@
 @import "../../bower_components/susy/sass/susy";
 
-$width-container: 980px;
-
 $susy: (
   columns: 6,
   gutters: 0.35,
-  container: $width-container,
   gutter-position: split,
   //debug: (image: show),
   global-box-sizing: border-box
@@ -13,4 +10,8 @@ $susy: (
 
 .clearfix {
   @include clearfix;
+}
+
+.container {
+  padding: 0.5em;
 }

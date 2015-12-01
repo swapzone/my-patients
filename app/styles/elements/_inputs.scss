@@ -1,0 +1,172 @@
+$input-height: 2rem;
+
+$inputs-text: 'input[type="text"], input[type="password"], input[type="email"], input[type="number"], textarea';
+$inputs-check: 'input[type="checkbox"], input[type="radio"]';
+
+%input {
+  font-family: $ff-body;
+  display: block;
+  border: 1px solid $c-border;
+  border-radius: 3px;
+  width: 100%;
+  background: rgba(255, 255, 255, 1);
+  position: relative;
+
+  &:focus {
+    outline: none;
+    border-color: $c-primary;
+  }
+}
+
+/*
+ * Text Input
+ */
+#{$inputs-text} {
+  @extend %input;
+
+  font-size: $fs-normal;
+  height: $input-height;
+  padding-left: 1rem;
+}
+
+/*
+ * Checkboxes
+ */
+input[type="checkbox"] {
+  display: none;
+
+  & + label::before {
+    @include fa-icon();
+    content: $fa-var-square-o;
+    width: 1em;
+    color: $c-primary;
+    vertical-align: middle;
+    margin-right: .1em;
+    font-size: 1.6em;
+
+    @include respond-above("medium") {
+      margin-right: .5em;
+      font-size: 1em;
+    }
+  }
+  &:checked + label::before {
+    content: $fa-var-check-square-o;
+  }
+  &[disabled] + label::before {
+    color: lighten($c-text-light, 10%);
+  }
+  &[disabled] + label {
+    color: lighten($c-text-light, 10%);
+    cursor: default;
+    text-decoration: line-through;
+  }
+  & + label {
+    cursor: pointer;
+    display: block;
+  }
+}
+
+/*
+ * Radio Buttons
+ */
+input[type=radio] {
+  display: none;
+
+  & + label::before {
+    @include fa-icon();
+    content: $fa-var-circle-o;
+    width: 1em;
+    color: $c-text;
+    vertical-align: middle;
+    margin-right: .5em;
+  }
+  &:checked + label::before {
+    content: $fa-var-dot-circle-o;
+  }
+  & + label {
+    cursor: pointer;
+    display: block;
+    color: $c-text-light;
+    margin-bottom: 0.4em;
+  }
+  &:checked + label {
+    font-weight: 800;
+    color: $c-text;
+  }
+  &:focus + label::before {
+    color: $c-primary;
+  }
+}
+
+@include respond-above("medium") {
+
+  input[type=radio] + label {
+    margin-bottom: 0;
+  }
+}
+
+/*
+ * Select Inputs
+ */
+select {
+  @extend %input;
+  height: $input-height;
+  font-size: $fs-normal;
+  padding-left: 0.3em;
+
+  @include respond-above("medium") {
+
+  }
+}
+
+/*
+ * Custom Input Directives
+ */
+input.error, select.error {
+  border: 1px solid $c-status-error;
+
+  & + span.input-status {
+    display: block;
+    color: $c-status-error;
+
+    .fa-check {
+      display: none;
+    }
+  }
+}
+
+input.success, select.success {
+  & + span.input-status {
+    display: block;
+    color: $c-status-okay;
+
+    .fa-exclamation {
+      display: none;
+    }
+  }
+}
+
+input[type="radio"]:checked.success + label:after {
+  @include fa-icon();
+  content: $fa-var-check;
+  color: $c-status-okay;
+  margin-left: 0.3em;
+}
+
+input[type="radio"]:checked.error + label:after {
+  @include fa-icon();
+  content: $fa-var-exclamation;
+  color: $c-status-error;
+  margin-left: 0.3em;
+}
+
+/******************************************/
+/* Input Placeholder Styling              */
+/******************************************/
+
+::-webkit-input-placeholder {
+  font-weight: 400;
+  font-size: $fs-small;
+  padding: 0.1em;
+  color: lighten($c-text-light, 10%);
+}

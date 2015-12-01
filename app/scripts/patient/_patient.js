@@ -9,12 +9,14 @@
 
   function routerConfig($stateProvider) {
 
+
     $stateProvider.state('patient', {
       abstract: true,
       parent: 'index',
       template: '<div ui-view></div>',
       controller: 'patientCtrl'
     });
+
 
     $stateProvider.state('patient.list', {
       url: 'patient/list',

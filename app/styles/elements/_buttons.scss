@@ -1,0 +1,42 @@
+%button {
+  /* Reset */
+  cursor: pointer;
+  outline: 0;
+
+  /* Layout */
+  display: inline-block;
+  height: $input-height + 0.2rem;
+  padding: 0.4em 1em;
+
+  /* Looks */
+  background: $c-white;
+  color: $c-text;
+  text-decoration: none;
+  text-align: center;
+  border: 1px solid $c-border;
+  border-radius: 3px;
+
+  &.is-disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  & > .fa {
+    margin-right: 0.8em;
+  }
+}
+
+.button {
+  @extend %button;
+  font-size: $fs-small;
+
+  &:hover, &:focus {
+    background: #e6e6e6;
+    color: $c-text;
+    text-decoration: none;
+  }
+}
+
+button:focus {
+  outline: none; // for OS X
+}

@@ -9,13 +9,20 @@
   function PatientController($scope, patientService, $q, $mdDialog) {
     var self = this;
 
+    $scope.showFilter = false;
+
+    $scope.toggleFilter = function() {
+      $scope.showFilter = !$scope.showFilter;
+    };
+
     self.selected = null;
     self.patients = [];
     self.selectedIndex = 0;
     self.filterText = null;
-    self.selectPatient = selectPatient;
-    self.deletePatient = deletePatient;
-    self.savePatient = savePatient;
+
+    $scope.selectPatient = selectPatient;
+    $scope.deletePatient = deletePatient;
+    $scope.savePatient = savePatient;
 
     // Load initial data
     getAllPatients();
@@ -23,6 +30,9 @@
     //----------------------
     // Internal functions
     //----------------------
+    function createPatient() {
+
+    }
 
     function selectPatient(patient, index) {
       self.selected = angular.isNumber(patient) ? self.patients[patient] : patient;
@@ -46,6 +56,9 @@
     }
 
     function savePatient($event) {
+      alert("Noch nicht implementiert.");
+
+      /*
       if (self.selected != null && self.selected.patient_id != null) {
         patientService.update(self.selected).then(function (affectedRows) {
           $mdDialog.show(
@@ -73,6 +86,7 @@
           );
         });
       }
+      */
     }
 
     function getAllPatients() {

@@ -51,7 +51,7 @@ gulp.task('styles', function() {
   gulp.src([
       'bower_components/font-awesome/fonts/*'
     ])
-    .pipe(gulp.dest("build/fonts"));
+    .pipe(gulp.dest("build/app/styles/fonts"));
 
   return sass('app/styles/**/*.scss', { style: 'expanded' })
     .on('error', function (err) {

@@ -1,0 +1,77 @@
+%patient {
+
+  .patient-header-controls {
+    @include clearfix();
+
+    margin-bottom: 2em;
+  }
+
+  .patient-quick-links {
+    display: block;
+    float: left;
+
+    ul {
+      list-style: none;
+    }
+
+    li {
+      display: inline-block;
+      padding: 0.3em 1em 0.3em 0;
+    }
+  }
+
+  .patient-filter {
+    display: block;
+    width: 20em;
+    float: right;
+    text-align: right;
+
+    input {
+      display: inline-block;
+      visibility: hidden;
+      border: transparent;
+      width: 0;
+      -webkit-transition: width 1s ease-in-out, visibility 1s linear, border 1s linear;
+
+      &.show {
+        visibility: visible;
+        border: 1px solid $c-border;
+        width: 18em;
+      }
+    }
+
+    .fa {
+      display: inline-block;
+      margin-left: 0.3em;
+      margin-top: 0.5em;
+      cursor: pointer;
+      text-decoration: none;
+    }
+  }
+
+  .patient-list {
+    display: block;
+
+    li {
+      min-height: 2em;
+      border-bottom: 1px solid $c-border;
+      margin-bottom: 0.3em;
+    }
+
+  }
+
+  .patient-footer {
+    height: 3em;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #ddd;
+
+    padding: 0.3em;
+  }
+}
+
+.patient {
+  @extend %patient;
+}

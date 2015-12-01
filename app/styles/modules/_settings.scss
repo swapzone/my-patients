@@ -1,0 +1,7 @@
+%settings {
+  display: block;
+}
+
+.settings {
+  @extend %settings;
+}
