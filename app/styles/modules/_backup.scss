@@ -1,0 +1,7 @@
+%backup {
+  display: block;
+}
+
+.backup {
+  @extend %backup;
+}

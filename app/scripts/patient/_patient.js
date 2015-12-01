@@ -29,5 +29,11 @@
       templateUrl: 'app/scripts/templates/patient/detail.html',
       controller: 'patientCtrl'
     });
+
+    $stateProvider.state('patient.new', {
+      url: 'patient/new',
+      templateUrl: 'app/scripts/templates/patient/new.html',
+      controller: 'patientCtrl'
+    });
   }
 })();

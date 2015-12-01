@@ -8,6 +8,7 @@
       'app.index',
       'app.patient',
       'app.invoice',
+      'app.backup',
       'app.settings',
       'app.templates'
     ])
@@ -27,7 +28,6 @@
   }
 
   function loadData($q) {
-
     // for testing purposes only
     /*
     var db = new Datastore({ filename: 'data/patients.db', autoload: true });
