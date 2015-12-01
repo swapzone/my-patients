@@ -2,18 +2,20 @@
 
   'use strict';
 
-  // Create NeDB database connection
-  var connection;
+  var Datastore = require('nedb');
 
   angular
     .module('app.patient')
     .service('patientService', ['$q', PatientService]);
 
   function PatientService($q) {
+
+    // Create NeDB database containers
+    var patientStore = new Datastore({ filename: 'data/patients.db', autoload: true });
+
     return {
       getPatients: getPatients,
       getById: getPatientById,
-      getByName: getPatientByName,
       create: createPatient,
       destroy: deletePatient,
       update: updatePatient
@@ -21,33 +23,20 @@
 
     function getPatients() {
       var deferred = $q.defer();
-      var query = "SELECT * FROM customers";
 
-      //connection.query(query, function (err, rows) {
-      //  if (err) deferred.reject(err);
-      //  deferred.resolve(rows);
-      //});
+      patientStore.find({}, function (err, docs) {
+        deferred.resolve(docs);
+      });
+
       return deferred.promise;
     }
 
     function getPatientById(id) {
       var deferred = $q.defer();
-      var query = "SELECT * FROM customers WHERE customer_id = ?";
+
 
       //connection.query(query, [id], function (err, rows) {
       //  if (err) deferred.reject(err);
-      //  deferred.resolve(rows);
-      //});
-      return deferred.promise;
-    }
-
-    function getPatientByName(name) {
-      var deferred = $q.defer();
-      var query = "SELECT * FROM customers WHERE name LIKE  '" + name + "%'";
-
-      //connection.query(query, [name], function (err, rows) {
-      //  if (err) deferred.reject(err);
-      //
       //  deferred.resolve(rows);
       //});
       return deferred.promise;

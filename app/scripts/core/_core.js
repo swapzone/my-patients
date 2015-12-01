@@ -7,5 +7,6 @@
       'ui.router',
       'ngMaterial',
       'pascalprecht.translate'
-    ]);
+    ])
+    .constant('DATABASE_LOCATION', 'data/');
 })();

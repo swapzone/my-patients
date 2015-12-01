@@ -1,5 +1,8 @@
 {
   "name": "MyElectron",
   "version": "0.0.1",
-  "main": "main.js"
+  "main": "main.js",
+  "dependencies": {
+    "nedb": "^1.5.0"
+  }
 }

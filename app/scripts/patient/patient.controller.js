@@ -4,9 +4,9 @@
 
   angular
     .module('app.patient')
-    .controller('patientCtrl', ['patientService', '$q', '$mdDialog', PatientController]);
+    .controller('patientCtrl', ['$scope', 'patientService', '$q', '$mdDialog', PatientController]);
 
-  function PatientController(patientService, $q, $mdDialog) {
+  function PatientController($scope, patientService, $q, $mdDialog) {
     var self = this;
 
     self.selected = null;
@@ -16,8 +16,6 @@
     self.selectPatient = selectPatient;
     self.deletePatient = deletePatient;
     self.savePatient = savePatient;
-    self.createPatient = createPatient;
-    self.filter = filterPatient;
 
     // Load initial data
     getAllPatients();
@@ -77,28 +75,11 @@
       }
     }
 
-    function createPatient() {
-      self.selected = {};
-      self.selectedIndex = null;
-    }
-
     function getAllPatients() {
       patientService.getPatients().then(function (patients) {
-        self.patients = [].concat(patients);
-        self.selected = patients[0];
+        $scope.patients = patients;
+        $scope.selected = patients[0];
       });
-    }
-
-    function filterPatient() {
-      if (self.filterText == null || self.filterText == "") {
-        getAllPatients();
-      }
-      else {
-        patientService.getByName(self.filterText).then(function (patients) {
-          self.patients = [].concat(patients);
-          self.selected = patients[0];
-        });
-      }
     }
   }
 })();
