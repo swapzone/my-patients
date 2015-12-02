@@ -1,6 +1,6 @@
 $input-height: 2rem;
 
-$inputs-text: 'input[type="text"], input[type="password"], input[type="email"], input[type="number"], textarea';
+$inputs-text: 'input[type="text"], input[type="password"], input[type="email"], input[type="number"]';
 $inputs-check: 'input[type="checkbox"], input[type="radio"]';
 
 %input {
@@ -26,7 +26,15 @@ $inputs-check: 'input[type="checkbox"], input[type="radio"]';
 
   font-size: $fs-normal;
   height: $input-height;
-  padding-left: 1rem;
+  padding-left: 0.3em;
+}
+
+textarea {
+  width: 100%;
+  padding: 0.3em;
+  font-size: $fs-normal;
+  outline: none;
+  border: 1px solid $c-border;
 }
 
 /*

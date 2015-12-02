@@ -51,24 +51,82 @@
 
   .patient-list {
     display: block;
+    list-style: none;
 
     li {
       min-height: 2em;
       border-bottom: 1px solid $c-border;
       margin-bottom: 0.3em;
     }
+  }
 
+  .patient-abstract {
+    display: block;
+    width: 100%;
+    padding: 0.8em;
+    border: 1px solid $c-border-color;
+    background-color: $c-background-blue;
+    margin-bottom: 1em;
+  }
+
+  .patient-personal  {
+    float: left;
+
+    @include respond-above("small") {
+      width: 70%;
+    }
+  }
+
+  .patient-attributes {
+    float: left;
+
+    @include respond-above("small") {
+      width: 28%;
+      margin-left: 2%;
+    }
+  }
+
+  .table {
+
+    &.two {
+      .table-cell {
+
+        &:first-of-type {
+          padding-right: 0.5em;
+        }
+      }
+    }
+
+    &.three {
+      .table-cell {
+        padding-right: 0.5em;
+        width: 33%;
+
+        &:last-of-type {
+          padding-right: 0;
+        }
+      }
+    }
+  }
+
+  .patient-history {
+    width: 100%;
+    padding: 0.5em;
+    border: 1px solid $c-border-color;
+  }
+
+  input, select, textarea {
+    margin-top: 0.1em;
+    margin-bottom: 0.5em;
   }
 
   .patient-footer {
-    height: 3em;
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     background-color: #ddd;
-
-    padding: 0.3em;
+    padding: 0.5em 1em;
   }
 }
 

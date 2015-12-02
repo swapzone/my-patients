@@ -4,15 +4,16 @@ $c-grey: #ccc;
 $c-grey-dark: #7a7a7a;
 $c-green: #5cbd3d;
 $c-red: #d92929;
-$c-blue: #4978ac;
+$c-blue: #4897c1;
 
 // standard colors
 $c-primary: $c-blue;
-$c-action: #006;
 $c-border: $c-grey;
+$c-border-color: $c-blue;
 
 // background colors
 $c-background: #e6e6e6;
+$c-background-blue: rgba(73, 155, 237, 0.2);
 $c-background-dark: $c-grey-dark;
 
 // font colors
@@ -22,9 +23,3 @@ $c-text-light: $c-grey-dark;
 // status colors
 $c-status-okay: $c-green;
 $c-status-error: $c-red;
-
-
-
-
-
-

@@ -36,7 +36,6 @@ h1 {
   font-size: $fs-largest;
   line-height: 1em;
   font-weight: normal;
-
 }
 
 h2 {
@@ -54,7 +53,7 @@ p {
 }
 
 a, a:visited {
-  color: $c-action;
+  color: $c-text;
   text-decoration: underline;
   cursor: pointer;
 }

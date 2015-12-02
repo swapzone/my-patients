@@ -1,6 +1,152 @@
 <div class="patient container">
   <h1 class="header">Neuer Patient</h1>
 
+  <div class="clearfix">
+    <div class="patient-personal patient-abstract">
+      <h2 class="sub-header">Persönliche Daten</h2>
+
+      <label for="firstname">Vorname</label>
+      <input type="text" id="firstname" name="firstname" />
+
+      <label for="lastname">Nachname</label>
+      <input type="text" id="lastname" name="lastname" />
+
+      <label for="street">Straße</label>
+      <input type="text" id="street" name="street" />
+
+      <span class="table two">
+        <span class="table-row">
+          <span class="table-cell" style="width: 9em;">
+            <label for="postal">PLZ</label>
+            <input type="text" id="postal" name="postal"/>
+          </span>
+          <span class="table-cell">
+            <label for="city">Ort</label>
+            <input type="text" id="city" name="city" />
+          </span>
+        </span>
+      </span>
+
+      <span class="table two">
+        <span class="table-row">
+          <span class="table-cell">
+            <label for="phone">Telefon</label>
+            <input type="number" id="phone" name="phone" />
+          </span>
+          <span class="table-cell">
+            <label for="mobile">Mobil</label>
+            <input type="number" id="mobile" name="mobile" />
+          </span>
+        </span>
+        <span class="table-row">
+          <span class="table-cell">
+            <label for="birthday">Geburtstag</label>
+            <input type="text" id="birthday" name="birthday" />
+          </span>
+          <span class="table-cell">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+              <option>alleinstehend</option>
+              <option>verheiratet</option>
+              <option>geschieden</option>
+              <option>verwittwet</option>
+            </select>
+          </span>
+        </span>
+        <span class="table-row">
+          <span class="table-cell">
+            <label for="insurance">Versicherung</label>
+            <select id="insurance" name="insurance">
+              <option>Privat</option>
+              <option>Privat Zusatz</option>
+              <option>Gesetzlich</option>
+            </select>
+          </span>
+          <span class="table-cell">
+            <label for="insurance-name">Name der Versicherung</label>
+            <input type="text" id="insurance-name" name="insurance-name" />
+          </span>
+        </span>
+      </span>
+
+      <label for="profession">Beruf</label>
+      <input type="text" id="profession" name="profession" />
+
+      <label for="notes">Sonstige Bemerkungen</label>
+      <textarea rows="4" id="notes" name="notes">
+      </textarea>
+    </div>
+
+    <div class="patient-attributes patient-abstract">
+      <label for="attention">Bemerk</label>
+      <input type="text" id="attention" name="attention" />
+
+      <label for="reference">Referenz durch</label>
+      <input type="text" id="reference" name="reference" />
+
+      <label for="doctor">Behandelnder Arzt</label>
+      <select id="doctor" name="doctor">
+        <option>Victoria Ott</option>
+      </select>
+
+      <input type="checkbox" id="paperfile" name="paperfile" value="paperfile" />
+      <label for="paperfile">Papierakte vorhanden</label>
+    </div>
+  </div>
+
+  <div class="patient-abstract">
+    <div class="patient-findings">
+      <h2 class="sub-header">Aktuelles</h2>
+
+      <label for="findings">Befunde</label>
+      <textarea rows="3" id="findings" name="findings">
+      </textarea>
+    </div>
+    <div class="patient-therapy">
+      <label for="therapy">Therapie</label>
+      <textarea rows="3" id="therapy" name="therapy">
+      </textarea>
+    </div>
+  </div>
+
+  <div class="patient-abstract">
+    <h2 class="sub-header">Krankengeschichte</h2>
+
+    <span class="table three">
+      <span class="table-row">
+        <span class="table-cell">
+          <label for="operations">Operationen</label>
+           <textarea rows="4" id="operations" name="operations">
+          </textarea>
+        </span>
+        <span class="table-cell">
+          <label for="accidents">Unfälle</label>
+          <textarea rows="4" id="accidents" name="accidents">
+          </textarea>
+        </span>
+        <span class="table-cell">
+          <label for="disease">Vorerkrankungen</label>
+          <textarea rows="4" id="disease" name="disease">
+          </textarea>
+        </span>
+      </span>
+    </span>
+  </div>
+
+  <div class="patient-abstract">
+    <div class="patient-current">
+      <h2 class="sub-header">Risikofaktoren</h2>
+
+      <label for="allergy">Allergien</label>
+      <textarea rows="3" id="allergy" name="allergy">
+      </textarea>
+
+      <label for="medicine">Medizin</label>
+      <textarea rows="3" id="medicine" name="medicine">
+      </textarea>
+    </div>
+  </div>
+
   <div class="patient-footer">
     <a class="button" ui-sref="patient.list">Abbrechen</a>
     <a class="button" ng-click="savePatient()">Speichern</a>
