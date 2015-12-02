@@ -29,3 +29,13 @@ body {
 .table-cell {
   display: table-cell;
 }
+
+.table-heading {
+  font-weight: bold;
+}
+
+.status-error {
+  display: block;
+  margin: 0.3em 0;
+  color: $c-status-error;
+}

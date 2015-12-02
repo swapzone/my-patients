@@ -1,0 +1,30 @@
+%patient-treatment {
+  padding: 1em;
+
+  .table {
+    margin-bottom: 1em;
+  }
+
+  .table-cell {
+    padding-right: 1em;
+  }
+
+  .table-heading {
+    display: table-row;
+
+    &.invisible {
+      .table-cell {
+        color: transparent;
+      }
+    }
+  }
+
+  input, select {
+    margin-bottom: 0.5em;
+    margin-top: 0.1em;
+  }
+}
+
+.patient-treatment {
+  @extend %patient-treatment;
+}

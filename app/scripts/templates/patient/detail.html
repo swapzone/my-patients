@@ -1,8 +1,169 @@
-<div class="patient container">
-  <h1 class="header">Patient</h1>
+<div class="patient-details container">
+  <div ng-if="activePatient == null">
+    Es wurde kein Patient ausgewählt!
+  </div>
+  <div ng-if="activePatient != null">
+    <h1 class="header">Patient</h1>
 
-  <div class="patient-footer">
-    <a class="button" ui-sref="patient.list">Abbrechen</a>
-    <a class="button" ng-click="savePatient()">Speichern</a>
+    <div class="clearfix">
+      <div class="patient-personal patient-abstract">
+        <h2 class="sub-header">Persönliche Daten</h2>
+
+        <span class="table list">
+          <span class="table-row">
+            <span class="table-cell">Vorname</span>
+            <span class="table-cell">{{ activePatient.firstname }}</span>
+          </span>
+          <span class="table-row">
+            <span class="table-cell">Nachname</span>
+            <span class="table-cell">{{ activePatient.lastname }}</span>
+          </span>
+          <span class="table-row">
+            <span class="table-cell">Straße</span>
+            <span class="table-cell">{{ activePatient.street }}</span>
+          </span>
+          <span class="table-row">
+            <span class="table-cell">PLZ / Ort</span>
+            <span class="table-cell">{{ activePatient.postal }} {{ activePatient.city }}</span>
+          </span>
+        </span>
+
+        <span class="table list">
+          <span class="table-row">
+            <span class="table-cell">Telefon</span>
+            <span class="table-cell">{{ activePatient.phone }}</span>
+          </span>
+          <span class="table-row">
+            <span class="table-cell">Mobil</span>
+            <span class="table-cell">{{ activePatient.mobile }}</span>
+          </span>
+        </span>
+
+        <a ng-click="triggerPersonalDetails()" ng-hide="showPersonalDetails" style="display: block; margin-bottom: 0.3em;">Details anzeigen</a>
+        <a ng-click="triggerPersonalDetails()" ng-show="showPersonalDetails" style="display: block; margin-bottom: 0.3em;">Details verbergen</a>
+        <span class="table list" ng-show="showPersonalDetails">
+          <span class="table-row">
+            <span class="table-cell">Geburtstag</span>
+            <span class="table-cell">{{ activePatient.birthday }}</span>
+          </span>
+          <span class="table-row">
+            <span class="table-cell">Familienstatus</span>
+            <span class="table-cell">{{ activePatient.status }}</span>
+          </span>
+           <span class="table-row">
+            <span class="table-cell">Beruf</span>
+            <span class="table-cell">{{ activePatient.profession }}</span>
+          </span>
+           <span class="table-row">
+            <span class="table-cell">Versicherung</span>
+            <span class="table-cell">{{ activePatient.insurance.type }}{{ activePatient.insurance.name }}</span>
+          </span>
+          <span class="table-row">
+            <span class="table-cell">Bemerkungen</span>
+            <span class="table-cell">{{ activePatient.notes }}</span>
+          </span>
+        </span>
+      </div>
+
+      <div class="patient-attributes patient-abstract">
+        <div class="patient-attention">
+          <h2 class="sub-header">Vermerk</h2>
+          <span>{{ activePatient.attention }}</span>
+        </div>
+
+        <span class="table list">
+          <span class="table-row">
+            <span class="table-cell">
+              Referenz durch
+            </span>
+            <span class="table-cell">
+              {{ activePatient.reference }}
+            </span>
+          </span>
+          <span class="table-row">
+            <span class="table-cell">
+              Behandelnder Arzt
+            </span>
+            <span class="table-cell">
+              {{ activePatient.doctor }}
+            </span>
+          </span>
+          <span class="table-row">
+            <span class="table-cell">
+              Papierakte?
+            </span>
+            <span class="table-cell">
+              <span ng-if="activePatient.paperfile">Ja</span>
+              <span ng-if="!activePatient.paperfile">Nein</span>
+            </span>
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div class="patient-abstract">
+      <h2 class="sub-header">Aktuelles</h2>
+
+      <span class="table">
+        <span class="table-row">
+          <span class="table-cell">
+            Befunde
+          </span>
+          <span class="table-cell">
+            {{ activePatient.findings }}
+          </span>
+        </span>
+        <span class="table-row">
+          <span class="table-cell">
+            Therapie
+          </span>
+          <span class="table-cell">
+            {{ activePatient.therapy }}
+          </span>
+        </span>
+      </span>
+    </div>
+
+    <div class="patient-abstract">
+      <h2 class="sub-header">Krankengeschichte</h2>
+
+      <span class="table">
+        <span class="table-row">
+          <span class="table-cell">Operationen </span>
+          <span class="table-cell">{{ activePatient.history.operations }}</span>
+        </span>
+        <span class="table-row">
+          <span class="table-cell">Unfälle</span>
+          <span class="table-cell">{{ activePatient.history.accidents }}</span>
+        </span>
+         <span class="table-row">
+          <span class="table-cell">Vorerkrankungen</span>
+          <span class="table-cell">{{ activePatient.history.disease }}</span>
+        </span>
+      </span>
+    </div>
+
+    <div class="patient-abstract">
+      <div class="patient-current">
+        <h2 class="sub-header">Risikofaktoren</h2>
+
+        <span class="table">
+          <span class="table-row">
+            <span class="table-cell">Allergien</span>
+            <span class="table-cell">{{ activePatient.risks.allergy }}</span>
+          </span>
+          <span class="table-row">
+            <span class="table-cell">Medizin</span>
+            <span class="table-cell">{{ activePatient.risks.medicine }}</span>
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div class="patient-footer">
+      <a class="button" ui-sref="patient.list">Zurück</a>
+      <a class="button" ng-click="editPatient()">Editieren</a>
+      <a class="button" ng-click="showTreatment()">Behandlungsakte</a>
+    </div>
   </div>
 </div>

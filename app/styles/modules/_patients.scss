@@ -57,6 +57,8 @@
       min-height: 2em;
       border-bottom: 1px solid $c-border;
       margin-bottom: 0.3em;
+
+      cursor: pointer;
     }
   }
 
@@ -87,7 +89,6 @@
   }
 
   .table {
-
     &.two {
       .table-cell {
 

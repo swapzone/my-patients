@@ -24,7 +24,7 @@
   </div>
 
   <ul class="patient-list">
-    <li ng-repeat="patient in patients">
+    <li ng-repeat="patient in patients" ng-click="selectPatient($index)">
       {{ patient.firstname }} {{ patient.lastname }}
     </li>
   </ul>

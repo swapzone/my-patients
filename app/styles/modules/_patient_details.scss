@@ -1,0 +1,74 @@
+%patient-details {
+
+  .patient-header-controls {
+    @include clearfix();
+
+    margin-bottom: 2em;
+  }
+
+  .patient-abstract {
+    display: block;
+    width: 100%;
+    padding: 0.8em;
+    border: 1px solid $c-border-color;
+    background-color: $c-background-blue;
+    margin-bottom: 1em;
+  }
+
+  .patient-personal  {
+    float: left;
+
+    @include respond-above("small") {
+      width: 60%;
+    }
+  }
+
+  .patient-attributes {
+    float: left;
+
+    @include respond-above("small") {
+      width: 38%;
+      margin-left: 2%;
+    }
+  }
+
+  .patient-attention {
+    margin-bottom: 2em;
+  }
+
+  .table {
+    &.list {
+      margin-bottom: 1em;
+
+      .table-cell {
+
+        &:first-of-type {
+          width: 11em;
+        }
+
+        &:last-of-type {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  .patient-history {
+    width: 100%;
+    padding: 0.5em;
+    border: 1px solid $c-border-color;
+  }
+
+  .patient-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #ddd;
+    padding: 0.5em 1em;
+  }
+}
+
+.patient-details {
+  @extend %patient-details;
+}

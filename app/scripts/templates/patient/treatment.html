@@ -1,0 +1,48 @@
+<div class="patient-treatment">
+  <h1 class="header">{{ activePatient.firstname }} {{ activePatient.lastname }}</h1>
+  <span>{{ activePatient.birthday }}</span>
+
+  <div ng-show="showNewForm">
+    <h3 class="sub-header">Neue Behandlung</h3>
+
+    <label for="treatment-date">Datum</label>
+    <input type="text" id="treatment-date" name="treatment-date" ng-model="newTreatment.date" />
+    <label for="treatment-payment">Bezahlung</label>
+    <select id="treatment-payment" name="treatment-payment" ng-model="newTreatment.payment">
+      <option>Rechnung</option>
+      <option>Quittung</option>
+    </select>
+    <label for="treatment-amount">Betrag</label>
+    <input type="text" id="treatment-amount" name="treatment-amount" ng-model="newTreatment.amount" />
+    <label for="treatment-description">Behandlung</label>
+    <input type="text" id="treatment-description" name="treatment-description" ng-model="newTreatment.description" />
+    <label for="treatment-doctor">Behandelnder Arzt</label>
+    <select id="treatment-doctor" name="treatment-doctor" ng-model="newTreatment.doctor">
+      <option>Victoria Ott</option>
+    </select>
+
+    <span ng-if="error" class="status-error">{{ error }}</span>
+
+    <a class="button" ng-click="triggerTreatmentForm()">Abbrechen</a>
+    <a class="button" ng-click="saveTreatment()">Speichern</a>
+  </div>
+
+  <span class="table">
+    <span class="table-heading" ng-class="{ invisible: showNewForm }">
+      <span class="table-cell">Datum</span>
+      <span class="table-cell">Bezahlung</span>
+      <span class="table-cell">Betrag</span>
+      <span class="table-cell">Behandlung</span>
+      <span class="table-cell">Behandelnder Arzt</span>
+    </span>
+    <span class="table-row" ng-repeat="treatment in activePatient.treatments" ng-hide="showNewForm">
+      <span class="table-cell">{{ treatment.date }}</span>
+      <span class="table-cell">{{ treatment.payment }}</span>
+      <span class="table-cell">{{ treatment.amount }}</span>
+      <span class="table-cell">{{ treatment.description }}</span>
+      <span class="table-cell">{{ treatment.doctor }}</span>
+    </span>
+  </span>
+
+  <a ng-click="triggerTreatmentForm()" ng-hide="showNewForm">Neue Behandlung</a>
+</div>

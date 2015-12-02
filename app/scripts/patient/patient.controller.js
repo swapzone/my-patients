@@ -14,11 +14,11 @@
       $scope.newPatient = {
         insurance: {},
         history: {},
-        risks: {}
+        risks: {},
+        treatments: []
       };
 
     $scope.patientSaved = false;
-    $scope.selectedIndex = -1;
     $scope.showFilter = false;
 
     $scope.toggleFilter = function() {
@@ -27,7 +27,6 @@
 
     $scope.abort = abort;
     $scope.selectPatient = selectPatient;
-    $scope.deletePatient = deletePatient;
     $scope.savePatient = savePatient;
 
     // Load initial data
@@ -46,7 +45,7 @@
         }
 
         if(fromState['name'] == "patient.details") {
-          $scope.selectedIndex = -1;
+          $scope.activePatient = null;
         }
       });
 
@@ -82,7 +81,8 @@
       $scope.newPatient = {
         insurance: {},
         history: {},
-        risks: {}
+        risks: {},
+        treatments: []
       };
     }
 
@@ -92,33 +92,7 @@
      * @param index
      */
     function selectPatient(index) {
-      $scope.selectedIndex = index;
-    }
-
-    /**
-     *
-     *
-     * @param $event
-     */
-    function deletePatient($event) {
-
-      if($scope.selectedIndex == -1) {
-        return;
-      }
-
-      var confirm = $mdDialog.confirm()
-        .title('Sicher?')
-        .content('Willst du den Patient wirklich löschen?')
-        .ok('Ja')
-        .cancel('Oh. Nein!')
-        .targetEvent($event);
-
-
-      $mdDialog.show(confirm).then(function () {
-        patientService.delete($scope.patients[$scope.selectedIndex]).then(function (affectedRows) {
-          $scope.patients.splice($scope.selectedIndex, 1);
-        });
-      }, function () { });
+      $state.go("patient.details", { active: JSON.stringify($scope.patients[index]) });
     }
 
     /**
@@ -154,28 +128,6 @@
             .ok('Ok')
             .targetEvent($event)
         );
-      }
-    }
-
-    /**
-     *
-     *
-     * @param $event
-     */
-    function updatePatient($event) {
-
-      if ($scope.selectedIndex != -1) {
-        patientService.update($scope.patients[$scope.selectedIndex]).then(function (affectedRows) {
-          $mdDialog.show(
-            $mdDialog
-              .alert()
-              .clickOutsideToClose(true)
-              .title('Super!')
-              .content('Patientendaten wurden erfolgreich gespeichert!')
-              .ok('Ok')
-              .targetEvent($event)
-          );
-        });
       }
     }
 

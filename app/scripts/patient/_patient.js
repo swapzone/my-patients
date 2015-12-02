@@ -13,10 +13,8 @@
     $stateProvider.state('patient', {
       abstract: true,
       parent: 'index',
-      template: '<div ui-view></div>',
-      controller: 'patientCtrl'
+      template: '<div ui-view></div>'
     });
-
 
     $stateProvider.state('patient.list', {
       url: 'patient/list',
@@ -25,9 +23,9 @@
     });
 
     $stateProvider.state('patient.details', {
-      url: 'patient/details',
+      url: 'patient/details?:active',
       templateUrl: 'app/scripts/templates/patient/detail.html',
-      controller: 'patientCtrl'
+      controller: 'patientDetailCtrl'
     });
 
     $stateProvider.state('patient.new', {
