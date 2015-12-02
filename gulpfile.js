@@ -53,6 +53,12 @@ gulp.task('styles', function() {
     ])
     .pipe(gulp.dest("build/app/styles/fonts"));
 
+  gulp.src([
+      'bower_components/angular-material/angular-material.css'
+    ])
+    .pipe(concat('vendor.css'))
+    .pipe(gulp.dest('build/app/styles'));
+
   return sass('app/styles/**/*.scss', { style: 'expanded' })
     .on('error', function (err) {
       console.error('Error during scss compilation: ', err.message);
@@ -69,7 +75,8 @@ gulp.task('vendor-scripts', function() {
       'bower_components/angular-material/angular-material.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
-      'bower_components/angular-translate/angular-translate.js'
+      'bower_components/angular-translate/angular-translate.js',
+      'bower_components/ngstorage/ngStorage.js'
     ])
     .pipe(plumber(plumberErrorHandler))
     .pipe(concat('vendor.js'))

@@ -15,9 +15,8 @@
 
     return {
       getPatients: getPatients,
-      getById: getPatientById,
       create: createPatient,
-      destroy: deletePatient,
+      delete: deletePatient,
       update: updatePatient
     };
 
@@ -31,25 +30,16 @@
       return deferred.promise;
     }
 
-    function getPatientById(id) {
+    function createPatient(patient) {
       var deferred = $q.defer();
 
+      patientStore.insert(patient, function (err, newDoc) {
+        // newDoc is the newly inserted document, including its _id
+        if (err) deferred.reject(err);
 
-      //connection.query(query, [id], function (err, rows) {
-      //  if (err) deferred.reject(err);
-      //  deferred.resolve(rows);
-      //});
-      return deferred.promise;
-    }
+        deferred.resolve(newDoc._id);
+      });
 
-    function createPatient(customer) {
-      var deferred = $q.defer();
-      var query = "INSERT INTO customers SET ?";
-
-      //connection.query(query, customer, function (err, res) {
-      //  if (err) deferred.reject(err);
-      //  deferred.resolve(res.insertId);
-      //});
       return deferred.promise;
     }
 
@@ -64,7 +54,7 @@
       return deferred.promise;
     }
 
-    function updatePatient(customer) {
+    function updatePatient(patient) {
       var deferred = $q.defer();
       var query = "UPDATE customers SET name = ? WHERE customer_id = ?";
 

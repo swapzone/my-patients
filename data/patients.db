@@ -1,2 +1,6 @@
-{"name":"Sascha","birthday":{"$$date":1448976976097},"privateInsurance":true,"notthere":null,"fruits":["guy","nice","cool"],"infos":{"name":"nedb"},"_id":"3IrA9Og93i0ybya8"}
-{"name":"Mareike","birthday":{"$$date":1448976976097},"privateInsurance":true,"notthere":null,"fruits":["girl","nice","cool"],"infos":{"name":"nedb"},"_id":"pxzt8zklaxDdlfCa"}
+{"insurance":{},"history":{},"risks":{},"firstname":"Neuer","lastname":"Patient","_id":"6a9NHdtom69Cix5v"}
+{"insurance":{},"history":{},"risks":{},"firstname":"Max","lastname":"Mustermann","_id":"CCjyUwLm9wpVz7T5"}
+{"insurance":{},"history":{},"risks":{},"firstname":"John","lastname":"Doe","_id":"FLtDKPNlbiUSi31y"}
+{"insurance":{},"history":{},"risks":{},"firstname":"Sascha","lastname":"Gros","_id":"iIazN45gYvTix5gw"}
+{"insurance":{},"history":{},"risks":{},"firstname":"Sascha","lastname":"Gros","_id":"l67KMuYEd1C47m8g"}
+{"insurance":{},"history":{},"risks":{},"firstname":"Annabelle","lastname":"Johnson","_id":"oPhJF9c2MpPWBGEW"}

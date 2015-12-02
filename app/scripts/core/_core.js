@@ -6,7 +6,8 @@
     .module('app.core', [
       'ui.router',
       'ngMaterial',
-      'pascalprecht.translate'
+      'pascalprecht.translate',
+      'ngStorage'
     ])
     .constant('DATABASE_LOCATION', 'data/');
 })();
