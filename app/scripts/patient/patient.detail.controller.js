@@ -12,6 +12,7 @@
 
     $scope.showPersonalDetails = false;
 
+    $scope.abort = abort;
     $scope.editPatient = editPatient;
     $scope.showTreatment = showTreatment;
     $scope.deletePatient = deletePatient;
@@ -21,6 +22,11 @@
       $scope.showPersonalDetails = !$scope.showPersonalDetails;
     };
 
+    /**
+     *
+     *
+     * @param $event
+     */
     function showTreatment($event) {
 
       var dialogObject = {
@@ -39,8 +45,31 @@
           });
     }
 
+    /**
+     *
+     */
     function editPatient() {
-      alert("Noch nicht implementiert!");
+      $state.go("patient.edit", { active: JSON.stringify($scope.activePatient) });
+    }
+
+    /**
+     *
+     *
+     * @param $event
+     */
+    function abort($event) {
+
+      var confirm = $mdDialog.confirm()
+        .parent(angular.element(document.body))
+        .title('Sicher?')
+        .content('Willst du den Vorgang wirklich abbrechen?')
+        .targetEvent($event)
+        .ok('Ja')
+        .cancel('Oh. Nein!');
+
+      $mdDialog.show(confirm).then(function() {
+        $state.go("patient.details", { active: JSON.stringify($scope.activePatient) });
+      }, function() { });
     }
 
     /**
@@ -63,14 +92,30 @@
 
 
       $mdDialog.show(confirm).then(function () {
-        patientService.delete($scope.activePatient).then(function (affectedRows) {
-          var index = $scope.patients.indexOf($scope.activePatient);
-          $scope.patients.splice(index, 1);
-
-          $scope.activePatient = null;
-          $state.go("patient.list", {});
+        patientService.delete($scope.activePatient._id).then(function (numRemoved) {
+          if(numRemoved === 1) {
+            $scope.activePatient = null;
+            $state.go("patient.list", {});
+          }
+          else {
+            $mdDialog.show(
+              $mdDialog
+                .alert()
+                .clickOutsideToClose(true)
+                .title('Fehler')
+                .content('Patient konnte nicht gelöscht werden.')
+                .ok('Ok')
+                .targetEvent($event)
+              )
+              .finally(function() {
+                $state.go("patient.details", { active: JSON.stringify($scope.activePatient) });
+              });
+          }
         });
-      }, function () { });
+      }, function (err) {
+        console.error("Patient konnte nicht gelöscht werden.");
+        console.error(err);
+      });
     }
 
     /**
@@ -80,18 +125,33 @@
      */
     function updatePatient($event) {
 
+      console.log("Cool.");
+
       if ($scope.activePatient != null) {
-        patientService.update($scope.activePatient).then(function (affectedRows) {
+
+        console.log("Noch cooler.");
+
+        patientService.update($scope.activePatient._id, $scope.activePatient).then(function () {
+          $state.go("patient.details", { active: JSON.stringify($scope.activePatient) });
+        }, function(err) {
+          console.error(err);
+
           $mdDialog.show(
             $mdDialog
               .alert()
               .clickOutsideToClose(true)
-              .title('Super')
-              .content('Patientendaten wurden erfolgreich gespeichert!')
+              .title('Fehler')
+              .content('Patientendaten konnten nicht gespeichert werden.')
               .ok('Ok')
               .targetEvent($event)
-          );
+          )
+          .finally(function() {
+            $state.go("patient.details", { active: JSON.stringify($scope.activePatient) });
+          });
         });
+      }
+      else {
+        console.error("Patient-Objekt nicht verfügbar.");
       }
     }
   }

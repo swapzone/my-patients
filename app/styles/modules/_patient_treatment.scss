@@ -1,6 +1,10 @@
 %patient-treatment {
   padding: 1em;
 
+  .header {
+    min-width: 25em;
+  }
+
   .table {
     margin-bottom: 1em;
   }

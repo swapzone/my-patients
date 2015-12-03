@@ -43,10 +43,6 @@
             $scope.patientSaved = false;
           }
         }
-
-        if(fromState['name'] == "patient.details") {
-          $scope.activePatient = null;
-        }
       });
 
     /**
@@ -103,7 +99,7 @@
     function savePatient($event) {
 
       if ($scope.newPatient['firstname'] && $scope.newPatient['lastname']) {
-        patientService.create($scope.newPatient).then(function (affectedRows) {
+        patientService.create($scope.newPatient).then(function () {
           $mdDialog.show(
             $mdDialog
               .alert()

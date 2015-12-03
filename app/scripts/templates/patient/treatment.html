@@ -27,7 +27,7 @@
     <a class="button" ng-click="saveTreatment()">Speichern</a>
   </div>
 
-  <span class="table">
+  <span class="table" ng-if="activePatient.treatments && activePatient.treatments.length">
     <span class="table-heading" ng-class="{ invisible: showNewForm }">
       <span class="table-cell">Datum</span>
       <span class="table-cell">Bezahlung</span>
@@ -43,6 +43,12 @@
       <span class="table-cell">{{ treatment.doctor }}</span>
     </span>
   </span>
+
+  <div ng-if="!activePatient.treatments || activePatient.treatments.length == 0"
+       ng-hide="showNewForm"
+       style="margin-bottom: 1em;">
+    Noch keine Behandlung vorhanden.
+  </div>
 
   <a ng-click="triggerTreatmentForm()" ng-hide="showNewForm">Neue Behandlung</a>
 </div>

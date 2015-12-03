@@ -73,25 +73,15 @@
 
         <span class="table list">
           <span class="table-row">
-            <span class="table-cell">
-              Referenz durch
-            </span>
-            <span class="table-cell">
-              {{ activePatient.reference }}
-            </span>
+            <span class="table-cell">Referenz durch</span>
+            <span class="table-cell">{{ activePatient.reference }}</span>
           </span>
           <span class="table-row">
-            <span class="table-cell">
-              Behandelnder Arzt
-            </span>
-            <span class="table-cell">
-              {{ activePatient.doctor }}
-            </span>
+            <span class="table-cell">Behandelnder Arzt</span>
+            <span class="table-cell">{{ activePatient.doctor }}</span>
           </span>
           <span class="table-row">
-            <span class="table-cell">
-              Papierakte?
-            </span>
+            <span class="table-cell">Papierakte?</span>
             <span class="table-cell">
               <span ng-if="activePatient.paperfile">Ja</span>
               <span ng-if="!activePatient.paperfile">Nein</span>
@@ -104,22 +94,14 @@
     <div class="patient-abstract">
       <h2 class="sub-header">Aktuelles</h2>
 
-      <span class="table">
+      <span class="table list">
         <span class="table-row">
-          <span class="table-cell">
-            Befunde
-          </span>
-          <span class="table-cell">
-            {{ activePatient.findings }}
-          </span>
+          <span class="table-cell">Befunde</span>
+          <span class="table-cell">{{ activePatient.findings }}</span>
         </span>
         <span class="table-row">
-          <span class="table-cell">
-            Therapie
-          </span>
-          <span class="table-cell">
-            {{ activePatient.therapy }}
-          </span>
+          <span class="table-cell">Therapie</span>
+          <span class="table-cell">{{ activePatient.therapy }}</span>
         </span>
       </span>
     </div>
@@ -127,7 +109,7 @@
     <div class="patient-abstract">
       <h2 class="sub-header">Krankengeschichte</h2>
 
-      <span class="table">
+      <span class="table list">
         <span class="table-row">
           <span class="table-cell">Operationen </span>
           <span class="table-cell">{{ activePatient.history.operations }}</span>
@@ -147,7 +129,7 @@
       <div class="patient-current">
         <h2 class="sub-header">Risikofaktoren</h2>
 
-        <span class="table">
+        <span class="table list">
           <span class="table-row">
             <span class="table-cell">Allergien</span>
             <span class="table-cell">{{ activePatient.risks.allergy }}</span>

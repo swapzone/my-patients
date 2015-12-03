@@ -38,7 +38,7 @@
         // newDoc is the newly inserted document, including its _id
         if (err) deferred.reject(err);
 
-        deferred.resolve(newDoc._id);
+        deferred.resolve(newDoc);
       });
 
       return deferred.promise;
@@ -59,23 +59,29 @@
 
     function deletePatient(id) {
       var deferred = $q.defer();
-      var query = "DELETE FROM customers WHERE customer_id = ?";
 
-      //connection.query(query, [id], function (err, res) {
-      //  if (err) deferred.reject(err);
-      //  deferred.resolve(res.affectedRows);
-      //});
+      // Remove one document from the collection
+      // options set to {} since the default for multi is false
+      patientStore.remove({ _id: id }, {}, function (err, numRemoved) {
+        if (err) deferred.reject(err);
+
+        deferred.resolve(numRemoved);
+      });
+
       return deferred.promise;
     }
 
-    function updatePatient(patient) {
+    function updatePatient(id, patientDoc) {
       var deferred = $q.defer();
-      var query = "UPDATE customers SET name = ? WHERE customer_id = ?";
 
-      //connection.query(query, [customer.name, customer.customer_id], function (err, res) {
-      //  if (err) deferred.reject(err);
-      //  deferred.resolve(res);
-      //});
+      // Replace a document by another
+      patientStore.update({ _id: id }, patientDoc, {}, function (err, numReplaced) {
+        // Note that the _id is kept unchanged, and the document has been replaced
+        if (err) deferred.reject(err);
+
+        deferred.resolve(numReplaced);
+      });
+
       return deferred.promise;
     }
   }

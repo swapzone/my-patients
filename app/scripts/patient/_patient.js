@@ -28,6 +28,12 @@
       controller: 'patientDetailCtrl'
     });
 
+    $stateProvider.state('patient.edit', {
+      url: 'patient/edit?:active',
+      templateUrl: 'app/scripts/templates/patient/edit.html',
+      controller: 'patientDetailCtrl'
+    });
+
     $stateProvider.state('patient.new', {
       url: 'patient/new',
       templateUrl: 'app/scripts/templates/patient/new.html',
