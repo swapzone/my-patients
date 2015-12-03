@@ -76,7 +76,7 @@
       border-bottom: 1px solid $c-border;
 
       &:last-of-type {
-        width: 40%;
+        min-width: 40%;
       }
     }
   }

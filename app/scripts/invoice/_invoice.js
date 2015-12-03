@@ -15,7 +15,7 @@
     });
 
     $stateProvider.state('invoice.list', {
-      url: 'invoice/list',
+      url: 'invoice/list?:parameter',
       templateUrl: 'app/scripts/templates/invoice/list.html',
       controller: 'invoiceCtrl'
     });

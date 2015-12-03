@@ -1,5 +1,27 @@
 %invoice {
   display: block;
+
+  .button {
+
+    &.active {
+      background-color: #e6e6e6;
+    }
+  }
+
+  .invoice-instructions {
+    margin-top: 2em;
+  }
+
+  .table-row {
+
+    &:hover {
+      background-color: lighten($c-background, 3%);
+    }
+  }
+
+  .table-cell {
+    padding: 0.3em 1em 0.5em 0.3em;
+  }
 }
 
 .invoice {

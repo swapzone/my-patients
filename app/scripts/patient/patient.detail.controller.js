@@ -2,6 +2,8 @@
 
   'use strict';
 
+  var shortId = require("shortid");
+
   angular
     .module('app.patient')
     .controller('patientDetailCtrl', ['$scope', 'patientService', '$mdDialog', '$state', '$stateParams', PatientDetailController]);
@@ -13,6 +15,7 @@
     $scope.showPersonalDetails = false;
 
     $scope.abort = abort;
+    $scope.goBack = goBack;
     $scope.editPatient = editPatient;
     $scope.showTreatment = showTreatment;
     $scope.deletePatient = deletePatient;
@@ -50,6 +53,23 @@
      */
     function editPatient() {
       $state.go("patient.edit", { active: angular.toJson($scope.activePatient) });
+    }
+
+    /**
+     *
+     */
+    function goBack() {
+
+      if($stateParams.previousState) {
+        var parameters = {};
+
+        if($stateParams.parameter)
+          parameters.parameter = $stateParams.parameter;
+
+        $state.go($stateParams.previousState, parameters);
+      }
+      else
+        $state.go('patient.list', {});
     }
 
     /**
@@ -202,6 +222,8 @@
             $scope.newTreatment.date = new Date(dateArray[2], dateArray[1] - 1, dateArray[0]);
           }
 
+          $scope.newTreatment.id = shortId.generate();
+
           patientService.addTreatment($scope.activePatient._id, $scope.newTreatment).then(function () {
             if (!$scope.activePatient.treatments)
               $scope.activePatient.treatments = [];
@@ -209,6 +231,9 @@
             $scope.activePatient.treatments.push($scope.newTreatment);
             $scope.newTreatment = {};
             $scope.triggerTreatmentForm();
+          }, function(err) {
+            console.error("Could not add treatment: ");
+            console.error(err);
           });
         }
         else {

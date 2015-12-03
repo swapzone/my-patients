@@ -53,7 +53,7 @@
       <span class="table-cell">Behandlung</span>
       <span class="table-cell">Behandelnder Arzt</span>
     </span>
-    <span class="table-row" ng-repeat="treatment in activePatient.treatments" ng-hide="showNewForm">
+    <span class="table-row" ng-repeat="treatment in activePatient.treatments track by treatment.id" ng-hide="showNewForm">
       <span class="table-cell">{{ treatment.date | dateFilter }}</span>
       <span class="table-cell">{{ treatment.payment }}</span>
       <span class="table-cell">{{ treatment.amount }}</span>

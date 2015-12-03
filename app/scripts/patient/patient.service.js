@@ -15,6 +15,7 @@
 
     return {
       getPatients: getPatients,
+      getPatientById: getPatientById,
       create: createPatient,
       delete: deletePatient,
       update: updatePatient,
@@ -25,7 +26,21 @@
       var deferred = $q.defer();
 
       patientStore.find({}, function (err, docs) {
+        if (err) deferred.reject(err);
+
         deferred.resolve(docs);
+      });
+
+      return deferred.promise;
+    }
+
+    function getPatientById(patientId) {
+      var deferred = $q.defer();
+
+      patientStore.find({_id: patientId}, function (err, docs) {
+        if (err) deferred.reject(err);
+
+        deferred.resolve(docs[0]);
       });
 
       return deferred.promise;
