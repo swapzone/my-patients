@@ -4,9 +4,10 @@
 
   angular
     .module('app.patient')
-    .controller('patientCtrl', ['$scope', 'patientService', '$mdDialog', '$state', '$sessionStorage', PatientController]);
+    .controller('patientCtrl', ['$scope', 'patientService', '$mdDialog', '$state', '$sessionStorage', '$location', '$anchorScroll', PatientController]);
 
-  function PatientController($scope, patientService, $mdDialog, $state, $sessionStorage) {
+  function PatientController($scope, patientService, $mdDialog, $state, $sessionStorage, $location, $anchorScroll) {
+    var _this = this;
 
     if($sessionStorage['newPatient'])
       $scope.newPatient = $sessionStorage['newPatient'];
@@ -17,6 +18,12 @@
         risks: {},
         treatments: []
       };
+
+    $scope.activeAnchors = [];
+
+    $scope.anchors = [
+      'A', 'D', 'G', 'J', 'M', 'P', 'S', 'V', 'Y'
+    ];
 
     $scope.patientSaved = false;
     $scope.showFilter = false;
@@ -41,6 +48,9 @@
     $scope.selectPatient = selectPatient;
     $scope.savePatient = savePatient;
     $scope.filterPatient = filterPatient;
+
+    $scope.setAnchor = setAnchor;
+    $scope.scrollTo = scrollTo;
 
     // Load initial data
     getAllPatients();
@@ -168,6 +178,51 @@
 
         $scope.patients = patients;
       });
+    }
+
+    /**
+     *
+     *
+     * @param patient
+     * @returns {boolean}
+     */
+    function setAnchor(patient) {
+      var newLetter = patient.lastname.substring(0, 1).toUpperCase();
+
+      if(!_this.lastLetter) {
+        _this.lastLetter = newLetter;
+
+        if($scope.anchors.indexOf(newLetter) > -1) {
+          if($scope.activeAnchors.indexOf(newLetter) === -1)
+            $scope.activeAnchors.push(newLetter);
+
+          return true;
+        }
+      }
+      else {
+        if(_this.lastLetter != newLetter && $scope.anchors.indexOf(newLetter) > -1) {
+          if($scope.activeAnchors.indexOf(newLetter) === -1)
+            $scope.activeAnchors.push(newLetter);
+
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    /**
+     *
+     *
+     * @param anchor
+     */
+    function scrollTo(anchor) {
+      // set the location.hash to the id of
+      // the element you wish to scroll to.
+      $location.hash('index-' + anchor.toLowerCase());
+
+      // call $anchorScroll()
+      $anchorScroll();
     }
   }
 })();

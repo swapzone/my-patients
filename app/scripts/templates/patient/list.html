@@ -10,15 +10,9 @@
     <nav class="patient-quick-links">
       <ul class="clearfix">
         <li class="label">Quick Links:</li>
-        <li><a href="#index-a">A</a></li>
-        <li><a href="#index-d">D</a></li>
-        <li><a href="#index-g">G</a></li>
-        <li><a href="#index-j">J</a></li>
-        <li><a href="#index-m">M</a></li>
-        <li><a href="#index-p">P</a></li>
-        <li><a href="#index-s">S</a></li>
-        <li><a href="#index-v">V</a></li>
-        <li><a href="#index-y">Y</a></li>
+        <li ng-repeat="anchor in activeAnchors">
+          <a ng-click="scrollTo(anchor)">{{ anchor }}</a>
+        </li>
       </ul>
     </nav>
   </div>
@@ -29,6 +23,7 @@
         ng-click="selectPatient($index)"
         ng-if="filterPatient(patient)">
       <span class="table-cell">
+        <i ng-if="setAnchor(patient)" id="{{ 'index-' + patient.lastname.substring(0, 1).toLowerCase() }}"></i>
         <span class="patient-lastname">{{ patient.lastname }}</span>, {{ patient.firstname }}
       </span>
       <span class="table-cell">
