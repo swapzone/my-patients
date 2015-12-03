@@ -1,23 +1,41 @@
 <div class="patient-treatment">
   <h1 class="header">{{ activePatient.firstname }} {{ activePatient.lastname }}</h1>
-  <span>{{ activePatient.birthday }}</span>
+  <span class="header-birthday">{{ activePatient.birthday }}</span>
 
   <div ng-show="showNewForm">
     <h3 class="sub-header">Neue Behandlung</h3>
 
     <label for="treatment-date">Datum</label>
     <input type="text" id="treatment-date" name="treatment-date" ng-model="newTreatment.date" />
-    <label for="treatment-payment">Bezahlung</label>
-    <select id="treatment-payment" name="treatment-payment" ng-model="newTreatment.payment">
-      <option>Rechnung</option>
-      <option>Quittung</option>
-    </select>
-    <label for="treatment-amount">Betrag</label>
-    <input type="text" id="treatment-amount" name="treatment-amount" ng-model="newTreatment.amount" />
+    <span class="table payment">
+      <span class="table-cell">
+        <label for="treatment-payment">Bezahlung</label>
+        <select id="treatment-payment"
+                name="treatment-payment"
+                ng-init="newTreatment.payment = 'Rechnung'"
+                ng-model="newTreatment.payment">
+          <option>Rechnung</option>
+          <option>Quittung</option>
+        </select>
+      </span>
+      <span class="table-cell">
+        <label for="treatment-amount">Betrag</label>
+        <input type="text" id="treatment-amount" name="treatment-amount" ng-model="newTreatment.amount" />
+      </span>
+      <span class="table-cell">
+        <br />
+        <input type="checkbox" id="treatment-postpone" name="treatment-postpone" ng-model="newTreatment.postpone" />
+        <label for="treatment-postpone">Später abrechnen?</label>
+      </span>
+    </span>
+
     <label for="treatment-description">Behandlung</label>
     <input type="text" id="treatment-description" name="treatment-description" ng-model="newTreatment.description" />
     <label for="treatment-doctor">Behandelnder Arzt</label>
-    <select id="treatment-doctor" name="treatment-doctor" ng-model="newTreatment.doctor">
+    <select id="treatment-doctor"
+            name="treatment-doctor"
+            ng-init="newTreatment.doctor = 'Victoria Ott'"
+            ng-model="newTreatment.doctor">
       <option>Victoria Ott</option>
     </select>
 
@@ -36,7 +54,7 @@
       <span class="table-cell">Behandelnder Arzt</span>
     </span>
     <span class="table-row" ng-repeat="treatment in activePatient.treatments" ng-hide="showNewForm">
-      <span class="table-cell">{{ treatment.date }}</span>
+      <span class="table-cell">{{ treatment.date | dateFilter }}</span>
       <span class="table-cell">{{ treatment.payment }}</span>
       <span class="table-cell">{{ treatment.amount }}</span>
       <span class="table-cell">{{ treatment.description }}</span>

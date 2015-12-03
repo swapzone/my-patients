@@ -49,7 +49,7 @@
      *
      */
     function editPatient() {
-      $state.go("patient.edit", { active: JSON.stringify($scope.activePatient) });
+      $state.go("patient.edit", { active: angular.toJson($scope.activePatient) });
     }
 
     /**
@@ -68,7 +68,7 @@
         .cancel('Oh. Nein!');
 
       $mdDialog.show(confirm).then(function() {
-        $state.go("patient.details", { active: JSON.stringify($scope.activePatient) });
+        $state.go("patient.details", { active: angular.toJson($scope.activePatient) });
       }, function() { });
     }
 
@@ -108,7 +108,7 @@
                 .targetEvent($event)
               )
               .finally(function() {
-                $state.go("patient.details", { active: JSON.stringify($scope.activePatient) });
+                $state.go("patient.details", { active: angular.toJson($scope.activePatient) });
               });
           }
         });
@@ -125,14 +125,29 @@
      */
     function updatePatient($event) {
 
-      console.log("Cool.");
-
       if ($scope.activePatient != null) {
 
-        console.log("Noch cooler.");
+        if($scope.activePatient['birthday']) {
+          var dateFormat = /\d{2}.\d{2}.\d{4}/;
+
+          if(!dateFormat.test($scope.activePatient['birthday'])) {
+            $mdDialog.show(
+              $mdDialog
+                .alert()
+                .clickOutsideToClose(true)
+                .title('Fehler')
+                .content('Der Geburtstag muss dem Format tt.mm.jjjj entsprechen!')
+                .ok('Ok')
+                .targetEvent($event)
+              )
+              .finally(function() {});
+
+            return;
+          }
+        }
 
         patientService.update($scope.activePatient._id, $scope.activePatient).then(function () {
-          $state.go("patient.details", { active: JSON.stringify($scope.activePatient) });
+          $state.go("patient.details", { active: angular.toJson($scope.activePatient) });
         }, function(err) {
           console.error(err);
 
@@ -146,7 +161,7 @@
               .targetEvent($event)
           )
           .finally(function() {
-            $state.go("patient.details", { active: JSON.stringify($scope.activePatient) });
+            $state.go("patient.details", { active: angular.toJson($scope.activePatient) });
           });
         });
       }
@@ -176,13 +191,29 @@
     $scope.saveTreatment = function() {
 
       if ($scope.newTreatment['date'] && $scope.newTreatment['payment'] && $scope.newTreatment['description']) {
-        patientService.addTreatment($scope.activePatient._id, $scope.newTreatment).then(function () {
-          if(!$scope.activePatient.treatments)
-            $scope.activePatient.treatments = [];
 
-          $scope.activePatient.treatments.push($scope.newTreatment);
-          $scope.triggerTreatmentForm();
-        });
+        var dateFormat = /\d{2}.\d{2}.\d{4}/;
+        var complexDateFormat = /\d{4}-\d{2}-\d{2}/;
+
+        if(dateFormat.test($scope.newTreatment['date']) || complexDateFormat.test($scope.newTreatment['date'].substring(0, 10))) {
+
+          if(dateFormat.test($scope.newTreatment['date'])) {
+            var dateArray = $scope.newTreatment.date.split('.');
+            $scope.newTreatment.date = new Date(dateArray[2], dateArray[1] - 1, dateArray[0]);
+          }
+
+          patientService.addTreatment($scope.activePatient._id, $scope.newTreatment).then(function () {
+            if (!$scope.activePatient.treatments)
+              $scope.activePatient.treatments = [];
+
+            $scope.activePatient.treatments.push($scope.newTreatment);
+            $scope.newTreatment = {};
+            $scope.triggerTreatmentForm();
+          });
+        }
+        else {
+          $scope.error = "Das Datumsformat muss tt.mm.jjjj entsprechen!";
+        }
       }
       else {
         $scope.error = "Datum, Bezahlung und die Behandlung müssen ausgefüllt sein!";

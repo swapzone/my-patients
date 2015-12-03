@@ -111,7 +111,7 @@
      * @param index
      */
     function selectPatient(index) {
-      $state.go("patient.details", { active: JSON.stringify($scope.patients[index]) });
+      $state.go("patient.details", { active: angular.toJson($scope.patients[index]) });
     }
 
     /**
@@ -122,6 +122,27 @@
     function savePatient($event) {
 
       if ($scope.newPatient['firstname'] && $scope.newPatient['lastname']) {
+
+        if($scope.newPatient['birthday']) {
+          var dateFormat = /\d{2}.\d{2}.\d{4}/;
+
+          if(!dateFormat.test($scope.newPatient['birthday'])) {
+            $mdDialog.show(
+              $mdDialog
+                .alert()
+                .clickOutsideToClose(true)
+                .title('Fehler')
+                .content('Der Geburtstag muss dem Format tt.mm.jjjj entsprechen!')
+                .ok('Ok')
+                .targetEvent($event)
+              )
+              .finally(function () {
+              });
+
+            return;
+          }
+        }
+
         patientService.create($scope.newPatient).then(function () {
           $mdDialog.show(
             $mdDialog

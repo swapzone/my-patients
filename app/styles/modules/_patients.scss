@@ -74,6 +74,10 @@
     .table-cell {
       padding: 0.7em 3em 0.7em 0.2em;
       border-bottom: 1px solid $c-border;
+
+      &:last-of-type {
+        width: 40%;
+      }
     }
   }
 

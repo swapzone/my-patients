@@ -3,10 +3,24 @@
 
   .header {
     min-width: 25em;
+    margin-bottom: 0.1em;
+  }
+
+  .header-birthday {
+    display: block;
+    margin-bottom: 1em;
+    color: $c-text-light;
   }
 
   .table {
     margin-bottom: 1em;
+
+    &.payment {
+
+      .table-cell {
+        width: 33%;
+      }
+    }
   }
 
   .table-cell {

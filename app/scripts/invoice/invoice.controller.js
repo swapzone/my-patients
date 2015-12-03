@@ -4,10 +4,17 @@
 
   angular
     .module('app.invoice')
-    .controller('invoiceCtrl', ['invoiceService', '$q', InvoiceController]);
+    .controller('invoiceCtrl', ['patientService', 'invoiceService', '$q', InvoiceController]);
 
-  function InvoiceController(invoiceService, $q) {
+  function InvoiceController(patientService, invoiceService, $q) {
     var self = this;
+
+    $scope.openInvoices = [];
+    $scope.dueInvoices = [];
+
+    function init() {
+
+    }
 
   }
 })();
