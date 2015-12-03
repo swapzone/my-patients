@@ -2,9 +2,7 @@
   'use strict';
 
   angular
-    .module('app.invoice', [
-      'app.core'
-    ])
+    .module('app.invoice', [])
     .config(routerConfig);
 
   function routerConfig($stateProvider) {

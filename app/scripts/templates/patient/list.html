@@ -2,7 +2,7 @@
   <h1 class="header">Alle Patienten</h1>
 
   <span class="patient-filter filter">
-    <input ng-class="{ show: showFilter }" ng-focus="showFilter" type="text" placeholder="Filter Begriff">
+    <input ng-class="{ show: showFilter }" focus-me="showFilter" ng-model="filter" type="text" placeholder="Vor- oder Nachname">
     <a ng-click="toggleFilter()" class="fa" ng-class="{ 'fa-search' : !showFilter, 'fa-close' : showFilter }"></a>
   </span>
 
@@ -24,8 +24,21 @@
   </div>
 
   <ul class="patient-list">
-    <li ng-repeat="patient in patients track by patient._id" ng-click="selectPatient($index)">
-      {{ patient.firstname }} {{ patient.lastname }}
+    <li class="table-row"
+        ng-repeat="patient in patients track by patient._id"
+        ng-click="selectPatient($index)"
+        ng-if="filterPatient(patient)">
+      <span class="table-cell">
+        <span class="patient-lastname">{{ patient.lastname }}</span>, {{ patient.firstname }}
+      </span>
+      <span class="table-cell">
+        {{ patient.birthday }}
+      </span>
+      <span class="table-cell">
+        <span ng-if="patient.street && patient.postal">
+          {{ patient.street }}, {{ patient.postal }} {{ patient.city }}
+        </span>
+      </span>
     </li>
   </ul>
 

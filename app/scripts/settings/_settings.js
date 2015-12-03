@@ -2,9 +2,7 @@
   'use strict';
 
   angular
-    .module('app.settings', [
-      'app.core'
-    ])
+    .module('app.settings', [])
     .config(routerConfig);
 
   function routerConfig($stateProvider) {

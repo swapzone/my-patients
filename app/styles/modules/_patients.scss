@@ -17,6 +17,10 @@
     li {
       display: inline-block;
       padding: 0.3em 1em 0.3em 0;
+
+      &:focus {
+        outline: none; // for OS X
+      }
     }
   }
 
@@ -50,16 +54,31 @@
   }
 
   .patient-list {
-    display: block;
+    display: table;
+    width: 100%;
     list-style: none;
 
-    li {
-      min-height: 2em;
-      border-bottom: 1px solid $c-border;
-      margin-bottom: 0.3em;
-
+    .table-row {
       cursor: pointer;
+      width: 100%;
+
+      &:hover {
+        background-color: $c-background;
+      }
+
+      &:focus {
+        outline: none; // for OS X
+      }
     }
+
+    .table-cell {
+      padding: 0.7em 3em 0.7em 0.2em;
+      border-bottom: 1px solid $c-border;
+    }
+  }
+
+  .patient-lastname {
+    font-weight: bold;
   }
 
   .patient-abstract {

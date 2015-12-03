@@ -2,9 +2,7 @@
   'use strict';
 
   angular
-    .module('app.backup', [
-      'app.core'
-    ])
+    .module('app.backup', [])
     .config(routerConfig);
 
   function routerConfig($stateProvider) {

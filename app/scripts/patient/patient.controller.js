@@ -20,14 +20,27 @@
 
     $scope.patientSaved = false;
     $scope.showFilter = false;
+    $scope.filter = null;
 
     $scope.toggleFilter = function() {
       $scope.showFilter = !$scope.showFilter;
+
+      if(!$scope.showFilter) {
+        $scope.filter = null;
+      }
     };
+
+    $scope.$watch('showFilter', function() {
+      // the variable must be watched since it can be set from the
+      // watchMe directive
+      if($scope.showFilter == false)
+        $scope.filter = null;
+    });
 
     $scope.abort = abort;
     $scope.selectPatient = selectPatient;
     $scope.savePatient = savePatient;
+    $scope.filterPatient = filterPatient;
 
     // Load initial data
     getAllPatients();
@@ -125,6 +138,23 @@
             .targetEvent($event)
         );
       }
+    }
+
+    /**
+     *
+     *
+     * @param patient
+     * @returns {boolean}
+     */
+    function filterPatient(patient) {
+
+      if(!$scope.filter)
+        return true;
+
+      if(patient.lastname.indexOf($scope.filter) > -1)
+        return true;
+
+      return patient.firstname.indexOf($scope.filter) > -1;
     }
 
     /**
