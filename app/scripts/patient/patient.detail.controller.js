@@ -6,10 +6,11 @@
 
   angular
     .module('app.patient')
-    .controller('patientDetailCtrl', ['$scope', 'patientService', '$mdDialog', '$state', '$stateParams', PatientDetailController]);
+    .controller('patientDetailCtrl', ['$rootScope', '$scope', 'patientService', '$mdDialog', '$state', '$stateParams', PatientDetailController]);
 
-  function PatientDetailController($scope, patientService, $mdDialog, $state, $stateParams) {
+  function PatientDetailController($rootScope, $scope, patientService, $mdDialog, $state, $stateParams) {
 
+    $scope.users = $rootScope.users;
     $scope.activePatient = $stateParams.active ? JSON.parse($stateParams.active) : null;
 
     $scope.showPersonalDetails = false;

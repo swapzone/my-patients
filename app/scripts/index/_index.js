@@ -11,7 +11,14 @@
       url: '/',
       parent: 'root',
       templateUrl: 'app/templates/index/index.html',
-      controller: 'indexCtrl'
+      controller: 'indexCtrl',
+      resolve: {
+        users: loadUsers
+      }
     });
+  }
+
+  function loadUsers(settingsService) {
+    return settingsService.getUsers();
   }
 })();

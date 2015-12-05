@@ -4,9 +4,9 @@
 
   angular
     .module('app.patient')
-    .controller('patientCtrl', ['$scope', 'patientService', '$mdDialog', '$state', '$sessionStorage', '$location', '$anchorScroll', PatientController]);
+    .controller('patientCtrl', ['$rootScope', '$scope', 'patientService', '$mdDialog', '$state', '$sessionStorage', '$location', '$anchorScroll', PatientController]);
 
-  function PatientController($scope, patientService, $mdDialog, $state, $sessionStorage, $location, $anchorScroll) {
+  function PatientController($rootScope, $scope, patientService, $mdDialog, $state, $sessionStorage, $location, $anchorScroll) {
     var _this = this;
 
     if($sessionStorage['newPatient'])
@@ -25,6 +25,7 @@
       'A', 'D', 'G', 'J', 'M', 'P', 'S', 'V', 'Y'
     ];
 
+    $scope.users = $rootScope.users;
     $scope.patientSaved = false;
     $scope.showFilter = false;
     $scope.filter = null;

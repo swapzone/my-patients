@@ -4,10 +4,9 @@
 
   angular
     .module('app')
-    .controller('indexCtrl', IndexController);
+    .controller('indexCtrl', ['$rootScope', 'users', IndexController]);
 
-  function IndexController() {
-    var self = this;
-
+  function IndexController($rootScope, users) {
+    $rootScope.users = users;
   }
 })();

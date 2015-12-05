@@ -36,7 +36,7 @@
             name="treatment-doctor"
             ng-init="newTreatment.doctor = 'Victoria Ott'"
             ng-model="newTreatment.doctor">
-      <option>Victoria Ott</option>
+      <option ng-repeat="user in users track by user._id">{{ user.name }}</option>
     </select>
 
     <span ng-if="error" class="status-error">{{ error }}</span>

@@ -12,6 +12,7 @@
       'app.settings',
       'app.templates'
     ])
+    .value('users', [])
     .config(routeConfig);
 
   function routeConfig($stateProvider, $urlRouterProvider) {

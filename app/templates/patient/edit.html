@@ -85,7 +85,7 @@
 
       <label for="doctor">Behandelnder Arzt</label>
       <select id="doctor" name="doctor" ng-model="activePatient.doctor">
-        <option>Victoria Ott</option>
+        <option ng-repeat="user in users track by user._id">{{ user.name }}</option>
       </select>
 
       <input type="checkbox" id="paperfile" name="paperfile" value="paperfile" ng-model="activePatient.paperfile" />
