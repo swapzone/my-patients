@@ -10,7 +10,7 @@
     $stateProvider.state('settings', {
       url: '/settings',
       parent: 'index',
-      templateUrl: 'app/scripts/templates/settings/settings.html',
+      templateUrl: 'app/templates/settings/settings.html',
       controller: 'settingsCtrl'
     });
   }

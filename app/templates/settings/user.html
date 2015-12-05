@@ -1,0 +1,15 @@
+<div class="settings">
+  <div class="new-dialog">
+    <h1 class="header">Neuer Benutzer</h1>
+
+    <label for="user-name">Nutzername</label>
+    <input type="text" id="user-name" name="user-name" ng-model="newUser.name" />
+
+    <span class="status-error" ng-if="error">{{ error }}</span>
+
+    <div class="dialog-action-bar">
+      <a ng-click="abort()" class="button">Abbrechen</a>
+      <a ng-click="saveUser()" class="button">Speichern</a>
+    </div>
+  </div>
+</div>

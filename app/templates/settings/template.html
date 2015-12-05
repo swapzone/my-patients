@@ -1,0 +1,28 @@
+<div class="settings">
+  <div class="new-dialog">
+    <h1 class="header">Neue Rechnungsvorlage</h1>
+
+    <label for="template-name">Vorlagenname</label>
+    <input type="text" id="template-name" name="template-name" ng-model="newTemplate.name" />
+
+    <label for="template-file">Word Vorlage</label>
+    <input type="file" id="template-file" name="template-file" file-read="newTemplate.file" />
+
+    <label for="template-type">Zuordnung zu Krankenkassentyp</label>
+    <select id="template-type"
+            name="template-type"
+            class="template-type"
+            ng-model="newTemplate.type">
+      <option>Privat</option>
+      <option>Privat Zusatz</option>
+      <option>Gesetzlich</option>
+    </select>
+
+    <span class="status-error" ng-if="error">{{ error }}</span>
+
+    <div class="dialog-action-bar">
+      <a ng-click="abort()" class="button">Abbrechen</a>
+      <a ng-click="saveTemplate()" class="button">Speichern</a>
+    </div>
+  </div>
+</div>

@@ -16,25 +16,25 @@
 
     $stateProvider.state('patient.list', {
       url: 'patient/list',
-      templateUrl: 'app/scripts/templates/patient/list.html',
+      templateUrl: 'app/templates/patient/list.html',
       controller: 'patientCtrl'
     });
 
     $stateProvider.state('patient.details', {
       url: 'patient/details?:active:previousState:parameter',
-      templateUrl: 'app/scripts/templates/patient/detail.html',
+      templateUrl: 'app/templates/patient/detail.html',
       controller: 'patientDetailCtrl'
     });
 
     $stateProvider.state('patient.edit', {
       url: 'patient/edit?:active',
-      templateUrl: 'app/scripts/templates/patient/edit.html',
+      templateUrl: 'app/templates/patient/edit.html',
       controller: 'patientDetailCtrl'
     });
 
     $stateProvider.state('patient.new', {
       url: 'patient/new',
-      templateUrl: 'app/scripts/templates/patient/new.html',
+      templateUrl: 'app/templates/patient/new.html',
       controller: 'patientCtrl'
     });
   }

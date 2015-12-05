@@ -86,10 +86,10 @@ gulp.task('vendor-scripts', function() {
 gulp.task('custom-scripts', function(done) {
   return merge(
     gulp.src([
-        'app/scripts/templates/**/*.html'
+        'app/templates/**/*.html'
       ])
       .pipe(angularTemplateCache('templates.js', {
-        root: 'app/scripts/templates/',
+        root: 'app/templates/',
         module: 'app.templates',
         standalone: true
       })),
@@ -127,12 +127,12 @@ gulp.task('electron-reload', function() {
 /****************************************************************************************************/
 
 gulp.task('live', ['preprocess', 'scripts', 'styles'], function() {
-  //childProcess.spawn(electron, ['build/app'], { stdio: 'inherit' });
   liveServer.start();
 
-  gulp.watch(['app/*.html'], ['preprocess', 'electron-reload']);
-  gulp.watch(['app/styles/**/*.scss'], ['styles', 'electron-reload']);
-  gulp.watch(['app/scripts/**/*.html', 'app/scripts/**/*.js'], ['scripts', 'electron-reload']);
+  gulp.watch(['app/*.html'], ['preprocess']);
+  gulp.watch(['app/styles/**/*.scss'], ['styles']);
+  gulp.watch(['app/templates/**/*.html', 'app/scripts/**/*.js'], ['scripts']);
+  gulp.watch(['build/**/*'], ['electron-reload'])
 });
 
 gulp.task('debug', function () {

@@ -16,13 +16,13 @@
 
     $stateProvider.state('invoice.list', {
       url: 'invoice/list?:parameter',
-      templateUrl: 'app/scripts/templates/invoice/list.html',
+      templateUrl: 'app/templates/invoice/list.html',
       controller: 'invoiceCtrl'
     });
 
     $stateProvider.state('invoice.details', {
       url: '/invoice/details',
-      templateUrl: 'app/scripts/templates/invoice/detail.html',
+      templateUrl: 'app/templates/invoice/detail.html',
       controller: 'invoiceCtrl'
     });
   }

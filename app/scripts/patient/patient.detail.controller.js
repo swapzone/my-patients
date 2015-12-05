@@ -36,7 +36,7 @@
         controller: DialogCtrl,
         scope: $scope.$new(),
         controllerAs: 'treatmentCtrl',
-        templateUrl: 'app/scripts/templates/patient/treatment.html',
+        templateUrl: 'app/templates/patient/treatment.html',
         parent: angular.element(document.body),
         targetEvent: $event,
         clickOutsideToClose:true

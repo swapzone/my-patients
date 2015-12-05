@@ -10,7 +10,7 @@
     $stateProvider.state('backup', {
       url: '/backup',
       parent: 'index',
-      templateUrl: 'app/scripts/templates/backup/backup.html',
+      templateUrl: 'app/templates/backup/backup.html',
       controller: 'backupCtrl'
     });
   }

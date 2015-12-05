@@ -10,7 +10,7 @@
     $stateProvider.state('index', {
       url: '/',
       parent: 'root',
-      templateUrl: 'app/scripts/templates/index/index.html',
+      templateUrl: 'app/templates/index/index.html',
       controller: 'indexCtrl'
     });
   }

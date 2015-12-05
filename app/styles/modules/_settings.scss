@@ -1,5 +1,62 @@
 %settings {
   display: block;
+
+  .settings-section {
+    margin-bottom: 1.5em;
+  }
+
+  .settings-label {
+    display: block;
+  }
+
+  .settings-user-list {
+    list-style: none;
+    margin-bottom: 1em;
+
+    &.empty {
+      font-style: italic;
+    }
+  }
+
+  .settings-dropdown {
+    width: auto;
+    margin-top: 0.5em;
+  }
+
+  .new-dialog {
+    padding: 0.8em;
+
+    .header {
+      min-width: 14em;
+      margin-bottom: 0.8em;
+    }
+
+    label {
+      margin-bottom: 0.5em;
+    }
+
+    input, select {
+      margin-bottom: 1em;
+    }
+
+    input[type=file] {
+      width: 100%;
+      margin-top: 0.5em;
+    }
+  }
+
+  .dialog-action-bar {
+    margin-top: 1em;
+  }
+
+  .settings-template-list {
+    list-style: none;
+    margin: 1em 0;
+
+    &.empty {
+      font-style: italic;
+    }
+  }
 }
 
 .settings {
