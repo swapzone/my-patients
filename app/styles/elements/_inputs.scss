@@ -146,7 +146,7 @@ input.error, select.error {
 input.success, select.success {
   & + span.input-status {
     display: block;
-    color: $c-status-okay;
+    color: $c-status-success;
 
     .fa-exclamation {
       display: none;
@@ -157,7 +157,7 @@ input.success, select.success {
 input[type="radio"]:checked.success + label:after {
   @include fa-icon();
   content: $fa-var-check;
-  color: $c-status-okay;
+  color: $c-status-success;
   margin-left: 0.3em;
 }
 

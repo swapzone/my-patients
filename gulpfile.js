@@ -2,7 +2,8 @@
 var gulp = require('gulp');
 
 // include core modules
-var path  = require("path");
+var fs    = require('fs');
+var path  = require('path');
 
 // get the dependencies
 var concat 		    = require('gulp-concat'),
@@ -116,6 +117,14 @@ gulp.task('preprocess', function() {
       'app/package.json'
     ])
     .pipe(gulp.dest('build/app/'));
+
+  gulp
+    .src([
+      'data/accounting.db',
+      'data/patients.db',
+      'data/settings.db'
+    ])
+    .pipe(gulp.dest('build/app/data/'));
 });
 
 gulp.task('electron-reload', function() {

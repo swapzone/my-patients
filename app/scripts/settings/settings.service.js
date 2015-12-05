@@ -11,7 +11,7 @@
   function SettingsService($q) {
 
     // Create NeDB database containers
-    var settingsStore = new Datastore({ filename: 'data/settings.db', autoload: true });
+    var settingsStore = new Datastore({ filename: __dirname + '/data/settings.db', autoload: true });
 
     return {
       getUsers: getUsers,

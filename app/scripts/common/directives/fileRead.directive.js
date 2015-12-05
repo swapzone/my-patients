@@ -19,7 +19,7 @@
               });
             };
 
-            reader.readAsDataURL(changeEvent.target.files[0]);
+            reader.readAsBinaryString(changeEvent.target.files[0]);
           });
         }
       }

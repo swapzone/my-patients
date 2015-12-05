@@ -11,7 +11,7 @@
   function PatientService($q) {
 
     // Create NeDB database containers
-    var patientStore = new Datastore({ filename: 'data/patients.db', autoload: true });
+    var patientStore = new Datastore({ filename: __dirname + '/data/patients.db', autoload: true });
 
     return {
       getPatients: getPatients,
