@@ -1,6 +1,10 @@
+html {
+  min-height: 100%;
+}
+
 body {
   min-width: 480px;
-  height: auto;
+  min-height: 100%;
   position: relative;
   padding-bottom: 3em;
 }
@@ -9,6 +13,14 @@ body {
   display: block;
   margin-bottom: 0.8em;
   font-weight: bold;
+}
+
+.footer {
+  position: relative;
+  background-color: #ddd;
+  padding: 0.5em 1em;
+  height: $footer-height;
+  margin-top: -$footer-height;
 }
 
 .sub-header {
