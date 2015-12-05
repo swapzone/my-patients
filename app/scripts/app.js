@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var fs = require('fs');
+
   angular
     .module('app', [
       'app.common',
@@ -13,7 +15,8 @@
       'app.templates'
     ])
     .value('users', [])
-    .config(routeConfig);
+    .config(routeConfig)
+    .config(cleanFiles);
 
   function routeConfig($stateProvider, $urlRouterProvider) {
 
@@ -21,14 +24,35 @@
 
     $stateProvider.state('root', {
       abstract: true,
-      template: '<div ui-view></div>',
-      resolve: {
-        appData: loadData
-      }
+      template: '<div ui-view></div>'
     });
   }
 
-  function loadData($q) {
-    // for testing purposes only
+  /**
+   *
+   */
+  function cleanFiles() {
+    // clean up old backup files
+    var path = __dirname + '/temp';
+    deleteFolderRecursive(path);
+  }
+
+  /**
+   *
+   *
+   * @param path
+   */
+  function deleteFolderRecursive(path) {
+    if( fs.existsSync(path) ) {
+      fs.readdirSync(path).forEach(function(file,index){
+        var curPath = path + "/" + file;
+        if(fs.lstatSync(curPath).isDirectory()) { // recurse
+          deleteFolderRecursive(curPath);
+        } else { // delete file
+          fs.unlinkSync(curPath);
+        }
+      });
+      fs.rmdirSync(path);
+    }
   }
 })();

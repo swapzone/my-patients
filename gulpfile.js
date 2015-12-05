@@ -132,7 +132,7 @@ gulp.task('live', ['preprocess', 'scripts', 'styles'], function() {
   gulp.watch(['app/*.html'], ['preprocess']);
   gulp.watch(['app/styles/**/*.scss'], ['styles']);
   gulp.watch(['app/templates/**/*.html', 'app/scripts/**/*.js'], ['scripts']);
-  gulp.watch(['build/**/*'], ['electron-reload'])
+  gulp.watch(['build/app/scripts/*.js', 'build/app/styles/*.css', 'build/app/index.html', 'build/app/main.js'], ['electron-reload'])
 });
 
 gulp.task('debug', function () {
