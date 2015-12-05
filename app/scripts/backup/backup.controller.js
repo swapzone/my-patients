@@ -9,14 +9,11 @@
 
   angular
     .module('app.backup')
-    .controller('backupCtrl', ['$scope', '$mdDialog', BackupController]);
+    .controller('backupCtrl', ['$scope', '$mdDialog', '$state', BackupController]);
 
-  function BackupController($scope, $mdDialog) {
+  function BackupController($scope, $mdDialog, $state) {
     $scope.backupFile = null;
-    $scope.message = {
-      success: "",
-      error: ""
-    };
+    $scope.error = "";
 
     $scope.createBackupFile = createBackupFile;
     $scope.restoreBackup = restoreBackup;
@@ -72,7 +69,7 @@
     function restoreBackup($event) {
 
       if($scope.backupFile) {
-        $scope.message.error = "";
+        $scope.error = "";
 
         var confirm = $mdDialog.confirm()
           .parent(angular.element(document.body))
@@ -83,6 +80,7 @@
           .cancel('Oh. Nein!');
 
         $mdDialog.show(confirm).then(function() {
+          confirm = null;
 
           var path = __dirname + '/temp';
           fs.exists(path, function(exists) {
@@ -98,7 +96,7 @@
         }, function() { });
       }
       else {
-        $scope.message.error = "Es muss zuerst eine Sicherungsdatei ausgewählt werden.";
+        $scope.error = "Es muss zuerst eine Sicherungsdatei ausgewählt werden.";
       }
     }
 
@@ -118,7 +116,7 @@
     function restoreBackupFile(filePath) {
 
       if($scope.backupFile == null) {
-        $scope.message.error = "Die Sicherungsdatei konnte nicht gelesen werden.";
+        $scope.error = "Die Sicherungsdatei konnte nicht gelesen werden.";
         return;
       }
 
@@ -138,10 +136,19 @@
           }
         })
         .on('close', function() {
-          $scope.message.success = "Die Wiederherstellung war erfolgreich.";
+          $mdDialog.show(
+            $mdDialog
+              .alert()
+              .clickOutsideToClose(true)
+              .title('Super!')
+              .content('Die Wiederherstellung war erfolgreich!')
+              .ok('Ok')
+          ).then(function() {
+            $state.go("patient.list", {});
+          });
         })
         .on('error', function() {
-          $scope.message.error = "Die Wiederherstellung war leider nicht erfolgreich.";
+          $scope.error = "Die Wiederherstellung war leider nicht erfolgreich.";
         });
     }
   }

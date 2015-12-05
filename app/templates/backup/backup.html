@@ -11,8 +11,7 @@
     <label for="backup-file">Sicherungsdatei laden und auf 'Wiederherstellen' klicken.</label>
     <input type="file" id="backup-file" name="backup-file" accept=".zip" file-read="backupFile" />
 
-    <span class="status-success" ng-if="message.success">{{ message.success }}</span>
-    <span class="status-error" ng-if="message.error">{{ message.error }}</span>
+    <span class="status-error" ng-if="error">{{ error }}</span>
     <a ng-click="restoreBackup($event)" class="button">Wiederherstellen</a>
   </div>
 </div>

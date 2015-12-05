@@ -2,7 +2,6 @@
 var gulp = require('gulp');
 
 // include core modules
-var fs    = require('fs');
 var path  = require('path');
 
 // get the dependencies
