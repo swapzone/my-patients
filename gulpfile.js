@@ -117,6 +117,7 @@ gulp.task('preprocess', function() {
     ])
     .pipe(gulp.dest('build/app/'));
 
+  // copy data sources
   gulp
     .src([
       'data/accounting.db',
@@ -124,6 +125,13 @@ gulp.task('preprocess', function() {
       'data/settings.db'
     ])
     .pipe(gulp.dest('build/app/data/'));
+
+  // copy node modules
+  gulp
+    .src([
+      'app/node_modules/**/*'
+    ])
+    .pipe(gulp.dest('build/app/node_modules/'));
 });
 
 gulp.task('electron-reload', function() {

@@ -15,6 +15,11 @@
       'app.templates'
     ])
     .value('users', [])
+    .constant('INSURANCE_TYPE', {
+      'state': 'Gesetzlich',
+      'private': 'Privat',
+      'privatePlus': 'Privat Zusatz'
+    })
     .config(routeConfig)
     .config(cleanFiles);
 

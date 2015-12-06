@@ -2,14 +2,19 @@
 
   'use strict';
 
+  var fs = require('fs');
+  var Docxtemplater = require('docxtemplater');
+
   angular
     .module('app.invoice')
-    .controller('invoiceCtrl', ['$scope', 'patientService', 'invoiceService', '$state', '$stateParams', InvoiceController]);
+    .controller('invoiceCtrl', ['$scope', 'INSURANCE_TYPE', 'patientService', 'invoiceService', '$state', '$stateParams', InvoiceController]);
 
-  function InvoiceController($scope, patientService, invoiceService, $state, $stateParams) {
+  function InvoiceController($scope, INSURANCE_TYPE, patientService, invoiceService, $state, $stateParams) {
     $scope.selectedInvoices = undefined;
     $scope.openInvoices = [];
     $scope.dueInvoices = [];
+
+    $scope.createInvoice = createInvoice;
 
     $scope.showOpenInvoices = function() {
       $scope.selectedInvoices = $scope.openInvoices;
@@ -149,7 +154,8 @@
               street: patient.street,
               postal: patient.postal,
               city: patient.city
-            }
+            },
+            insurance: patient.insurance ? patient.insurance.type : undefined
           },
           amount: amount,
           treatments: openLiabilities.map(function(openLiability) {
@@ -203,6 +209,78 @@
      */
     function treatmentSort(a, b) {
       return new Date(a.date) > new Date(b.date);
+    }
+
+    /**
+     *
+     *
+     * @param patient
+     */
+    function createInvoice(patient) {
+      alert("Not yet implemented.");
+
+      // create temp directory if not available
+      var path = __dirname + '/temp';
+      fs.exists(path, function(exists) {
+        if (!exists) {
+          fs.mkdir(path, function() {
+            createDocument();
+          });
+        }
+        else {
+          createDocument();
+        }
+      });
+
+      /**
+       *
+       */
+      function createDocument() {
+
+        var content;
+        if(patient.insurance) {
+          switch(patient.insurance) {
+            case INSURANCE_TYPE.state:
+              // state template
+              break;
+            case INSURANCE_TYPE.private:
+            case INSURANCE_TYPE.privatePlus:
+              // private template
+              break;
+            default:
+
+          }
+        }
+        else {
+          // ask user which template to use
+
+        }
+
+        // load the docx file as a binary
+        /*
+        var content = fs
+          .readFileSync(__dirname + "/input.docx", "binary");*/
+
+        var doc = new Docxtemplater(content);
+
+        // set the templateVariables
+        doc.setData({
+          "first_name": "Hipp",
+          "last_name": "Edgar",
+          "phone": "0652455478",
+          "description": "New Website"
+        });
+
+        // apply them (replace all occurences of {first_name} by Hipp, ...)
+        doc.render();
+
+        var buffer = doc.getZip()
+          .generate({type: "nodebuffer"});
+
+        fs.writeFileSync(path + "/invoice.docx", buffer);
+
+        // write invoice data set to database
+      }
     }
   }
 })();
