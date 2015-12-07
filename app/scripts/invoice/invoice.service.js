@@ -19,7 +19,7 @@
 
     return {
       getInvoices: getInvoices,
-      create: createInvoice
+      createInvoice: createInvoice
     };
 
     function getInvoices() {

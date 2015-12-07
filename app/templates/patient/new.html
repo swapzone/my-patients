@@ -5,6 +5,12 @@
     <div class="patient-personal patient-abstract">
       <h2 class="sub-header">Persönliche Daten</h2>
 
+      <label for="salutation">Anrede</label>
+      <select id="salutation" name="salutation" ng-model="newPatient.salutation">
+        <option>Herr</option>
+        <option>Frau</option>
+      </select>
+
       <label for="firstname">Vorname</label>
       <input type="text" id="firstname" name="firstname" ng-model="newPatient.firstname" />
 

@@ -4,6 +4,7 @@
 
   var fs = require('fs');
   var Docxtemplater = require('docxtemplater');
+  var moment = require('moment');
 
   angular
     .module('app.invoice')
@@ -33,6 +34,7 @@
     init("Victoria Ott");
 
     function init(doctor) {
+      $scope.doctor = doctor;
 
       patientService.getPatients()
         .then(function(patients) {
@@ -98,7 +100,7 @@
 
             treatments = treatments.filter(function (treatment) {
               var treatmentDate = new Date(treatment.date);
-              return new treatmentDate > lastInvoicedDate;
+              return treatmentDate > lastInvoicedDate;
             });
           }
 
@@ -146,17 +148,7 @@
         });
 
         $scope.openInvoices.push({
-          patient: {
-            id: patient._id,
-            firstname: patient.firstname,
-            lastname: patient.lastname,
-            address: {
-              street: patient.street,
-              postal: patient.postal,
-              city: patient.city
-            },
-            insurance: patient.insurance ? patient.insurance.type : undefined
-          },
+          patient: patient,
           amount: amount,
           treatments: openLiabilities.map(function(openLiability) {
             return {
@@ -177,16 +169,7 @@
         });
 
         $scope.dueInvoices.push({
-          patient: {
-            id: patient._id,
-            firstname: patient.firstname,
-            lastname: patient.lastname,
-            address: {
-              street: patient.street,
-              postal: patient.postal,
-              city: patient.city
-            }
-          },
+          patient: patient,
           amount: amount,
           treatments: dueLiabilities.map(function(dueLiability) {
             return {
@@ -214,9 +197,14 @@
     /**
      *
      *
-     * @param patient
+     * @param invoice
      */
-    function createInvoice(patient) {
+    function createInvoice(invoice) {
+
+      var patient = invoice.patient;
+      var amount = invoice.amount;
+      var treatments = invoice.treatments;
+
       // create temp directory if not available
       var path = __dirname + '/temp';
       fs.exists(path, function(exists) {
@@ -293,24 +281,34 @@
          * @param templateContent
          */
         function createDocumentWithTemplate(templateContent) {
-          console.log("Create document now.");
-
           // load the docx file as a binary
-          /*
-           var content = fs
-           .readFileSync(__dirname + "/input.docx", "binary");
+          var doc = new Docxtemplater(templateContent);
 
-          var doc = new Docxtemplater(content);
+
+          var fullSalutation = " ";
+
+          if(patient.salutation) {
+            fullSalutation = patient.salutation == "Herr" ?
+              "Sehr geehrter Herr " : "Sehr geehrte Frau ";
+
+            fullSalutation += patient.lastname;
+          }
 
           // set the templateVariables
           doc.setData({
-            "first_name": "Hipp",
-            "last_name": "Edgar",
-            "phone": "0652455478",
-            "description": "New Website"
+            "salutation": patient.salutation || " ",
+            "first_name": patient.firstname,
+            "last_name": patient.lastname,
+            "street": patient.street,
+            "postal": patient.postal,
+            "city": patient.city,
+            "full_salutation": fullSalutation,
+            "invoice_amount": amount,
+            "treatment_date": moment(treatments[0].date).format('DD.MM.YYYY'),
+            "date": moment().format('DD.MM.YYYY')
           });
 
-          // apply them (replace all occurences of {first_name} by Hipp, ...)
+          // apply them (replace all occurences of the previously defined tags ...)
           doc.render();
 
           var buffer = doc.getZip()
@@ -318,9 +316,34 @@
 
           fs.writeFileSync(path + "/invoice.docx", buffer);
 
-          // write invoice data set to database
+          var date = moment().format('DDMMYYYY');
+          var documentName = "Rechnung_" + patient.lastname + "_" + date + ".docx";
+          triggerDownload(path + "/invoice.docx", documentName);
 
-          */
+          // write invoice data set to database
+          invoiceService.createInvoice({
+            date: new Date(),
+            patientId: patient._id,
+            invoice_positions: treatments.map(function(treatment) {
+              return treatment.id;
+            }),
+            invoice_amount: amount,
+            doctor: $scope.doctor
+          });
+
+          patient['last_invoiced'] = new Date(treatments[treatments.length - 1].date);
+          patientService.update(patient._id, patient);
+
+          // delete invoice from invoices array
+          var invoiceIndex = $scope.dueInvoices.indexOf(invoice);
+          if(invoiceIndex > -1)
+            $scope.dueInvoices.splice(invoiceIndex, 1);
+          else {
+            invoiceIndex = $scope.openInvoices.indexOf(invoice);
+
+            if(invoiceIndex > -1)
+              $scope.openInvoices.splice(invoiceIndex, 1);
+          }
         }
 
         /**
@@ -367,6 +390,19 @@
             default:
               return defaultTemplate;
           }
+        }
+
+        /**
+         *
+         *
+         * @param filePath
+         * @param fileName
+         */
+        function triggerDownload(filePath, fileName) {
+          var downloadLink = angular.element('<a></a>');
+          downloadLink.attr('href', filePath);
+          downloadLink.attr('download', fileName);
+          downloadLink[0].click();
         }
       }
     }

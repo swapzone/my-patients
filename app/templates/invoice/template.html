@@ -15,7 +15,7 @@
 
       <ul class="invoice-template-selection">
         <li ng-repeat="invoiceTemplate in templates track by invoiceTemplate._id">
-          {{ invoiceTemplate.name }} <a ng-click="chooseTemplate(invoiceTemplate)">auswählen</a>
+          <a ng-click="chooseTemplate(invoiceTemplate)">{{ invoiceTemplate.name }}</a>
         </li>
       </ul>
     </div>
