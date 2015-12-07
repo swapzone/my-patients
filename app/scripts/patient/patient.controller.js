@@ -183,10 +183,11 @@
       if(!$scope.filter)
         return true;
 
-      if(patient.lastname.indexOf($scope.filter) > -1)
-        return true;
+      var firstname = patient.lastname.toLowerCase();
+      var lastname = patient.firstname.toLowerCase();
+      var filter = $scope.filter.toLowerCase();
 
-      return patient.firstname.indexOf($scope.filter) > -1;
+      return firstname.indexOf(filter) > -1 || lastname.indexOf(filter) > -1;
     }
 
     /**

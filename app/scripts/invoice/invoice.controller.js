@@ -237,6 +237,9 @@
        */
       function createDocument() {
 
+        alert("Noch nicht implementiert!");
+        return;
+
         var content;
         if(patient.insurance) {
           switch(patient.insurance) {
