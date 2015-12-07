@@ -6,12 +6,16 @@
 
   angular
     .module('app.settings')
-    .service('settingsService', ['$q', SettingsService]);
+    .service('settingsService', ['$rootScope', '$q', SettingsService]);
 
-  function SettingsService($q) {
+  function SettingsService($rootScope, $q) {
 
     // Create NeDB database containers
     var settingsStore = new Datastore({ filename: __dirname + '/data/settings.db', autoload: true });
+
+    $rootScope.$on('backupRestored', function () {
+      settingsStore.loadDatabase();
+    });
 
     return {
       getUsers: getUsers,

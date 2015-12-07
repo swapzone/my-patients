@@ -9,9 +9,9 @@
 
   angular
     .module('app.backup')
-    .controller('backupCtrl', ['$scope', '$mdDialog', '$state', BackupController]);
+    .controller('backupCtrl', ['$rootScope', '$scope', '$mdDialog', '$state', BackupController]);
 
-  function BackupController($scope, $mdDialog, $state) {
+  function BackupController($rootScope, $scope, $mdDialog, $state) {
     $scope.backupFile = null;
     $scope.error = "";
 
@@ -144,6 +144,7 @@
               .content('Die Wiederherstellung war erfolgreich!')
               .ok('Ok')
           ).then(function() {
+            $rootScope.$broadcast('backupRestored');
             $state.go("patient.list", {});
           });
         })

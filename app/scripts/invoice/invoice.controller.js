@@ -7,9 +7,9 @@
 
   angular
     .module('app.invoice')
-    .controller('invoiceCtrl', ['$scope', 'INSURANCE_TYPE', 'patientService', 'invoiceService', '$state', '$stateParams', InvoiceController]);
+    .controller('invoiceCtrl', ['$scope', 'INSURANCE_TYPE', 'patientService', 'settingsService', 'invoiceService', '$state', '$stateParams', '$mdDialog', InvoiceController]);
 
-  function InvoiceController($scope, INSURANCE_TYPE, patientService, invoiceService, $state, $stateParams) {
+  function InvoiceController($scope, INSURANCE_TYPE, patientService, settingsService, invoiceService, $state, $stateParams, $mdDialog) {
     $scope.selectedInvoices = undefined;
     $scope.openInvoices = [];
     $scope.dueInvoices = [];
@@ -217,8 +217,6 @@
      * @param patient
      */
     function createInvoice(patient) {
-      alert("Not yet implemented.");
-
       // create temp directory if not available
       var path = __dirname + '/temp';
       fs.exists(path, function(exists) {
@@ -237,52 +235,139 @@
        */
       function createDocument() {
 
-        alert("Noch nicht implementiert!");
-        return;
+        settingsService.getInvoiceTemplates()
+          .then(function (templates) {
+            $scope.templates = templates;
 
-        var content;
-        if(patient.insurance) {
-          switch(patient.insurance) {
+            var templateFile;
+            if (patient.insurance) {
+              var template = getSuitableTemplate(templates, patient);
+              if (template && template.hasOwnProperty("file")) {
+                templateFile = template.file;
+              }
+            }
+
+            if (!templateFile) {
+              // ask user which template to use
+              var dialogObject = {
+                controller: function(items) {
+                  $scope.templates = items;
+
+                  $scope.abort = function() {
+                    $mdDialog.cancel();
+                  };
+
+                  $scope.chooseTemplate = function(template) {
+                    templateFile = template.file;
+                    $mdDialog.hide();
+                  };
+                },
+                scope: $scope.$new(),
+                templateUrl: 'app/templates/invoice/template.html',
+                parent: angular.element(document.body),
+                clickOutsideToClose: false,
+                locals: {
+                  items: templates
+                }
+              };
+
+              $mdDialog.show(dialogObject)
+                .finally(function() {
+                  dialogObject = undefined;
+
+                  if(templateFile)
+                    createDocumentWithTemplate(templateFile);
+                  else {
+                    console.warn("Could not select template file.");
+                  }
+                });
+            }
+            else {
+              createDocumentWithTemplate(templateFile);
+            }
+          });
+
+        /**
+         *
+         * 
+         * @param templateContent
+         */
+        function createDocumentWithTemplate(templateContent) {
+          console.log("Create document now.");
+
+          // load the docx file as a binary
+          /*
+           var content = fs
+           .readFileSync(__dirname + "/input.docx", "binary");
+
+          var doc = new Docxtemplater(content);
+
+          // set the templateVariables
+          doc.setData({
+            "first_name": "Hipp",
+            "last_name": "Edgar",
+            "phone": "0652455478",
+            "description": "New Website"
+          });
+
+          // apply them (replace all occurences of {first_name} by Hipp, ...)
+          doc.render();
+
+          var buffer = doc.getZip()
+            .generate({type: "nodebuffer"});
+
+          fs.writeFileSync(path + "/invoice.docx", buffer);
+
+          // write invoice data set to database
+
+          */
+        }
+
+        /**
+         *
+         *
+         * @param templates
+         * @param insuranceType
+         * @returns {*}
+         */
+        function getSuitableTemplate(templates, insuranceType) {
+
+          var defaultTemplate = null;
+          var stateTemplate = null;
+          var privateTemplate = null;
+
+          templates.forEach(function(template) {
+            if(!template.hasOwnProperty("type")) {
+              defaultTemplate = template;
+            }
+            else {
+              switch (template.hasOwnProperty("type")) {
+                case INSURANCE_TYPE.state:
+                  stateTemplate = template;
+                  break;
+                case INSURANCE_TYPE.private:
+                case INSURANCE_TYPE.privatePlus:
+                  privateTemplate = template;
+                  break;
+                default:
+                  console.warn("Unknown template type in database.");
+                  break;
+              }
+            }
+          });
+
+          switch (insuranceType) {
             case INSURANCE_TYPE.state:
-              // state template
+              return stateTemplate || defaultTemplate;
               break;
             case INSURANCE_TYPE.private:
             case INSURANCE_TYPE.privatePlus:
-              // private template
+              return privateTemplate || defaultTemplate;
               break;
             default:
-
+              return defaultTemplate;
           }
         }
-        else {
-          // ask user which template to use
-
-        }
-
-        // load the docx file as a binary
-        /*
-        var content = fs
-          .readFileSync(__dirname + "/input.docx", "binary");*/
-
-        var doc = new Docxtemplater(content);
-
-        // set the templateVariables
-        doc.setData({
-          "first_name": "Hipp",
-          "last_name": "Edgar",
-          "phone": "0652455478",
-          "description": "New Website"
-        });
-
-        // apply them (replace all occurences of {first_name} by Hipp, ...)
-        doc.render();
-
-        var buffer = doc.getZip()
-          .generate({type: "nodebuffer"});
-
-        fs.writeFileSync(path + "/invoice.docx", buffer);
-
-        // write invoice data set to database
       }
     }
   }

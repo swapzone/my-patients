@@ -22,6 +22,28 @@
   .table-cell {
     padding: 0.3em 1em 0.5em 0.3em;
   }
+
+  .new-dialog {
+    padding: 0.8em;
+
+    .header {
+      min-width: 14em;
+      margin-bottom: 0.8em;
+    }
+
+    .invoice-template-selection {
+      list-style: none;
+      margin: 1em 0;
+    }
+
+    .invoice-templates-empty {
+      margin-top: 1em;
+    }
+  }
+
+  .dialog-action-bar {
+    margin-top: 1em;
+  }
 }
 
 .invoice {

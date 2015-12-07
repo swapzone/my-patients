@@ -1,0 +1,27 @@
+<div class="invoice">
+  <div class="new-dialog">
+    <h1 class="header">Auswahl der Rechnungsvorlage</h1>
+
+    <div ng-if="!templates || templates.length == 0" class="invoice-templates-empty">
+      Es sind keine Rechnungsvorlagen vorhanden. <br />
+      Bitte erst eine Rechnungsvorlage in den Einstellungen hinzufügen.
+    </div>
+
+    <div ng-if="templates && templates.length">
+      <span>
+        Es konnte dem Patienten keine Rechnungsvorlage zugeordnet werden. <br />
+        Bitte eine Rechnungsvorlage auswählen:
+      </span>
+
+      <ul class="invoice-template-selection">
+        <li ng-repeat="invoiceTemplate in templates track by invoiceTemplate._id">
+          {{ invoiceTemplate.name }} <a ng-click="chooseTemplate(invoiceTemplate)">auswählen</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dialog-action-bar">
+      <a ng-click="abort()" class="button">Abbrechen</a>
+    </div>
+  </div>
+</div>
