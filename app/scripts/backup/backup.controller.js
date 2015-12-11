@@ -58,7 +58,7 @@
         archive.pipe(output);
 
         archive
-          .directory('data', false, { date: new Date() })
+          .directory(__dirname + '/data', false, { date: new Date() })
           .finalize();
       }
     }
