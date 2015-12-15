@@ -294,6 +294,32 @@
             fullSalutation += patient.lastname;
           }
 
+          var treatmentDate = "";
+
+          treatments.forEach(function(treatment, index) {
+            var date = moment(treatment.date).format('DD.MM.YYYY');
+
+            if(treatments.length == 1)
+              treatmentDate += date;
+            else {
+              switch(index) {
+                case treatments.length - 2:
+                  treatmentDate += date + " und ";
+                  break;
+                case treatments.length - 1:
+                  treatmentDate += date;
+                  break;
+                default:
+                  treatmentDate += date + ", ";
+                  break;
+              }
+            }
+          });
+
+          var treatmentsString = treatments.length > 1 ?
+            "durchgeführten osteopathischen Behandlungen" :
+            "durchgeführte osteopathische Behandlung";
+
           // set the templateVariables
           doc.setData({
             "salutation": patient.salutation || " ",
@@ -304,7 +330,8 @@
             "city": patient.city,
             "full_salutation": fullSalutation,
             "invoice_amount": amount,
-            "treatment_date": moment(treatments[0].date).format('DD.MM.YYYY'),
+            "treatment_date": treatmentDate,
+            "treatments": treatmentsString,
             "date": moment().format('DD.MM.YYYY')
           });
 

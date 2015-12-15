@@ -196,13 +196,19 @@
    * Controller for treatment dialog.
    *
    * @param $scope
+   * @param $mdDialog
    * @param patientService
    * @constructor
    */
-  function DialogCtrl($scope, patientService) {
+  function DialogCtrl($scope, $mdDialog, patientService) {
 
     $scope.showNewForm = false;
     $scope.newTreatment = {};
+
+    $scope.closeTreatments = function() {
+      $scope.newTreatment = {};
+      $mdDialog.cancel();
+    };
 
     $scope.triggerTreatmentForm = function() {
       $scope.showNewForm = !$scope.showNewForm;

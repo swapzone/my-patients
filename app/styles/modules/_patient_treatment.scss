@@ -1,6 +1,19 @@
 %patient-treatment {
   padding: 1em;
 
+  .close-button {
+    display: block;
+    padding-left: 0.5em;
+    float: right;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:active {
+      border: none;
+      outline: none;
+    }
+  }
+
   .header {
     min-width: 25em;
     margin-bottom: 0.1em;
