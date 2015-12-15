@@ -94,6 +94,7 @@ gulp.task('custom-scripts', function(done) {
         standalone: true
       })),
     gulp.src([
+        'app/scripts/**/_*.js',
         'app/scripts/**/*.js'
       ])
     )
