@@ -1,11 +1,12 @@
 // Module to control application life.
 var app = require('app');
 
+// set production flag to true before release
+var production = true;
+
 // Module to create native browser window.
 var BrowserWindow = require('browser-window');
 var mainWindow = null;
-
-var liveReload = require('electron-livereload');
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -24,7 +25,10 @@ app.on('ready', function () {
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
-  liveReload.client(mainWindow);
+  if(!production) {
+    var liveReload = require('electron-livereload');
+    liveReload.client(mainWindow);
+  }
 
   // Open the devtools.
   // mainWindow.openDevTools();

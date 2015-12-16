@@ -1,6 +1,7 @@
 {
-  "name": "MyElectron",
-  "version": "0.0.1",
+  "name": "Meine Patienten",
+  "description": "Die minimale Patientenverwaltung für kleine bis mittelgroße Arztpraxen.",
+  "version": "0.9.0",
   "main": "main.js",
   "dependencies": {
     "archiver": "^0.20.0",

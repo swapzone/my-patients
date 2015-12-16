@@ -5,6 +5,7 @@ var Q           = require('q'),
 
 var projectDir;
 var buildDir;
+var outputDir;
 var manifest;
 var appDir;
 
@@ -16,11 +17,14 @@ function init() {
   // Build directory is our destination where the final build will be placed
   buildDir = projectDir.dir('./dist', { empty: true });
 
+  // installer output directory
+  outputDir = buildDir.dir('./installer');
+
   // angular application directory
   appDir = projectDir.dir('./build/app');
 
   // angular application's package.json file
-  manifest = appDir.read('./manifest.json', 'json');
+  manifest = appDir.read('./package.json', 'json');
 
   return Q();
 }
@@ -70,6 +74,7 @@ function updateResources() {
 
   // Copy your icon from resource folder into build folder.
   projectDir.copy('resources/windows/icon.ico', buildDir.path('icon.ico'));
+  projectDir.copy('resources/windows/setup.ico', buildDir.path('setup.ico'));
 
   // Replace Electron icon for your own.
   var rcedit = require('rcedit');
@@ -122,9 +127,9 @@ function createInstaller() {
     productName: manifest.name,
     version: manifest.version,
     src: buildDir.path(),
-    dest: projectDir.path(),
+    dest: buildDir.path('installer/setup.exe'),
     icon: buildDir.path('icon.ico'),
-    setupIcon: buildDir.path('icon.ico'),
+    setupIcon: buildDir.path('setup.ico'),
     banner: projectDir.path('resources/windows/banner.bmp')
   });
 
@@ -136,8 +141,8 @@ function createInstaller() {
 
   nsis.on('error', function (err) {
     if (err.message === 'spawn makensis ENOENT') {
-      throw "Can't find NSIS. Are you sure you've installed it and"
-      + " added to PATH environment variable?";
+      throw Error("Can't find NSIS. Are you sure you've installed it and"
+      + " added to PATH environment variable?");
     } else {
       throw err;
     }
