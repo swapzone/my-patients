@@ -157,7 +157,7 @@ gulp.task('live', ['preprocess', 'scripts', 'styles'], function() {
 });
 
 gulp.task('debug', function () {
-  childProcess.spawn(electron, ['--debug=5858', './app'], { stdio: 'inherit' });
+  childProcess.spawn(electron, ['--debug=5858', '.'], { stdio: 'inherit' });
 });
 
 gulp.task('release', ['preprocess', 'scripts', 'styles'], function () {
