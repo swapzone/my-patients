@@ -42,7 +42,7 @@ var plumberErrorHandler = {
 };
 
 var liveServer = liveReload.server({
-  applicationPath: 'build/app'
+  applicationPath: 'build'
 });
 
 /****************************************************************************************************/
@@ -55,19 +55,19 @@ gulp.task('styles', function() {
   gulp.src([
       'bower_components/font-awesome/fonts/*'
     ])
-    .pipe(gulp.dest("build/app/styles/fonts"));
+    .pipe(gulp.dest("build/styles/fonts"));
 
   gulp.src([
       'bower_components/angular-material/angular-material.css'
     ])
     .pipe(concat('vendor.css'))
-    .pipe(gulp.dest('build/app/styles'));
+    .pipe(gulp.dest('build/styles'));
 
   return sass('app/styles/**/*.scss', { style: 'expanded' })
     .on('error', function (err) {
       console.error('Error during scss compilation: ', err.message);
     })
-    .pipe(gulp.dest('build/app/styles'));
+    .pipe(gulp.dest('build/styles'));
 });
 
 // process and compile all script files
@@ -84,7 +84,7 @@ gulp.task('vendor-scripts', function() {
     ])
     .pipe(plumber(plumberErrorHandler))
     .pipe(concat('vendor.js'))
-    .pipe(gulp.dest('build/app/scripts'));
+    .pipe(gulp.dest('build/scripts'));
 });
 
 gulp.task('custom-scripts', function(done) {
@@ -105,7 +105,7 @@ gulp.task('custom-scripts', function(done) {
     .pipe(plumber(plumberErrorHandler))
     .pipe(concat('script.js'))
     .pipe(ngAnnotate())
-    .pipe(gulp.dest('build/app/scripts'));
+    .pipe(gulp.dest('build/scripts'));
 });
 
 gulp.task('scripts', function(done) {
@@ -120,7 +120,7 @@ gulp.task('preprocess', function() {
       'app/main.js',
       'app/package.json'
     ])
-    .pipe(gulp.dest('build/app/'));
+    .pipe(gulp.dest('build/'));
 
   // copy data sources
   gulp
@@ -129,14 +129,14 @@ gulp.task('preprocess', function() {
       'data/patients.db',
       'data/settings.db'
     ])
-    .pipe(gulp.dest('build/app/data/'));
+    .pipe(gulp.dest('build/data/'));
 
   // copy node modules
   gulp
     .src([
       'app/node_modules/**/*'
     ])
-    .pipe(gulp.dest('build/app/node_modules/'));
+    .pipe(gulp.dest('build/node_modules/'));
 });
 
 gulp.task('electron-reload', function() {
@@ -153,7 +153,7 @@ gulp.task('live', ['preprocess', 'scripts', 'styles'], function() {
   gulp.watch(['app/*.html'], ['preprocess']);
   gulp.watch(['app/styles/**/*.scss'], ['styles']);
   gulp.watch(['app/templates/**/*.html', 'app/scripts/**/*.js'], ['scripts']);
-  gulp.watch(['build/app/scripts/*.js', 'build/app/styles/*.css', 'build/app/index.html', 'build/app/main.js'], ['electron-reload'])
+  gulp.watch(['build/scripts/*.js', 'build/styles/*.css', 'build/index.html', 'build/main.js'], ['electron-reload'])
 });
 
 gulp.task('debug', function () {
