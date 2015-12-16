@@ -18,6 +18,10 @@ var concat 		    = require('gulp-concat'),
     gulpSequence  = require('gulp-sequence'),
     liveReload    = require('electron-livereload');
 
+// get the deployment dependencies
+var releaseWindows = require('./build.windows'),
+    os             = require('os');
+
 /****************************************************************************************************/
 /* SETTING UP DEVELOPMENT ENVIRONMENT                                                               */
 /****************************************************************************************************/
@@ -154,4 +158,18 @@ gulp.task('live', ['preprocess', 'scripts', 'styles'], function() {
 
 gulp.task('debug', function () {
   childProcess.spawn(electron, ['--debug=5858', './app'], { stdio: 'inherit' });
+});
+
+gulp.task('release', ['preprocess', 'scripts', 'styles'], function () {
+
+  switch (os.platform()) {
+    case 'darwin':
+      // execute build.osx.js
+      break;
+    case 'linux':
+      //execute build.linux.js
+      break;
+    case 'win32':
+      return releaseWindows.build();
+  }
 });

@@ -37,5 +37,11 @@
   "bugs": {
     "url": "https://github.com/clowdfish/my-patients/issues"
   },
-  "homepage": "https://github.com/clowdfish/my-patients#readme"
+  "homepage": "https://github.com/clowdfish/my-patients#readme",
+  "dependencies": {
+    "asar": "^0.8.3",
+    "fs-jetpack": "^0.7.0",
+    "q": "^1.4.1",
+    "rcedit": "^0.3.0"
+  }
 }
