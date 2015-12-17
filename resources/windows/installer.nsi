@@ -7,6 +7,7 @@
 
 !define dest "{{dest}}"
 !define src "{{src}}"
+!define data "{{data}}"
 !define name "{{name}}"
 !define productName "{{productName}}"
 !define version "{{version}}"
@@ -84,6 +85,17 @@ Section "Install"
 		WriteRegStr HKLM "${uninstkey}" "DisplayName" "${productName}"
 		WriteRegStr HKLM "${uninstkey}" "DisplayIcon" '"$INSTDIR\icon.ico"'
 		WriteRegStr HKLM "${uninstkey}" "UninstallString" '"$INSTDIR\${uninstaller}"'
+
+        ${If} ${FileExists} "$LOCALAPPDATA\${name}"
+            ; do nothing to avoid overwriting user data
+        ${Else}
+            ; Create AppData directory
+            CreateDirectory "$LOCALAPPDATA\${name}"
+
+            ; Include all app data from /build/data directory
+            SetOutPath "$LOCALAPPDATA\${name}"
+            File /r "${data}\*"
+        ${EndIf}
 
 		; Remove all application files copied by previous installation
 		RMDir /r "$INSTDIR"

@@ -4,10 +4,10 @@
   "description": "A minimal patient administration solution for small doctor's offices.",
   "main": "main.js",
   "devDependencies": {
-    "asar": "^0.8.3",
+    "asar": "*",
     "coffee-script": "^1.10.0",
     "electron-livereload": "git@github.com:swapzone/electron-livereload.git",
-    "electron-prebuilt": "^0.35.2",
+    "electron-prebuilt": "*",
     "fs-jetpack": "^0.7.0",
     "gulp": "^3.9.0",
     "gulp-angular-templatecache": "^1.8.0",
@@ -37,11 +37,5 @@
   "bugs": {
     "url": "https://github.com/clowdfish/my-patients/issues"
   },
-  "homepage": "https://github.com/clowdfish/my-patients#readme",
-  "dependencies": {
-    "asar": "^0.8.3",
-    "fs-jetpack": "^0.7.0",
-    "q": "^1.4.1",
-    "rcedit": "^0.3.0"
-  }
+  "homepage": "https://github.com/clowdfish/my-patients#readme"
 }

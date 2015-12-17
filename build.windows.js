@@ -21,7 +21,7 @@ function init() {
   outputDir = buildDir.dir('./installer');
 
   // angular application directory
-  appDir = projectDir.dir('./build/app');
+  appDir = projectDir.dir('./build');
 
   // angular application's package.json file
   manifest = appDir.read('./package.json', 'json');
@@ -46,6 +46,15 @@ function copyElectron() {
  */
 function cleanupRuntime() {
   return buildDir.removeAsync('resources/default_app');
+}
+
+/**
+ *
+ *
+ * @returns {*}
+ */
+function copyApp() {
+  return appDir.copyAsync('./', buildDir.path('resources/app'), { overwrite: true });
 }
 
 /**
@@ -128,6 +137,7 @@ function createInstaller() {
     version: manifest.version,
     src: buildDir.path(),
     dest: buildDir.path('installer/setup.exe'),
+    data: appDir.path('data'),
     icon: buildDir.path('icon.ico'),
     setupIcon: buildDir.path('setup.ico'),
     banner: projectDir.path('resources/windows/banner.bmp')
@@ -164,7 +174,8 @@ function build() {
   return init()
     .then(copyElectron)
     .then(cleanupRuntime)
-    .then(createAsar)
+    .then(copyApp)
+    //.then(createAsar)
     .then(updateResources)
     .then(rename)
     .then(createInstaller);

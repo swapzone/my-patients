@@ -2,7 +2,7 @@
 var app = require('app');
 
 // set production flag to true before release
-var production = false;
+var production = true;
 
 // Module to create native browser window.
 var BrowserWindow = require('browser-window');
