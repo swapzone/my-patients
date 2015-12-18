@@ -16,6 +16,7 @@
     $scope.dueInvoices = [];
 
     $scope.createInvoice = createInvoice;
+    $scope.setInvoiceDue = setInvoiceDue;
 
     $scope.showOpenInvoices = function() {
       $scope.selectedInvoices = $scope.openInvoices;
@@ -151,12 +152,7 @@
           patient: patient,
           amount: amount,
           treatments: openLiabilities.map(function(openLiability) {
-            return {
-              id: openLiability.id,
-              date: openLiability.date,
-              amount: openLiability.amount,
-              description: openLiability.description
-            };
+            return openLiability;
           })
         });
       }
@@ -172,12 +168,7 @@
           patient: patient,
           amount: amount,
           treatments: dueLiabilities.map(function(dueLiability) {
-            return {
-              id: dueLiability.id,
-              date: dueLiability.date,
-              amount: dueLiability.amount,
-              description: dueLiability.description
-            };
+            return dueLiability;
           })
         });
       }
@@ -477,6 +468,29 @@
           downloadLink[0].click();
         }
       }
+    }
+
+    /**
+     *
+     *
+     * @param invoice
+     */
+    function setInvoiceDue(invoice) {
+
+      // set postpone to false
+      var oldTreatmentDoc = JSON.parse(JSON.stringify(invoice.treatments[invoice.treatments.length - 1]));
+      var newTreatmentDoc = JSON.parse(JSON.stringify(invoice.treatments[invoice.treatments.length - 1]));
+      newTreatmentDoc.postpone = false;
+
+      patientService.updateTreatment(invoice.patient._id, oldTreatmentDoc, newTreatmentDoc)
+        .then(function() {
+          console.log("Treatment set to due.");
+
+          $scope.dueInvoices.push(invoice);
+          $scope.openInvoices.splice($scope.openInvoices.indexOf(invoice), 1);
+        }, function(err) {
+          console.error(err);
+        });
     }
   }
 })();

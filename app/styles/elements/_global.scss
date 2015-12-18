@@ -6,7 +6,7 @@ body {
   min-width: 480px;
   min-height: 100%;
   position: relative;
-  padding-bottom: 3.3em;
+  padding-bottom: $footer-height;
 }
 
 .header {
@@ -20,7 +20,7 @@ body {
   background-color: #ddd;
   padding: 0.5em 1em;
   height: $footer-height;
-  margin-top: -$footer-height;
+  margin-top: -$footer-height + 0.1em;
 }
 
 .sub-header {

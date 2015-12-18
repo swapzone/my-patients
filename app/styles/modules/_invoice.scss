@@ -21,6 +21,24 @@
 
   .table-cell {
     padding: 0.3em 1em 0.5em 0.3em;
+
+    ul {
+      list-style: none;
+      display: table;
+
+      li {
+        display: table-row;
+      }
+
+      span {
+        display: table-cell;
+        padding: 0 1em 0.1em 0.2em;
+
+        &:first-of-type {
+          font-weight: bold;
+        }
+      }
+    }
   }
 
   .new-dialog {

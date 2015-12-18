@@ -23,7 +23,8 @@
       create: createPatient,
       delete: deletePatient,
       update: updatePatient,
-      addTreatment: addTreatment
+      addTreatment: addTreatment,
+      updateTreatment: updateTreatment
     };
 
     function getPatients() {
@@ -71,6 +72,22 @@
         if (err) deferred.reject(err);
 
         deferred.resolve();
+      });
+
+      return deferred.promise;
+    }
+
+    function updateTreatment(patientId, oldTreatment, newTreatment) {
+      var deferred = $q.defer();
+
+      patientStore.update({ _id: patientId }, { $pull: { treatments: oldTreatment } }, { }, function (err) {
+        if (err) deferred.reject(err);
+
+        patientStore.update({ _id: patientId }, { $push: { treatments: newTreatment } }, { }, function (err) {
+          if (err) deferred.reject(err);
+
+          deferred.resolve();
+        });
       });
 
       return deferred.promise;
