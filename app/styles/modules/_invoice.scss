@@ -39,6 +39,29 @@
     .invoice-templates-empty {
       margin-top: 1em;
     }
+
+    .invoice-positions-empty {
+      margin-top: 1em;
+    }
+
+    .invoice-positions-list {
+      list-style: none;
+      display: table;
+      margin-top: 0.8em;
+
+      li {
+        display: table-row;
+      }
+
+      span {
+        display: table-cell;
+        padding: 0.1em 1em 0.1em 0.2em;
+
+        &:first-of-type {
+          font-weight: bold;
+        }
+      }
+    }
   }
 
   .dialog-action-bar {

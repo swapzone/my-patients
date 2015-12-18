@@ -246,8 +246,7 @@
                   };
 
                   $scope.chooseTemplate = function(template) {
-                    templateFile = template.file;
-                    $mdDialog.hide();
+                    $mdDialog.hide(template.file);
                   };
                 },
                 scope: $scope.$new(),
@@ -260,14 +259,17 @@
               };
 
               $mdDialog.show(dialogObject)
-                .finally(function() {
-                  dialogObject = undefined;
+                .then(function (templateFile) {
 
-                  if(templateFile)
+                  if(templateFile) {
                     createDocumentWithTemplate(templateFile);
+                  }
                   else {
                     console.warn("Could not select template file.");
                   }
+                }, function () {})
+                .finally(function() {
+                  dialogObject = undefined;
                 });
             }
             else {
@@ -288,10 +290,10 @@
           var fullSalutation = " ";
 
           if(patient.salutation) {
-            fullSalutation = patient.salutation == "Herr" ?
-              "Sehr geehrter Herr " : "Sehr geehrte Frau ";
+            fullSalutation = patient.salutation.indexOf("Herr") == 0 ?
+              "Sehr geehrter " : "Sehr geehrte ";
 
-            fullSalutation += patient.lastname;
+            fullSalutation += patient.salutation + " " + patient.lastname;
           }
 
           var treatmentDate = "";
@@ -343,9 +345,52 @@
 
           fs.writeFileSync(path + "/invoice.docx", buffer);
 
-          var date = moment().format('DDMMYYYY');
-          var documentName = "Rechnung_" + patient.lastname + "_" + date + ".docx";
+          var date = moment().format('YYYY');
+          var documentName = patient.lastname + ", " + patient.firstname + " " + date + "-XXX.docx";
           triggerDownload(path + "/invoice.docx", documentName);
+
+
+          // show invoice details in popup before writing data to database
+          var dialogObject = {
+            controller: function(items) {
+              $scope.treatments = items;
+
+              $scope.close = function() {
+                $mdDialog.hide();
+              };
+
+              $scope.abort = function(template) {
+                $mdDialog.cancel();
+              };
+            },
+            scope: $scope.$new(),
+            templateUrl: 'app/templates/invoice/positions.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false,
+            locals: {
+              items: treatments
+            }
+          };
+
+          $mdDialog.show(dialogObject)
+            .then(function () {
+              createInvoiceRecord(patient, treatments, invoice);
+            }, function () {
+              console.log("Abort.");
+            })
+            .finally(function() {
+              dialogObject = undefined;
+            });
+        }
+
+        /**
+         *
+         *
+         * @param patient
+         * @param treatments
+         * @param invoice
+         */
+        function createInvoiceRecord(patient, treatments, invoice) {
 
           // write invoice data set to database
           invoiceService.createInvoice({
@@ -391,7 +436,7 @@
               defaultTemplate = template;
             }
             else {
-              switch (template.hasOwnProperty("type")) {
+              switch (template["type"]) {
                 case INSURANCE_TYPE.state:
                   stateTemplate = template;
                   break;
@@ -415,7 +460,7 @@
               return privateTemplate || defaultTemplate;
               break;
             default:
-              return defaultTemplate;
+              return null;
           }
         }
 

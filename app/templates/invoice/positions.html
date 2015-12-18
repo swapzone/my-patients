@@ -1,0 +1,26 @@
+<div class="invoice">
+  <div class="new-dialog">
+    <h1 class="header">Rechnungspositionen</h1>
+
+    <div ng-if="!treatments || treatments.length == 0" class="invoice-positions-empty">
+      Es können keine Rechnungspositionen angezeigt werden.
+    </div>
+
+    <div ng-if="treatments && treatments.length">
+      <span>
+        Folgende Rechnungspositionen sind Bestandteil der gerade erstellten Rechnung:
+      </span>
+
+      <ul class="invoice-positions-list">
+        <li ng-repeat="treatment in treatments track by treatment.id">
+          <span>{{ treatment.date | dateFilter }}</span><span>{{ treatment.description }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dialog-action-bar">
+      <a ng-click="abort()" class="button">Abbrechen</a>
+      <a ng-click="close()" class="button">Schließen</a>
+    </div>
+  </div>
+</div>
