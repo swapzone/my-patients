@@ -7,6 +7,10 @@ body {
   min-height: 100%;
   position: relative;
   padding-bottom: $footer-height;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .header {
