@@ -2,7 +2,7 @@
   <h1 class="header">Neuer Patient</h1>
 
   <div class="clearfix">
-    <div class="patient-personal patient-abstract">
+    <span class="patient-personal patient-abstract">
       <h2 class="sub-header">Persönliche Daten</h2>
 
       <label for="salutation">Anrede</label>
@@ -35,17 +35,24 @@
         </span>
       </span>
 
-      <span class="table two">
+      <span class="table three">
         <span class="table-row">
           <span class="table-cell">
             <label for="phone">Telefon</label>
-            <input type="number" id="phone" name="phone" ng-model="newPatient.phone" />
+            <input type="text" id="phone" name="phone" ng-model="newPatient.phone" />
+          </span>
+          <span class="table-cell">
+            <label for="office">Geschäftlich</label>
+            <input type="text" id="office" name="office" ng-model="newPatient.office" />
           </span>
           <span class="table-cell">
             <label for="mobile">Mobil</label>
-            <input type="number" id="mobile" name="mobile" ng-model="newPatient.mobile" />
+            <input type="text" id="mobile" name="mobile" ng-model="newPatient.mobile" />
           </span>
         </span>
+      </span>
+
+      <span class="table two">
         <span class="table-row">
           <span class="table-cell">
             <label for="birthday">Geburtstag</label>
@@ -82,7 +89,7 @@
 
       <label for="notes">Sonstige Bemerkungen</label>
       <textarea rows="4" id="notes" name="notes" ng-model="newPatient.notes"></textarea>
-    </div>
+    </span>
 
     <div class="patient-attributes patient-abstract">
       <label for="attention">Vermerk</label>
