@@ -4,9 +4,9 @@
 
   angular
     .module('app.settings')
-    .controller('settingsCtrl', ['$scope', 'settingsService', '$mdDialog', SettingsController]);
+    .controller('settingsCtrl', ['$rootScope', '$scope', 'settingsService', '$mdDialog', SettingsController]);
 
-  function SettingsController($scope, settingsService, $mdDialog) {
+  function SettingsController($rootScope, $scope, settingsService, $mdDialog) {
     $scope.users = [];
     $scope.invoiceTemplates = [];
     $scope.settings = {}; // used to store languages
@@ -18,6 +18,10 @@
 
     loadUsers();
     loadInvoiceTemplates();
+
+    $rootScope.$on('userChanged', function() {
+      loadUsers();
+    });
 
     function loadUsers() {
       settingsService.getUsers()
@@ -54,7 +58,8 @@
               settingsService.addUser($scope.newUser).then(function () {
                 $scope.newUser = {};
                 $scope.error = "";
-                loadUsers();
+
+                $rootScope.$broadcast('userChanged', {});
                 $mdDialog.cancel();
               }, function(err) {
                 $scope.error("Der neue Nutzer konnte nicht hinzugefügt werden. Ist der Nutzername schon vergeben?");
@@ -97,7 +102,8 @@
 
       $mdDialog.show(confirm).then(function() {
         settingsService.deleteUser(id);
-        loadUsers();
+
+        $rootScope.$broadcast('userChanged', {});
       }, function() { });
     }
 

@@ -8,9 +8,9 @@
 
   angular
     .module('app.invoice')
-    .controller('invoiceCtrl', ['$rootScope', '$scope', 'INSURANCE_TYPE', 'INVOICE_TYPE', 'patientService', 'settingsService', 'invoiceService', '$state', '$mdDialog', InvoiceController]);
+    .controller('invoiceCtrl', ['$scope', 'INSURANCE_TYPE', 'INVOICE_TYPE', 'patientService', 'settingsService', 'invoiceService', '$state', '$mdDialog', InvoiceController]);
 
-  function InvoiceController($rootScope, $scope, INSURANCE_TYPE, INVOICE_TYPE, patientService, settingsService, invoiceService, $state, $mdDialog) {
+  function InvoiceController($scope, INSURANCE_TYPE, INVOICE_TYPE, patientService, settingsService, invoiceService, $state, $mdDialog) {
     $scope.selectedInvoices = undefined;
 
     $scope.openInvoices = [];
@@ -27,7 +27,7 @@
     $scope.setReceiptRead = setReceiptRead;
 
     $scope.$on('$stateChangeStart',
-      function(event, toState, toParams, fromState, fromParams) {
+      function(event, toState) {
         if(toState.name.indexOf('invoice')== 0) {
           $scope.invoiceType = toState.data.invoiceType;
           selectInvoiceType(toState.data.invoiceType);
@@ -130,7 +130,7 @@
         .then(function(invoices) {
 
           $scope.oldInvoices = invoices.filter(function(invoice) {
-            return invoice.doctor == $scope.doctor;
+            return invoice.doctor == doctor;
           }).map(function(invoice) {
               var patient = getPatientforInvoice(invoice.patientId);
 
