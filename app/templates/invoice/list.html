@@ -1,15 +1,18 @@
 <div class="invoice container">
   <h1 class="header">Abrechnungen</h1>
 
-  <a ng-click="showOpenInvoices()"
-     ng-class="{ active: openInvoicesActive }"
+  <a ui-sref="invoice.list.open"
+     ui-sref-active="active"
      class="button">Offene Rechnungen</a>
-  <a ng-click="showDueInvoices()"
-     ng-class="{ active: dueInvoicesActive }"
+  <a ui-sref="invoice.list.due"
+     ui-sref-active="active"
      class="button">Fällige Rechnungen</a>
-  <a ng-click="showOpenReceipts()"
-     ng-class="{ active: openReceiptsActive }"
+  <a ui-sref="invoice.list.receipt"
+     ui-sref-active="active"
      class="button">Offene Quittungen</a>
+  <a ui-sref="invoice.list.old"
+     ui-sref-active="active"
+     class="button">Alte Rechnungen</a>
 
   <div class="invoice-instructions">
     <span ng-if="selectedInvoices == undefined">
@@ -17,26 +20,29 @@
     </span>
 
     <span ng-if="selectedInvoices && selectedInvoices.length == 0">
-      <span ng-if="openInvoicesActive">
+      <span ng-if="invoiceType == INVOICE_TYPE.open">
          Es sind keine offenen Rechnungen vorhanden.
       </span>
-      <span ng-if="dueInvoicesActive">
+      <span ng-if="invoiceType == INVOICE_TYPE.due">
         Schade, es sind keine Rechnungen fällig.
       </span>
-       <span ng-if="openReceiptsActive">
+      <span ng-if="invoiceType == INVOICE_TYPE.receipt">
          Es sind keine offenen Quittungen vorhanden.
+      </span>
+      <span ng-if="invoiceType == INVOICE_TYPE.old">
+         Es sind keine alten Rechnungen vorhanden.
       </span>
     </span>
   </div>
 
-  <ul class="invoice-list table" ng-if="selectedInvoices.length">
-    <li class="table-row" ng-repeat="invoice in selectedInvoices">
+  <ul class="invoice-list table" ng-if="selectedInvoices.length && invoiceType != INVOICE_TYPE.old">
+  <li class="table-row" ng-repeat="invoice in selectedInvoices">
       <span class="table-cell">
         <a ng-click="goToPatientDetails(invoice.patient._id)">
           {{ invoice.patient.firstname }} {{ invoice.patient.lastname }}</a>
         <span style="margin-left: 0.6em;">({{ invoice.patient.birthday }})</span>
       </span>
-      <span class="table-cell">{{ invoice.amount }} Euro</span>
+    <span class="table-cell">{{ invoice.amount }} Euro</span>
       <span class="table-cell">
         <ul>
           <li ng-repeat="treatment in invoice.treatments track by treatment.id">
@@ -45,14 +51,32 @@
           </li>
         </ul>
       </span>
-      <span class="table-cell" ng-if="dueInvoicesActive">
+      <span class="table-cell" ng-if="invoiceType == INVOICE_TYPE.due">
         <a ng-click="createInvoice(invoice)">Rechnung erstellen</a>
       </span>
-      <span class="table-cell" ng-if="openInvoicesActive">
+      <span class="table-cell" ng-if="invoiceType == INVOICE_TYPE.open">
         <a ng-click="setInvoiceDue(invoice)">Als fällig markieren</a>
       </span>
-       <span class="table-cell" ng-if="openReceiptsActive">
+      <span class="table-cell" ng-if="invoiceType == INVOICE_TYPE.receipt">
         <a ng-click="setReceiptRead(invoice)">entfernen</a>
+      </span>
+    </li>
+  </ul>
+
+  <ul class="invoice-list table" ng-if="selectedInvoices.length && invoiceType == INVOICE_TYPE.old">
+    <li class="table-row" ng-repeat="invoice in selectedInvoices">
+      <span class="table-cell">
+        {{ invoice.date | dateFilter }}
+        <a ng-click="goToPatientDetails(invoice.patient._id)"
+           style="margin-left: 1em;">
+          {{ invoice.patient.firstname }} {{ invoice.patient.lastname }}</a>
+      </span>
+      <span class="table-cell">
+
+      </span>
+      <span class="table-cell">{{ invoice.amount }} Euro</span>
+      <span class="table-cell" ng-if="invoiceType == INVOICE_TYPE.old">
+        <a ng-click="createInvoice(invoice)">Neu erstellen</a>
       </span>
     </li>
   </ul>

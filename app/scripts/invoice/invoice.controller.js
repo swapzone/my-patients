@@ -8,42 +8,31 @@
 
   angular
     .module('app.invoice')
-    .controller('invoiceCtrl', ['$scope', 'INSURANCE_TYPE', 'patientService', 'settingsService', 'invoiceService', '$state', '$stateParams', '$mdDialog', InvoiceController]);
+    .controller('invoiceCtrl', ['$rootScope', '$scope', 'INSURANCE_TYPE', 'INVOICE_TYPE', 'patientService', 'settingsService', 'invoiceService', '$state', '$mdDialog', InvoiceController]);
 
-  function InvoiceController($scope, INSURANCE_TYPE, patientService, settingsService, invoiceService, $state, $stateParams, $mdDialog) {
+  function InvoiceController($rootScope, $scope, INSURANCE_TYPE, INVOICE_TYPE, patientService, settingsService, invoiceService, $state, $mdDialog) {
     $scope.selectedInvoices = undefined;
 
     $scope.openInvoices = [];
     $scope.dueInvoices = [];
+    $scope.oldInvoices = [];
     $scope.openReceipts = [];
+
+    $scope.invoiceType = $state.current.data.invoiceType;
+
+    $scope.INVOICE_TYPE = INVOICE_TYPE;
 
     $scope.createInvoice = createInvoice;
     $scope.setInvoiceDue = setInvoiceDue;
     $scope.setReceiptRead = setReceiptRead;
 
-    $scope.showOpenInvoices = function() {
-      $scope.selectedInvoices = $scope.openInvoices;
-
-      $scope.openInvoicesActive = true;
-      $scope.dueInvoicesActive = false;
-      $scope.openReceiptsActive = false;
-    };
-
-    $scope.showDueInvoices = function() {
-      $scope.selectedInvoices = $scope.dueInvoices;
-
-      $scope.openInvoicesActive = false;
-      $scope.dueInvoicesActive = true;
-      $scope.openReceiptsActive = false;
-    };
-
-    $scope.showOpenReceipts = function() {
-      $scope.selectedInvoices = $scope.openReceipts;
-
-      $scope.openInvoicesActive = false;
-      $scope.dueInvoicesActive = false;
-      $scope.openReceiptsActive = true;
-    };
+    $scope.$on('$stateChangeStart',
+      function(event, toState, toParams, fromState, fromParams) {
+        if(toState.name.indexOf('invoice')== 0) {
+          $scope.invoiceType = toState.data.invoiceType;
+          selectInvoiceType(toState.data.invoiceType);
+        }
+      });
 
     init("Victoria Ott");
 
@@ -55,30 +44,10 @@
           extractInvoices(patients, doctor);
           extractReceipts(patients, doctor);
 
-          if($stateParams.parameter) {
-            if($stateParams.parameter == "due") {
-              $scope.selectedInvoices = $scope.dueInvoices;
-
-              $scope.openInvoicesActive = false;
-              $scope.dueInvoicesActive = true;
-              $scope.openReceiptsActive = false;
-            }
-            else if($stateParams.parameter == "open") {
-              $scope.selectedInvoices = $scope.openInvoices;
-
-              $scope.openInvoicesActive = true;
-              $scope.dueInvoicesActive = false;
-              $scope.openReceiptsActive = false;
-
-            }
-            else if($stateParams.parameter == "receipts") {
-              $scope.selectedInvoices = $scope.openReceipts;
-
-              $scope.openInvoicesActive = false;
-              $scope.dueInvoicesActive = false;
-              $scope.openReceiptsActive = true;
-            }
-          }
+          extractOldInvoices(patients, doctor)
+            .then(function() {
+              selectInvoiceType($state.current.data.invoiceType);
+            });
         }, function(err) {
           console.error("Could not initialize invoice module: ");
           console.error(err);
@@ -90,25 +59,36 @@
       patientService.getPatientById(patientId)
         .then(function(patient) {
 
-          var parameter;
-
-          if($scope.dueInvoicesActive)
-            parameter = "due";
-          else if($scope.openInvoicesActive)
-            parameter = "open";
-          else if($scope.openReceiptsActive)
-            parameter = "receipts";
-
           $state.go("patient.details", {
             active: angular.toJson(patient),
-            previousState: "invoice.list",
-            parameter: parameter
+            previousState: $state.current.name
           });
         }, function(err) {
           console.error("Could not get patient by id: ");
           console.error(err);
         });
     };
+
+    /**
+     *
+     *
+     * @param invoiceType
+     */
+    function selectInvoiceType(invoiceType) {
+
+      if(invoiceType == INVOICE_TYPE.due) {
+        $scope.selectedInvoices = $scope.dueInvoices;
+      }
+      else if(invoiceType == INVOICE_TYPE.open) {
+        $scope.selectedInvoices = $scope.openInvoices;
+      }
+      else if(invoiceType == INVOICE_TYPE.receipt) {
+        $scope.selectedInvoices = $scope.openReceipts;
+      }
+      else if(invoiceType == INVOICE_TYPE.old) {
+        $scope.selectedInvoices = $scope.oldInvoices;
+      }
+    }
 
     /**
      *
@@ -136,6 +116,44 @@
           });
         }
       });
+    }
+
+    /**
+     *
+     *
+     * @param patients
+     * @param doctor
+     */
+    function extractOldInvoices(patients, doctor) {
+
+      return invoiceService.getInvoices()
+        .then(function(invoices) {
+
+          $scope.oldInvoices = invoices.filter(function(invoice) {
+            return invoice.doctor == $scope.doctor;
+          }).map(function(invoice) {
+              var patient = getPatientforInvoice(invoice.patientId);
+
+              return {
+                date: invoice.date,
+                patient: patient,
+                amount: invoice.invoice_amount,
+                treatments: getTreatmentsForPatient(patient, invoice.invoice_positions)
+              }
+            }).sort(treatmentSort);
+        });
+
+      function getPatientforInvoice(patientId) {
+        return patients.filter(function(patient) {
+          return patient._id == patientId;
+        })[0];
+      }
+
+      function getTreatmentsForPatient(patient, positions) {
+        return patient.treatments.filter(function(treatment) {
+          return positions.indexOf(treatment.id) != -1;
+        }).sort(treatmentSort);
+      }
     }
 
     /**

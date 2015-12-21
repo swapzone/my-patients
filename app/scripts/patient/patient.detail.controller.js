@@ -62,12 +62,7 @@
     function goBack() {
 
       if($stateParams.previousState) {
-        var parameters = {};
-
-        if($stateParams.parameter)
-          parameters.parameter = $stateParams.parameter;
-
-        $state.go($stateParams.previousState, parameters);
+        $state.go($stateParams.previousState, {});
       }
       else
         $state.go('patient.list', {});
