@@ -7,6 +7,9 @@
   <a ng-click="showDueInvoices()"
      ng-class="{ active: dueInvoicesActive }"
      class="button">Fällige Rechnungen</a>
+  <a ng-click="showOpenReceipts()"
+     ng-class="{ active: openReceiptsActive }"
+     class="button">Offene Quittungen</a>
 
   <div class="invoice-instructions">
     <span ng-if="selectedInvoices == undefined">
@@ -19,6 +22,9 @@
       </span>
       <span ng-if="dueInvoicesActive">
         Schade, es sind keine Rechnungen fällig.
+      </span>
+       <span ng-if="openReceiptsActive">
+         Es sind keine offenen Quittungen vorhanden.
       </span>
     </span>
   </div>
@@ -44,6 +50,9 @@
       </span>
       <span class="table-cell" ng-if="openInvoicesActive">
         <a ng-click="setInvoiceDue(invoice)">Als fällig markieren</a>
+      </span>
+       <span class="table-cell" ng-if="openReceiptsActive">
+        <a ng-click="setReceiptRead(invoice)">entfernen</a>
       </span>
     </li>
   </ul>

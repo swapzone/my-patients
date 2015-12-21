@@ -12,17 +12,21 @@
 
   function InvoiceController($scope, INSURANCE_TYPE, patientService, settingsService, invoiceService, $state, $stateParams, $mdDialog) {
     $scope.selectedInvoices = undefined;
+
     $scope.openInvoices = [];
     $scope.dueInvoices = [];
+    $scope.openReceipts = [];
 
     $scope.createInvoice = createInvoice;
     $scope.setInvoiceDue = setInvoiceDue;
+    $scope.setReceiptRead = setReceiptRead;
 
     $scope.showOpenInvoices = function() {
       $scope.selectedInvoices = $scope.openInvoices;
 
       $scope.openInvoicesActive = true;
       $scope.dueInvoicesActive = false;
+      $scope.openReceiptsActive = false;
     };
 
     $scope.showDueInvoices = function() {
@@ -30,6 +34,15 @@
 
       $scope.openInvoicesActive = false;
       $scope.dueInvoicesActive = true;
+      $scope.openReceiptsActive = false;
+    };
+
+    $scope.showOpenReceipts = function() {
+      $scope.selectedInvoices = $scope.openReceipts;
+
+      $scope.openInvoicesActive = false;
+      $scope.dueInvoicesActive = false;
+      $scope.openReceiptsActive = true;
     };
 
     init("Victoria Ott");
@@ -40,6 +53,7 @@
       patientService.getPatients()
         .then(function(patients) {
           extractInvoices(patients, doctor);
+          extractReceipts(patients, doctor);
 
           if($stateParams.parameter) {
             if($stateParams.parameter == "due") {
@@ -47,12 +61,22 @@
 
               $scope.openInvoicesActive = false;
               $scope.dueInvoicesActive = true;
+              $scope.openReceiptsActive = false;
             }
-            else {
+            else if($stateParams.parameter == "open") {
               $scope.selectedInvoices = $scope.openInvoices;
 
               $scope.openInvoicesActive = true;
               $scope.dueInvoicesActive = false;
+              $scope.openReceiptsActive = false;
+
+            }
+            else if($stateParams.parameter == "receipts") {
+              $scope.selectedInvoices = $scope.openReceipts;
+
+              $scope.openInvoicesActive = false;
+              $scope.dueInvoicesActive = false;
+              $scope.openReceiptsActive = true;
             }
           }
         }, function(err) {
@@ -66,16 +90,53 @@
       patientService.getPatientById(patientId)
         .then(function(patient) {
 
+          var parameter;
+
+          if($scope.dueInvoicesActive)
+            parameter = "due";
+          else if($scope.openInvoicesActive)
+            parameter = "open";
+          else if($scope.openReceiptsActive)
+            parameter = "receipts";
+
           $state.go("patient.details", {
             active: angular.toJson(patient),
             previousState: "invoice.list",
-            parameter: $scope.dueInvoicesActive ? "due" : "open"
+            parameter: parameter
           });
         }, function(err) {
           console.error("Could not get patient by id: ");
           console.error(err);
         });
     };
+
+    /**
+     *
+     *
+     * @param patients
+     * @param doctor
+     */
+    function extractReceipts(patients, doctor) {
+
+      patients.forEach(function(patient) {
+
+        if (patient.treatments) {
+          $scope.openReceipts = patient.treatments.filter(function (treatment) {
+            var isTreatedByDoctor = !doctor || doctor && treatment['doctor'] == doctor;
+            var isOfTypeReceipt = treatment['payment'] == "Quittung";
+            var receiptIsOpen = !treatment['closed'];
+
+            return isTreatedByDoctor && isOfTypeReceipt && receiptIsOpen;
+          }).map(function (treatment) {
+            return {
+              patient: patient,
+              amount: treatment.amount,
+              treatments: [treatment]
+            };
+          });
+        }
+      });
+    }
 
     /**
      *
@@ -479,6 +540,8 @@
 
       // set postpone to false
       var oldTreatmentDoc = JSON.parse(JSON.stringify(invoice.treatments[invoice.treatments.length - 1]));
+      oldTreatmentDoc.date = new Date(oldTreatmentDoc.date); // Date object must be re-initialized
+
       var newTreatmentDoc = JSON.parse(JSON.stringify(invoice.treatments[invoice.treatments.length - 1]));
       newTreatmentDoc.postpone = false;
 
@@ -488,6 +551,30 @@
 
           $scope.dueInvoices.push(invoice);
           $scope.openInvoices.splice($scope.openInvoices.indexOf(invoice), 1);
+        }, function(err) {
+          console.error(err);
+        });
+    }
+
+    /**
+     *
+     *
+     * @param invoice
+     */
+    function setReceiptRead(invoice) {
+
+      // set closed to true
+      var oldTreatmentDoc = JSON.parse(JSON.stringify(invoice.treatments[0]));
+      oldTreatmentDoc.date = new Date(oldTreatmentDoc.date); // Date object must be re-initialized
+
+      var newTreatmentDoc = JSON.parse(JSON.stringify(invoice.treatments[0]));
+      newTreatmentDoc.closed = true;
+
+      patientService.updateTreatment(invoice.patient._id, oldTreatmentDoc, newTreatmentDoc)
+        .then(function() {
+          console.log("Treatment set to closed.");
+
+          $scope.openReceipts.splice($scope.openReceipts.indexOf(invoice), 1);
         }, function(err) {
           console.error(err);
         });
