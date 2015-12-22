@@ -91,9 +91,10 @@ Section "Install"
         ${Else}
             ; Create AppData directory
             CreateDirectory "$LOCALAPPDATA\${name}"
+            CreateDirectory "$LOCALAPPDATA\${name}\data"
 
             ; Include all app data from /build/data directory
-            SetOutPath "$LOCALAPPDATA\${name}"
+            SetOutPath "$LOCALAPPDATA\${name}\data"
             File /r "${data}\*"
         ${EndIf}
 
