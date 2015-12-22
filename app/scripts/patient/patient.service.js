@@ -6,12 +6,13 @@
 
   angular
     .module('app.patient')
-    .service('patientService', ['$rootScope', '$q', PatientService]);
+    .service('patientService', ['$rootScope', '$q', 'storageService', PatientService]);
 
-  function PatientService($rootScope, $q) {
+  function PatientService($rootScope, $q, storageService) {
 
     // Create NeDB database containers
-    var patientStore = new Datastore({ filename: __dirname + '/data/patients.db', autoload: true });
+    //var patientStore = new Datastore({ filename: __dirname + '/data/patients.db', autoload: true });
+    var patientStore = new Datastore({ filename: storageService.getUserDataDirectory('patients.db'), autoload: true });
 
     $rootScope.$on('backupRestored', function () {
       patientStore.loadDatabase();

@@ -6,12 +6,13 @@
 
   angular
     .module('app.invoice')
-    .service('invoiceService', ['$rootScope', '$q', InvoiceService]);
+    .service('invoiceService', ['$rootScope', '$q', 'storageService', InvoiceService]);
 
-  function InvoiceService($rootScope, $q) {
+  function InvoiceService($rootScope, $q, storageService) {
 
     // Create NeDB database containers
-    var invoiceStore = new Datastore({ filename: __dirname + '/data/accounting.db', autoload: true });
+    //var invoiceStore = new Datastore({ filename: __dirname + '/data/accounting.db', autoload: true });
+    var invoiceStore = new Datastore({ filename: storageService.getUserDataDirectory('accounting.db'), autoload: true });
 
     $rootScope.$on('backupRestored', function () {
       invoiceStore.loadDatabase();

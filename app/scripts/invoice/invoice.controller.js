@@ -428,10 +428,6 @@
               $scope.close = function() {
                 $mdDialog.hide();
               };
-
-              $scope.abort = function(template) {
-                $mdDialog.cancel();
-              };
             },
             scope: $scope.$new(),
             templateUrl: 'app/templates/invoice/positions.html',
@@ -445,9 +441,7 @@
           $mdDialog.show(dialogObject)
             .then(function () {
               createInvoiceRecord(patient, treatments, invoice);
-            }, function () {
-              console.log("Abort.");
-            })
+            }, function () { })
             .finally(function() {
               dialogObject = undefined;
             });
@@ -565,8 +559,6 @@
 
       patientService.updateTreatment(invoice.patient._id, oldTreatmentDoc, newTreatmentDoc)
         .then(function() {
-          console.log("Treatment set to due.");
-
           $scope.dueInvoices.push(invoice);
           $scope.openInvoices.splice($scope.openInvoices.indexOf(invoice), 1);
         }, function(err) {
@@ -590,8 +582,6 @@
 
       patientService.updateTreatment(invoice.patient._id, oldTreatmentDoc, newTreatmentDoc)
         .then(function() {
-          console.log("Treatment set to closed.");
-
           $scope.openReceipts.splice($scope.openReceipts.indexOf(invoice), 1);
         }, function(err) {
           console.error(err);

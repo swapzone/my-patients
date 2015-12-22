@@ -1,8 +1,9 @@
 // Module to control application life.
 var app = require('app');
+var Menu = require('menu');
 
 // set production flag to true before release
-var production = false;
+var production = true;
 
 // Module to create native browser window.
 var BrowserWindow = require('browser-window');
@@ -20,7 +21,11 @@ app.on('window-all-closed', function () {
 app.on('ready', function () {
 
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600 });
+  mainWindow = new BrowserWindow({ width: 960, height: 800 });
+
+  // Create menu
+  var menu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menu);
 
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/index.html');
@@ -31,7 +36,8 @@ app.on('ready', function () {
   }
 
   // Open the devtools.
-  // mainWindow.openDevTools();
+  //mainWindow.openDevTools();
+
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
 
@@ -41,3 +47,78 @@ app.on('ready', function () {
     mainWindow = null;
   });
 });
+
+var menuTemplate = [
+  {
+    label: 'Programm',
+    submenu: [
+      {
+        label: 'Vollbild',
+        accelerator: (function() {
+          if (process.platform == 'darwin')
+            return 'Ctrl+Command+F';
+          else
+            return 'F11';
+        })(),
+        click: function(item, focusedWindow) {
+          if (focusedWindow)
+            focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
+        }
+      },
+      {
+        label: 'Neu laden',
+        accelerator: 'CmdOrCtrl+R',
+        click: function(item, focusedWindow) {
+          if (focusedWindow)
+            focusedWindow.reload();
+        }
+      },
+      {
+        label: 'Beenden',
+        accelerator: 'Ctrl+W',
+        role: 'close'
+      }
+    ]
+  },
+  {
+    label: 'Hilfe',
+    role: 'help',
+    submenu: [
+      {
+        label: 'Mehr erfahren',
+        click: function() { require('electron').shell.openExternal('http://electron.atom.io') }
+      }
+    ]
+  }
+];
+
+if (process.platform == 'darwin') {
+  var name = require('electron').app.getName();
+  template.unshift({
+    label: name,
+    submenu: [
+      {
+        label: 'Über  ' + name,
+        role: 'about'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Services',
+        role: 'services',
+        submenu: []
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Beenden',
+        accelerator: 'Command+Q',
+        click: function() {
+          app.quit();
+        }
+      }
+    ]
+  });
+}

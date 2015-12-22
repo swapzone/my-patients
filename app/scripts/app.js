@@ -1,8 +1,6 @@
 (function () {
   'use strict';
 
-  var fs = require('fs');
-
   angular
     .module('app', [
       'app.common',
@@ -20,8 +18,7 @@
       'private': 'Privat',
       'privatePlus': 'Privat Zusatz'
     })
-    .config(routeConfig)
-    .config(cleanFiles);
+    .config(routeConfig);
 
   function routeConfig($stateProvider, $urlRouterProvider) {
 
@@ -35,20 +32,12 @@
   }
 
   /**
-   *
-   */
-  function cleanFiles() {
-    // clean up old backup files
-    var path = __dirname + '/temp';
-    deleteFolderRecursive(path);
-  }
-
-  /**
-   *
+   * Deprecated. Temp files are now stored in system's temp directory.
    *
    * @param path
    */
   function deleteFolderRecursive(path) {
+    /*
     if( fs.existsSync(path) ) {
       fs.readdirSync(path).forEach(function(file,index){
         var curPath = path + "/" + file;
@@ -60,5 +49,6 @@
       });
       fs.rmdirSync(path);
     }
+    */
   }
 })();

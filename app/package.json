@@ -1,7 +1,7 @@
-{
+﻿{
   "name": "Meine Patienten",
   "description": "Die minimale Patientenverwaltung für kleine bis mittelgroße Arztpraxen.",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "main": "main.js",
   "dependencies": {
     "archiver": "^0.20.0",
@@ -9,6 +9,6 @@
     "moment": "^2.10.6",
     "nedb": "^1.5.0",
     "shortid": "^2.2.4",
-    "unzip": "^0.1.11"
+    "yauzl": "^2.3.1"
   }
 }
