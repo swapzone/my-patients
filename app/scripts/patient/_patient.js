@@ -21,7 +21,7 @@
     });
 
     $stateProvider.state('patient.details', {
-      url: 'patient/details?:active:previousState:parameter',
+      url: 'patient/details?:active:previousState',
       templateUrl: 'app/templates/patient/detail.html',
       controller: 'patientDetailCtrl'
     });

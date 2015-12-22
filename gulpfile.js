@@ -128,6 +128,7 @@ gulp.task('preprocess', function() {
       'data/accounting.db',
       'data/patients.db',
       'data/settings.db',
+      'data/postals.db',
       'data/postals.txt'
     ])
     .pipe(gulp.dest('build/data/'));

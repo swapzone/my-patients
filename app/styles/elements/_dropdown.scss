@@ -1,0 +1,29 @@
+.dropdown {
+  position: absolute;
+  background-color: $c-white;
+  list-style: none;
+  z-index: 10;
+  margin-top: -0.5em;
+  padding: 0.3em;
+  left: 0.2em;
+  width: 20em;
+
+  -webkit-box-shadow: 1px 0 10px 2px rgba(0,0,0,0.2);
+  box-shadow: 1px 0 10px 2px rgba(0,0,0,0.2);
+
+  li {
+    cursor: pointer;
+
+    &:hover {
+      background-color: $c-background;
+    }
+
+    &.active {
+      background-color: $c-background;
+    }
+
+    &:focus {
+      outline: none; // for OS X
+    }
+  }
+}

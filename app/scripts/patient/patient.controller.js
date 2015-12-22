@@ -4,9 +4,9 @@
 
   angular
     .module('app.patient')
-    .controller('patientCtrl', ['$rootScope', '$scope', 'patientService', '$mdDialog', '$state', '$sessionStorage', '$location', '$anchorScroll', PatientController]);
+    .controller('patientCtrl', ['$rootScope', '$scope', 'patientService', 'postalService', '$mdDialog', '$state', '$sessionStorage', '$location', '$anchorScroll', PatientController]);
 
-  function PatientController($rootScope, $scope, patientService, $mdDialog, $state, $sessionStorage, $location, $anchorScroll) {
+  function PatientController($rootScope, $scope, patientService, postalService, $mdDialog, $state, $sessionStorage, $location, $anchorScroll) {
     var _this = this;
 
     if($sessionStorage['newPatient'])
@@ -52,6 +52,8 @@
 
     $scope.setAnchor = setAnchor;
     $scope.scrollTo = scrollTo;
+
+    $scope.postalService = postalService;
 
     // Load initial data
     getAllPatients();

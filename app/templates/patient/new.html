@@ -24,9 +24,13 @@
 
       <span class="table two">
         <span class="table-row">
-          <span class="table-cell" style="width: 9em;">
+          <span class="table-cell" style="width: 9em; position: relative;">
             <label for="postal">PLZ</label>
-            <input type="text" id="postal" name="postal" ng-model="newPatient.postal" />
+            <auto-complete
+              id="postal"
+              model="newPatient"
+              retrieve-suggestions-fn="postalService.getSuggestions(input)">
+            </auto-complete>
           </span>
           <span class="table-cell">
             <label for="city">Ort</label>

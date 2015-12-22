@@ -6,9 +6,9 @@
 
   angular
     .module('app.patient')
-    .controller('patientDetailCtrl', ['$rootScope', '$scope', 'patientService', '$mdDialog', '$state', '$stateParams', PatientDetailController]);
+    .controller('patientDetailCtrl', ['$rootScope', '$scope', 'patientService', '$mdDialog', '$state', '$stateParams', 'postalService', PatientDetailController]);
 
-  function PatientDetailController($rootScope, $scope, patientService, $mdDialog, $state, $stateParams) {
+  function PatientDetailController($rootScope, $scope, patientService, $mdDialog, $state, $stateParams, postalService) {
 
     $scope.users = $rootScope.users;
     $scope.activePatient = $stateParams.active ? JSON.parse($stateParams.active) : null;
@@ -25,6 +25,8 @@
     $scope.triggerPersonalDetails = function() {
       $scope.showPersonalDetails = !$scope.showPersonalDetails;
     };
+
+    $scope.postalService = postalService;
 
     /**
      *
