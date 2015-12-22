@@ -52,7 +52,6 @@
               break;
             case 27: // escape
               scope.suggestions = [];
-              //event.target.blur();
               break;
             case 38: // arrow up
               if(scope.suggestions && scope.suggestions.length) {

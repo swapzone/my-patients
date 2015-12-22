@@ -8,14 +8,14 @@
 
   angular
     .module('app.common')
-    .service('postalService', ['$q', PostalService]);
+    .service('postalService', ['$q', 'storageService', PostalService]);
 
-  function PostalService($q) {
+  function PostalService($q, storageService) {
     var self = this;
     self.initialized = false;
 
     // Create NeDB database containers
-    var postalStore = new Datastore({ filename: __dirname + '/data/postals.db', autoload: true });
+    var postalStore = new Datastore({ filename: storageService.getUserDataDirectory('postals.db'), autoload: true });
 
     return {
       getSuggestions: getSuggestions
@@ -25,10 +25,13 @@
      *
      *
      * @param input
+     * @param limit
      * @returns {*}
      */
-    function getSuggestions(input) {
+    function getSuggestions(input, limit) {
       var deferred = $q.defer();
+
+      if(!limit) limit = 10;
 
       init().then(function() {
         var regex = new RegExp('^' + input);
@@ -36,7 +39,7 @@
         postalStore.find({ code: { $regex: regex }}, function (err, docs) {
           if (err) deferred.reject(err);
 
-          deferred.resolve(docs);
+          deferred.resolve(docs.slice(0, limit));
         });
       });
 
