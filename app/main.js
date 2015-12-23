@@ -3,7 +3,7 @@ var app = require('app');
 var Menu = require('menu');
 
 // set production flag to true before release
-var production = true;
+var production = false;
 
 // Module to create native browser window.
 var BrowserWindow = require('browser-window');
@@ -36,7 +36,7 @@ app.on('ready', function () {
   }
 
   // Open the devtools.
-  //mainWindow.openDevTools();
+  mainWindow.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {

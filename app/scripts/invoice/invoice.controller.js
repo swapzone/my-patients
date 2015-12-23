@@ -101,7 +101,7 @@
       patients.forEach(function(patient) {
 
         if (patient.treatments) {
-          $scope.openReceipts = patient.treatments.filter(function (treatment) {
+          var treatmentsWithReceipt = patient.treatments.filter(function (treatment) {
             var isTreatedByDoctor = !doctor || doctor && treatment['doctor'] == doctor;
             var isOfTypeReceipt = treatment['payment'] == "Quittung";
             var receiptIsOpen = !treatment['closed'];
@@ -114,6 +114,8 @@
               treatments: [treatment]
             };
           });
+
+          $scope.openReceipts = $scope.openReceipts.concat(treatmentsWithReceipt);
         }
       });
     }

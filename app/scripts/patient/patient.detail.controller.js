@@ -214,7 +214,7 @@
 
     $scope.saveTreatment = function() {
 
-      if ($scope.newTreatment['date'] && $scope.newTreatment['payment'] && $scope.newTreatment['description']) {
+      if ($scope.newTreatment['date'] && $scope.newTreatment['payment'] && $scope.newTreatment['description'] && $scope.newTreatment['doctor']) {
 
         var dateFormat = /\d{2}.\d{2}.\d{4}/;
         var complexDateFormat = /\d{4}-\d{2}-\d{2}/;
@@ -245,7 +245,7 @@
         }
       }
       else {
-        $scope.error = "Datum, Bezahlung und die Behandlung müssen ausgefüllt sein!";
+        $scope.error = "Es müssen alle Felder ausgefüllt sein!";
       }
     };
   }
