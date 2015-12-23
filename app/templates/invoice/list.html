@@ -76,7 +76,7 @@
       </span>
       <span class="table-cell">{{ invoice.amount }} Euro</span>
       <span class="table-cell" ng-if="invoiceType == INVOICE_TYPE.old">
-        <a ng-click="createInvoice(invoice)">Neu erstellen</a>
+        <a ng-click="createInvoice(invoice, true)">Neu erstellen</a>
       </span>
     </li>
   </ul>

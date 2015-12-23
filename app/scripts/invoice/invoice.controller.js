@@ -42,6 +42,9 @@
 
       patientService.getPatients()
         .then(function(patients) {
+          // reference needed for reloading of old invoices
+          $scope.patients = patients;
+
           extractInvoices(patients, doctor);
           extractReceipts(patients, doctor);
 
@@ -272,7 +275,7 @@
      *
      * @param invoice
      */
-    function createInvoice(invoice) {
+    function createInvoice(invoice, old) {
 
       var patient = invoice.patient;
       var amount = invoice.amount;
@@ -302,7 +305,7 @@
 
             var templateFile;
             if (patient.insurance) {
-              var template = getSuitableTemplate(templates, patient);
+              var template = getSuitableTemplate(templates, patient.insurance.type);
               if (template && template.hasOwnProperty("file")) {
                 templateFile = template.file;
               }
@@ -421,7 +424,6 @@
           var documentName = patient.lastname + ", " + patient.firstname + " " + date + "-XXX.docx";
           triggerDownload(path + "/invoice.docx", documentName);
 
-
           // show invoice details in popup before writing data to database
           var dialogObject = {
             controller: function(items) {
@@ -442,7 +444,10 @@
 
           $mdDialog.show(dialogObject)
             .then(function () {
-              createInvoiceRecord(patient, treatments, invoice);
+              if(!old) {
+                createInvoiceRecord(patient, treatments, invoice);
+                extractOldInvoices($scope.patients, $scope.doctor);
+              }
             }, function () { })
             .finally(function() {
               dialogObject = undefined;
@@ -496,6 +501,8 @@
           var defaultTemplate = null;
           var stateTemplate = null;
           var privateTemplate = null;
+
+          console.log(insuranceType);
 
           templates.forEach(function(template) {
             if(!template.hasOwnProperty("type")) {
