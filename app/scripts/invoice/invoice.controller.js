@@ -3,6 +3,7 @@
   'use strict';
 
   var fs = require('fs');
+  var os = require('os');
   var Docxtemplater = require('docxtemplater');
   var moment = require('moment');
 
@@ -277,8 +278,8 @@
       var amount = invoice.amount;
       var treatments = invoice.treatments;
 
-      // create temp directory if not available
-      var path = __dirname + '/temp';
+      // create temp directory if not available TODO
+      var path = os.tmpdir();
       fs.exists(path, function(exists) {
         if (!exists) {
           fs.mkdir(path, function() {
@@ -357,7 +358,6 @@
         function createDocumentWithTemplate(templateContent) {
           // load the docx file as a binary
           var doc = new Docxtemplater(templateContent);
-
 
           var fullSalutation = " ";
 
