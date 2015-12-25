@@ -11,7 +11,6 @@
   function PatientService($rootScope, $q, storageService) {
 
     // Create NeDB database containers
-    //var patientStore = new Datastore({ filename: __dirname + '/data/patients.db', autoload: true });
     var patientStore = new Datastore({ filename: storageService.getUserDataDirectory('patients.db'), autoload: true });
 
     $rootScope.$on('backupRestored', function () {
@@ -91,7 +90,7 @@
 
         patient.treatments.splice(patient.treatments.indexOf(oldTreatment));
         patient.treatments.push(newTreatment);
-        
+
         patientStore.update({ _id: patientId }, patient, { }, function (err) {
           if (err) {
             deferred.reject(err);
