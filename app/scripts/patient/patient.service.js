@@ -81,12 +81,18 @@
     function updateTreatment(patientId, oldTreatment, newTreatment) {
       var deferred = $q.defer();
 
-      patientStore.update({ _id: patientId }, { $pull: { treatments: oldTreatment } }, { }, function (err) {
+      patientStore.find({ _id: patientId}, function (err, docs) {
         if (err) {
           deferred.reject(err);
           return;
         }
-        patientStore.update({ _id: patientId }, { $push: { treatments: newTreatment } }, { }, function (err) {
+
+        var patient = docs[0];
+
+        patient.treatments.splice(patient.treatments.indexOf(oldTreatment));
+        patient.treatments.push(newTreatment);
+        
+        patientStore.update({ _id: patientId }, patient, { }, function (err) {
           if (err) {
             deferred.reject(err);
             return;

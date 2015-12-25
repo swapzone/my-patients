@@ -281,7 +281,7 @@
       var amount = invoice.amount;
       var treatments = invoice.treatments;
 
-      // create temp directory if not available TODO
+      // create temp directory if not available
       var path = os.tmpdir();
       fs.exists(path, function(exists) {
         if (!exists) {
@@ -502,8 +502,6 @@
           var stateTemplate = null;
           var privateTemplate = null;
 
-          console.log(insuranceType);
-
           templates.forEach(function(template) {
             if(!template.hasOwnProperty("type")) {
               defaultTemplate = template;
@@ -587,6 +585,7 @@
       oldTreatmentDoc.date = new Date(oldTreatmentDoc.date); // Date object must be re-initialized
 
       var newTreatmentDoc = JSON.parse(JSON.stringify(invoice.treatments[0]));
+      newTreatmentDoc.date = new Date(newTreatmentDoc.date); // Date object must be re-initialized
       newTreatmentDoc.closed = true;
 
       patientService.updateTreatment(invoice.patient._id, oldTreatmentDoc, newTreatmentDoc)
