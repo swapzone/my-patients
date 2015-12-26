@@ -17,7 +17,11 @@
     </nav>
   </div>
 
-  <ul class="patient-list">
+  <div ng-if="patients.length == 0">
+    Keine Patienten vorhanden.
+  </div>
+
+  <ul class="patient-list" ng-if="patients.length > 0">
     <li class="table-row"
         ng-repeat="patient in patients track by patient._id"
         ng-click="selectPatient($index)"
