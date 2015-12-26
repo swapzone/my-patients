@@ -36,7 +36,7 @@ app.on('ready', function () {
   }
 
   // Open the devtools.
-  //mainWindow.openDevTools();
+  // mainWindow.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {

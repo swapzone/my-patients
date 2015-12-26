@@ -156,6 +156,8 @@
       }
 
       function getTreatmentsForPatient(patient, positions) {
+        if(!patient || !patient.hasOwnProperty('treatments')) return [];
+
         return patient.treatments.filter(function(treatment) {
           return positions.indexOf(treatment.id) != -1;
         }).sort(treatmentSort);
@@ -562,6 +564,7 @@
       oldTreatmentDoc.date = new Date(oldTreatmentDoc.date); // Date object must be re-initialized
 
       var newTreatmentDoc = JSON.parse(JSON.stringify(invoice.treatments[invoice.treatments.length - 1]));
+      newTreatmentDoc.date = new Date(newTreatmentDoc.date); // Date object must be re-initialized
       newTreatmentDoc.postpone = false;
 
       patientService.updateTreatment(invoice.patient._id, oldTreatmentDoc, newTreatmentDoc)
