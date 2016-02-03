@@ -119,7 +119,7 @@
             };
           });
 
-          $scope.openReceipts = $scope.openReceipts.concat(treatmentsWithReceipt);
+          $scope.openReceipts = $scope.openReceipts.concat(treatmentsWithReceipt).sort(receiptSort);
         }
       });
     }
@@ -146,7 +146,7 @@
                 amount: invoice.invoice_amount,
                 treatments: getTreatmentsForPatient(patient, invoice.invoice_positions)
               }
-            }).sort(treatmentSort);
+            }).sort(invoiceSort);
         });
 
       function getPatientforInvoice(patientId) {
@@ -198,6 +198,9 @@
           }
         }
       });
+
+      $scope.openInvoices.sort(invoiceSort);
+      $scope.dueInvoices.sort(invoiceSort);
     }
 
     /**
@@ -259,6 +262,40 @@
           })
         });
       }
+    }
+
+    /**
+     *
+     *
+     * @param a
+     * @param b
+     * @returns {boolean}
+     */
+    function invoiceSort(a, b) {
+      var aDate = a.date ? new Date(a.date) : new Date(a.treatments[0].date);
+      var bDate = b.date ? new Date(b.date) : new Date(b.treatments[0].date);
+
+      if(aDate == bDate)
+        return a.patient.last_name > b.patient.last_name;
+
+      return aDate > bDate;
+    }
+
+    /**
+     *
+     *
+     * @param a
+     * @param b
+     * @returns {boolean}
+       */
+    function receiptSort(a, b) {
+      var aDate = new Date(a.treatments[0].date);
+      var bDate = new Date(b.treatments[0].date);
+
+      if(aDate == bDate)
+        return a.patient.last_name > b.patient.last_name;
+
+      return aDate > bDate;
     }
 
     /**
