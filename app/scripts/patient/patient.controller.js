@@ -197,11 +197,9 @@
      */
     function getAllPatients() {
       patientService.getPatients().then(function (patients) {
-        patients.sort(function(a, b) {
+        $scope.patients = patients.sort(function(a, b) {
           return a['lastname'] > b['lastname'];
         });
-
-        $scope.patients = patients;
       });
     }
 

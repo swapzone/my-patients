@@ -276,7 +276,7 @@
       var bDate = b.date ? new Date(b.date) : new Date(b.treatments[0].date);
 
       if(aDate == bDate)
-        return a.patient.last_name > b.patient.last_name;
+        return a.patient.lastname > b.patient.lastname;
 
       return aDate > bDate;
     }
@@ -293,7 +293,7 @@
       var bDate = new Date(b.treatments[0].date);
 
       if(aDate == bDate)
-        return a.patient.last_name > b.patient.last_name;
+        return a.patient.lastname > b.patient.lastname;
 
       return aDate > bDate;
     }
