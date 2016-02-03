@@ -20,11 +20,14 @@ body {
 }
 
 .footer {
-  position: relative;
+  position: fixed;
   background-color: #ddd;
   padding: 0.5em 1em;
   height: $footer-height;
-  margin-top: -$footer-height + 0.1em;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top: 1px solid $c-border;
 }
 
 .sub-header {
