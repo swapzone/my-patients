@@ -1,5 +1,7 @@
 %patient-treatment {
   padding: 1em;
+  position: relative;
+  z-index: 10000;
 
   .close-button {
     display: block;
@@ -48,6 +50,11 @@
         color: transparent;
       }
     }
+  }
+
+  .button {
+    margin-bottom: 1.5em;
+    margin-top: 0.5em;
   }
 
   input, select {

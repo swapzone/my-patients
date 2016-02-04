@@ -3,6 +3,7 @@
   'use strict';
 
   var shortId = require("shortid");
+  var moment = require("moment");
 
   angular
     .module('app.patient')
@@ -12,6 +13,9 @@
 
     $scope.users = $rootScope.users;
     $scope.activePatient = $stateParams.active ? JSON.parse($stateParams.active) : null;
+    $scope.activePatient.treatments.sort(function(a, b) {
+      return a.date > b.date;
+    });
 
     $scope.showPersonalDetails = false;
 
@@ -199,46 +203,73 @@
    */
   function DialogCtrl($scope, $mdDialog, patientService) {
 
-    $scope.showNewForm = false;
-    $scope.newTreatment = {};
+    $scope.showForm = false;
+    $scope.treatmentObject = {};
+    $scope.originalTreatmentObject = {};
 
     $scope.closeTreatments = function() {
-      $scope.newTreatment = {};
+      $scope.treatmentObject = {};
       $mdDialog.cancel();
     };
 
-    $scope.triggerTreatmentForm = function() {
-      $scope.showNewForm = !$scope.showNewForm;
+    $scope.triggerTreatmentForm = function(treatment) {
+      $scope.showForm = !$scope.showForm;
       $scope.error = null;
+
+      $scope.treatmentObject = {};
+
+      if(treatment) {
+        $scope.treatmentObject = treatment;
+        $scope.originalTreatmentObject = JSON.parse(JSON.stringify(treatment));
+
+        var dateObject = moment(treatment.date);
+        $scope.treatmentObject.date = dateObject.format("DD.MM.YYYY");
+      }
     };
 
     $scope.saveTreatment = function() {
 
-      if ($scope.newTreatment['date'] && $scope.newTreatment['payment'] && $scope.newTreatment['description'] && $scope.newTreatment['doctor']) {
+      if ($scope.treatmentObject['date'] && $scope.treatmentObject['payment'] && $scope.treatmentObject['description'] && $scope.treatmentObject['doctor']) {
 
         var dateFormat = /\d{2}.\d{2}.\d{4}/;
         var complexDateFormat = /\d{4}-\d{2}-\d{2}/;
 
-        if(dateFormat.test($scope.newTreatment['date']) || complexDateFormat.test($scope.newTreatment['date'].substring(0, 10))) {
+        if(dateFormat.test($scope.treatmentObject['date']) || complexDateFormat.test($scope.treatmentObject['date'].substring(0, 10))) {
 
-          if(dateFormat.test($scope.newTreatment['date'])) {
-            var dateArray = $scope.newTreatment.date.split('.');
-            $scope.newTreatment.date = new Date(dateArray[2], dateArray[1] - 1, dateArray[0]);
+          if(dateFormat.test($scope.treatmentObject['date'])) {
+            var dateArray = $scope.treatmentObject.date.split('.');
+            $scope.treatmentObject.date = new Date(dateArray[2], dateArray[1] - 1, dateArray[0]);
           }
 
-          $scope.newTreatment.id = shortId.generate();
+          if(!$scope.treatmentObject.hasOwnProperty('id')) {
+            // new treatment
+            $scope.treatmentObject.id = shortId.generate();
 
-          patientService.addTreatment($scope.activePatient._id, $scope.newTreatment).then(function () {
-            if (!$scope.activePatient.treatments)
-              $scope.activePatient.treatments = [];
+            patientService.addTreatment($scope.activePatient._id, $scope.treatmentObject)
+              .then(function () {
+                if (!$scope.activePatient.treatments)
+                  $scope.activePatient.treatments = [];
 
-            $scope.activePatient.treatments.push($scope.newTreatment);
-            $scope.newTreatment = {};
-            $scope.triggerTreatmentForm();
-          }, function(err) {
-            console.error("Could not add treatment: ");
-            console.error(err);
-          });
+                $scope.activePatient.treatments.push($scope.treatmentObject);
+                $scope.treatmentObject = {};
+                $scope.triggerTreatmentForm();
+              }, function(err) {
+                console.error("Could not add treatment: ");
+                console.error(err);
+              });
+          }
+          else {
+            // update treatment
+            patientService.updateTreatment($scope.activePatient._id, $scope.originalTreatmentObject, $scope.treatmentObject)
+              .then(function () {
+                $scope.treatmentObject = {};
+                $scope.originalTreatmentObject = {};
+                $scope.triggerTreatmentForm();
+              }, function(err) {
+                console.error("Could not update treatment: ");
+                console.error(err);
+              });
+          }
         }
         else {
           $scope.error = "Das Datumsformat muss tt.mm.jjjj entsprechen!";

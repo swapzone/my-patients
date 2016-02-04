@@ -27,6 +27,11 @@
       updateTreatment: updateTreatment
     };
 
+    /**
+     *
+     *
+     * @returns {*}
+     */
     function getPatients() {
       var deferred = $q.defer();
 
@@ -39,6 +44,12 @@
       return deferred.promise;
     }
 
+    /**
+     *
+     *
+     * @param patientId
+     * @returns {*}
+     */
     function getPatientById(patientId) {
       var deferred = $q.defer();
 
@@ -127,6 +138,12 @@
       return deferred.promise;
     }
 
+    /**
+     *
+     *
+     * @param id
+     * @returns {*}
+     */
     function deletePatient(id) {
       var deferred = $q.defer();
 
@@ -141,6 +158,13 @@
       return deferred.promise;
     }
 
+    /**
+     *
+     *
+     * @param id
+     * @param patientDoc
+     * @returns {*}
+     */
     function updatePatient(id, patientDoc) {
       var deferred = $q.defer();
 
