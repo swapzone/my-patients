@@ -79,6 +79,7 @@ gulp.task('vendor-scripts', function() {
       'bower_components/angular-material/angular-material.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
+      'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/angular-translate/angular-translate.js',
       'bower_components/ngstorage/ngStorage.js'
     ])

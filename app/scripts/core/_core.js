@@ -7,6 +7,7 @@
       'ui.router',
       'ngMaterial',
       'pascalprecht.translate',
+      'ngSanitize',
       'ngStorage'
     ])
     .constant('DATABASE_LOCATION', 'data/');

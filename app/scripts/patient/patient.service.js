@@ -33,6 +33,10 @@
       patientStore.find({}, function (err, docs) {
         if (err) deferred.reject(err);
 
+        docs.forEach(function(doc) {
+          console.log(doc.street);
+        });
+
         deferred.resolve(docs);
       });
 
@@ -51,8 +55,16 @@
       return deferred.promise;
     }
 
+    /**
+     *
+     *
+     * @param patient
+     * @returns {*|promise}
+       */
     function createPatient(patient) {
       var deferred = $q.defer();
+
+      //patient.street = patient.street.replace('/', '\/');
 
       patientStore.insert(patient, function (err, newDoc) {
         // newDoc is the newly inserted document, including its _id
@@ -64,6 +76,13 @@
       return deferred.promise;
     }
 
+    /**
+     *
+     *
+     * @param id
+     * @param treatment
+     * @returns {*|promise}
+       */
     function addTreatment(id, treatment) {
       var deferred = $q.defer();
 
@@ -77,6 +96,14 @@
       return deferred.promise;
     }
 
+    /**
+     *
+     *
+     * @param patientId
+     * @param oldTreatment
+     * @param newTreatment
+     * @returns {*|promise}
+       */
     function updateTreatment(patientId, oldTreatment, newTreatment) {
       var deferred = $q.defer();
 
