@@ -46,7 +46,7 @@
         templateUrl: 'app/templates/patient/treatment.html',
         parent: angular.element(document.body),
         targetEvent: $event,
-        clickOutsideToClose:true
+        clickOutsideToClose: false
       };
 
        $mdDialog.show(dialogObject)
