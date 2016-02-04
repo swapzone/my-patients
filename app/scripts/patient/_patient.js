@@ -7,7 +7,6 @@
 
   function routerConfig($stateProvider) {
 
-
     $stateProvider.state('patient', {
       abstract: true,
       parent: 'index',

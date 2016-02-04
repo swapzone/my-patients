@@ -30,25 +30,4 @@
       template: '<div ui-view></div>'
     });
   }
-
-  /**
-   * Deprecated. Temp files are now stored in system's temp directory.
-   *
-   * @param path
-   */
-  function deleteFolderRecursive(path) {
-    /*
-    if( fs.existsSync(path) ) {
-      fs.readdirSync(path).forEach(function(file,index){
-        var curPath = path + "/" + file;
-        if(fs.lstatSync(curPath).isDirectory()) { // recurse
-          deleteFolderRecursive(curPath);
-        } else { // delete file
-          fs.unlinkSync(curPath);
-        }
-      });
-      fs.rmdirSync(path);
-    }
-    */
-  }
 })();

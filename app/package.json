@@ -1,5 +1,5 @@
 ﻿{
-  "name": "Meine Patienten",
+  "name": "my-patients",
   "description": "Die minimale Patientenverwaltung für kleine bis mittelgroße Arztpraxen.",
   "version": "1.0.0",
   "main": "main.js",

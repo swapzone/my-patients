@@ -94,7 +94,7 @@ var menuTemplate = [
 
 if (process.platform == 'darwin') {
   var name = require('electron').app.getName();
-  template.unshift({
+  menuTemplate.unshift({
     label: name,
     submenu: [
       {

@@ -4,9 +4,8 @@
   "main": "main.js",
   "dependencies": {
     "angular-material": "~0.11.4",
-    "angular-ui-router": "~0.2.15",
+    "angular-ui-router": "~0.2.17",
     "moment": "~2.10.6",
-    "angular-sanitize": "*",
     "angular-translate": "~2.8.1",
     "font-awesome": "~4.5.0",
     "susy": "~2.2.7",

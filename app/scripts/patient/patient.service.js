@@ -33,10 +33,6 @@
       patientStore.find({}, function (err, docs) {
         if (err) deferred.reject(err);
 
-        docs.forEach(function(doc) {
-          console.log(doc.street);
-        });
-
         deferred.resolve(docs);
       });
 
