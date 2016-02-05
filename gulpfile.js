@@ -18,6 +18,9 @@ var concat 		    = require('gulp-concat'),
     gulpSequence  = require('gulp-sequence'),
     liveReload    = require('electron-livereload');
 
+// include karma test runner
+var karma = require('karma');
+
 // get the deployment dependencies
 var releaseWindows = require('./build.windows'),
     os             = require('os');
@@ -72,6 +75,7 @@ gulp.task('styles', function() {
 
 // process and compile all script files
 gulp.task('vendor-scripts', function() {
+
   return gulp.src([
       'bower_components/moment/moment.js',
       'bower_components/angular/angular.js',
@@ -113,7 +117,7 @@ gulp.task('scripts', function(done) {
 });
 
 // copy html files
-gulp.task('preprocess', function() {
+gulp.task('pre-process', function() {
   gulp
     .src([
       'app/index.html',
@@ -149,10 +153,10 @@ gulp.task('electron-reload', function() {
 /* GULP TASK SUITES                                                                                 */
 /****************************************************************************************************/
 
-gulp.task('live', ['preprocess', 'scripts', 'styles'], function() {
+gulp.task('live', ['pre-process', 'scripts', 'styles'], function() {
   liveServer.start();
 
-  gulp.watch(['app/*.html'], ['preprocess']);
+  gulp.watch(['app/*.html'], ['pre-process']);
   gulp.watch(['app/styles/**/*.scss'], ['styles']);
   gulp.watch(['app/templates/**/*.html', 'app/scripts/**/*.js'], ['scripts']);
   gulp.watch(['build/scripts/*.js', 'build/styles/*.css', 'build/index.html', 'build/main.js'], ['electron-reload'])
@@ -162,7 +166,7 @@ gulp.task('debug', function () {
   childProcess.spawn(electron, ['--debug=5858', './build'], { stdio: 'inherit' });
 });
 
-gulp.task('release', ['preprocess', 'scripts', 'styles'], function () {
+gulp.task('release', ['pre-process', 'scripts', 'styles'], function () {
 
   switch (os.platform()) {
     case 'darwin':
@@ -174,4 +178,18 @@ gulp.task('release', ['preprocess', 'scripts', 'styles'], function () {
     case 'win32':
       return releaseWindows.build();
   }
+});
+
+gulp.task('test', function (done) {
+
+  // TODO Read the following for testing Electron.js apps
+  // http://jbavari.github.io/blog/2015/08/12/writing-unit-tests-for-electron-and-angularjs/
+
+  var server = new karma.Server({
+    configFile: __dirname + '/karma.conf.js',
+    autoWatch: false,
+    singleRun: true
+  }, done);
+
+  server.start();
 });
