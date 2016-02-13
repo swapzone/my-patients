@@ -20,7 +20,7 @@
     })
     .config(routeConfig);
 
-  function routeConfig($stateProvider, $urlRouterProvider) {
+  function routeConfig($urlRouterProvider, $stateProvider) {
 
     $urlRouterProvider.when('/', '/patient/list');
     $urlRouterProvider.otherwise('/patient/list');

@@ -269,16 +269,22 @@
      *
      * @param a
      * @param b
-     * @returns {boolean}
+     * @returns
      */
     function invoiceSort(a, b) {
       var aDate = a.date ? new Date(a.date) : new Date(a.treatments[0].date);
       var bDate = b.date ? new Date(b.date) : new Date(b.treatments[0].date);
 
-      if(aDate == bDate)
-        return a.patient.lastname > b.patient.lastname;
+      if(aDate == bDate) {
+        if(a.patient.lastname > b.patient.lastname)
+          return 1;
+        if(a.patient.lastname < b.patient.lastname)
+          return -1;
 
-      return aDate > bDate;
+        return 0;
+      }
+
+      return bDate - aDate;
     }
 
     /**
@@ -286,16 +292,22 @@
      *
      * @param a
      * @param b
-     * @returns {boolean}
-       */
+     * @returns number
+     */
     function receiptSort(a, b) {
       var aDate = new Date(a.treatments[0].date);
       var bDate = new Date(b.treatments[0].date);
 
-      if(aDate == bDate)
-        return a.patient.lastname > b.patient.lastname;
+      if(aDate == bDate) {
+        if(a.patient.lastname > b.patient.lastname)
+          return 1;
+        if(a.patient.lastname < b.patient.lastname)
+          return -1;
 
-      return aDate > bDate;
+        return 0;
+      }
+
+      return bDate - aDate;
     }
 
     /**
@@ -303,10 +315,10 @@
      *
      * @param a
      * @param b
-     * @returns {boolean}
+     * @returns number
      */
     function treatmentSort(a, b) {
-      return new Date(a.date) > new Date(b.date);
+      return new Date(b.date) - new Date(a.date);
     }
 
     /**

@@ -71,8 +71,6 @@
     function createPatient(patient) {
       var deferred = $q.defer();
 
-      //patient.street = patient.street.replace('/', '\/');
-
       patientStore.insert(patient, function (err, newDoc) {
         // newDoc is the newly inserted document, including its _id
         if (err) deferred.reject(err);

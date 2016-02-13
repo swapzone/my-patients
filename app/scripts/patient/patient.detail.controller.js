@@ -14,7 +14,7 @@
     $scope.users = $rootScope.users;
     $scope.activePatient = $stateParams.active ? JSON.parse($stateParams.active) : null;
     $scope.activePatient.treatments.sort(function(a, b) {
-      return a.date > b.date;
+      return b.date - a.date;
     });
 
     $scope.showPersonalDetails = false;

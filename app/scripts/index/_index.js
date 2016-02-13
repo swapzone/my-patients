@@ -5,7 +5,9 @@
     .module('app.index', [])
     .config(routerConfig);
 
-  function routerConfig($stateProvider) {
+  function routerConfig($urlRouterProvider, $stateProvider) {
+
+    $urlRouterProvider.when('/', '/patient/list');
 
     $stateProvider.state('index', {
       url: '/',
