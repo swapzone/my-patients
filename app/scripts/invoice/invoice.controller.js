@@ -275,7 +275,7 @@
       var aDate = a.date ? new Date(a.date) : new Date(a.treatments[0].date);
       var bDate = b.date ? new Date(b.date) : new Date(b.treatments[0].date);
 
-      if(aDate == bDate) {
+      if(aDate.getDate() == bDate.getDate() && aDate.getMonth() == bDate.getMonth() && aDate.getYear() == bDate.getYear()) {
         if(a.patient.lastname > b.patient.lastname)
           return 1;
         if(a.patient.lastname < b.patient.lastname)
@@ -298,7 +298,7 @@
       var aDate = new Date(a.treatments[0].date);
       var bDate = new Date(b.treatments[0].date);
 
-      if(aDate == bDate) {
+      if(aDate.getDate() == bDate.getDate() && aDate.getMonth() == bDate.getMonth() && aDate.getYear() == bDate.getYear()) {
         if(a.patient.lastname > b.patient.lastname)
           return 1;
         if(a.patient.lastname < b.patient.lastname)
