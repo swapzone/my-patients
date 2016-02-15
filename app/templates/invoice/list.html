@@ -36,7 +36,7 @@
   </div>
 
   <ul class="invoice-list table" ng-if="selectedInvoices.length && invoiceType != INVOICE_TYPE.old">
-  <li class="table-row" ng-repeat="invoice in selectedInvoices">
+  <li class="table-row" ng-repeat="invoice in selectedInvoices" ng-cloak>
       <span class="table-cell">
         <a ng-click="goToPatientDetails(invoice.patient._id)">
           {{ invoice.patient.firstname }} {{ invoice.patient.lastname }}</a>
@@ -64,7 +64,7 @@
   </ul>
 
   <ul class="invoice-list table" ng-if="selectedInvoices.length && invoiceType == INVOICE_TYPE.old">
-    <li class="table-row" ng-repeat="invoice in selectedInvoices">
+    <li class="table-row" ng-repeat="invoice in selectedInvoices" ng-cloak>
       <span class="table-cell">
         {{ invoice.date | dateFilter }}
         <a ng-click="goToPatientDetails(invoice.patient._id)"
