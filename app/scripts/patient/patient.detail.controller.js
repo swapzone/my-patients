@@ -206,8 +206,10 @@
     $scope.showForm = false;
     $scope.treatmentObject = {};
     $scope.originalTreatmentObject = {};
+    $scope.originalTreatmentReference = null;
 
     $scope.closeTreatments = function() {
+
       $scope.treatmentObject = {};
       $mdDialog.cancel();
     };
@@ -215,6 +217,9 @@
     $scope.triggerTreatmentForm = function(treatment) {
       $scope.showForm = !$scope.showForm;
       $scope.error = null;
+
+      if($scope.treatmentObject.hasOwnProperty('date'))
+        $scope.treatmentObject.date = moment($scope.treatmentObject.date, 'DD.MM.YYYY').format();
 
       $scope.treatmentObject = {};
 
