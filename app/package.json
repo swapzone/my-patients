@@ -1,7 +1,7 @@
 ﻿{
   "name": "my-patients",
   "description": "Die minimale Patientenverwaltung für kleine bis mittelgroße Arztpraxen.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "main.js",
   "dependencies": {
     "archiver": "^0.20.0",
