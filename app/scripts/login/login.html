@@ -1,0 +1,8 @@
+<div class="login-wrapper">
+  <h1>Bitte Benutzer auswählen</h1>
+  <ul class="login-user-list">
+    <li ng-repeat="user in vm.users track by user._id">
+      <a ng-click="vm.login(user)">{{ user.name }}</a>
+    </li>
+  </ul>
+</div>

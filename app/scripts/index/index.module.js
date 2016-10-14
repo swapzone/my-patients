@@ -8,6 +8,7 @@
       'app.invoice',
       'app.backup',
       'app.settings',
+      'app.login',
       'app.templates'
     ]);
 })();

@@ -2,16 +2,16 @@
   'use strict';
 
   angular
-    .module('app.index')
+    .module('app.login')
     .config(routerConfig);
 
   function routerConfig($stateProvider) {
 
-    $stateProvider.state('index', {
-      url: '/',
+    $stateProvider.state('login', {
+      url: '/login',
       parent: 'root',
-      templateUrl: 'app/templates/index/index.html',
-      controller: 'IndexCtrl',
+      templateUrl: 'app/templates/login/login.html',
+      controller: 'LoginCtrl',
       controllerAs: 'vm'
     });
   }

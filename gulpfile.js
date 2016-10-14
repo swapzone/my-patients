@@ -152,7 +152,7 @@ gulp.task('live', ['pre-process', 'scripts', 'styles'], function() {
 
   gulp.watch(['app/*.html'], ['pre-process']);
   gulp.watch(['app/styles/**/*.scss'], ['styles', 'reload-electron']);
-  gulp.watch(['app/templates/**/*.html', 'app/scripts/**/*.js'], ['scripts', 'reload-electron']);
+  gulp.watch(['app/scripts/**/*.html', 'app/scripts/**/*.js'], ['scripts', 'reload-electron']);
 });
 
 gulp.task('debug', function () {

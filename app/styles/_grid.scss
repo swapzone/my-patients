@@ -4,7 +4,6 @@ $susy: (
   columns: 6,
   gutters: 0.35,
   gutter-position: split,
-  //debug: (image: show),
   global-box-sizing: border-box
 );
 
@@ -14,4 +13,8 @@ $susy: (
 
 .container {
   padding: 1em;
+}
+
+.app-wrapper {
+  min-width: 640px;
 }

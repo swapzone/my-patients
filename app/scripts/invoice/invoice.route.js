@@ -19,6 +19,7 @@
       url: 'invoice/list',
       templateUrl: 'app/templates/invoice/list.html',
       controller: 'InvoiceCtrl',
+      controllerAs: 'vm',
       data: {
         invoiceType: undefined
       }
@@ -28,6 +29,7 @@
       url: 'invoice/list/open',
       templateUrl: 'app/templates/invoice/list.html',
       controller: 'InvoiceCtrl',
+      controllerAs: 'vm',
       data: {
         invoiceType: INVOICE_TYPE.open
       }
@@ -37,6 +39,7 @@
       url: 'invoice/list/due',
       templateUrl: 'app/templates/invoice/list.html',
       controller: 'InvoiceCtrl',
+      controllerAs: 'vm',
       data: {
         invoiceType: INVOICE_TYPE.due
       }
@@ -46,6 +49,7 @@
       url: 'invoice/list/receipt',
       templateUrl: 'app/templates/invoice/list.html',
       controller: 'InvoiceCtrl',
+      controllerAs: 'vm',
       data: {
         invoiceType: INVOICE_TYPE.receipt
       }
@@ -55,6 +59,7 @@
       url: 'invoice/list/old',
       templateUrl: 'app/templates/invoice/list.html',
       controller: 'InvoiceCtrl',
+      controllerAs: 'vm',
       data: {
         invoiceType: INVOICE_TYPE.old
       }
@@ -63,7 +68,8 @@
     $stateProvider.state('invoice.details', {
       url: '/invoice/details',
       templateUrl: 'app/templates/invoice/detail.html',
-      controller: 'invoiceCtrl'
+      controller: 'invoiceCtrl',
+      controllerAs: 'vm'
     });
   }
 })();

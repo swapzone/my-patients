@@ -4,16 +4,15 @@
 
   angular
     .module('app')
-    .controller('indexCtrl', ['$rootScope', 'users', 'settingsService', IndexController]);
+    .controller('IndexCtrl', IndexController);
 
-  function IndexController($rootScope, users, settingsService) {
-    $rootScope.users = users;
+  /* @ngInject */
+  function IndexController($state, loginService) {
+    let vm = this;
 
-    $rootScope.$on('userChanged', function() {
-      settingsService.getUsers()
-        .then(function(users) {
-          $rootScope.users = users;
-        });
-    });
+    vm.logout = () => {
+      loginService.logout();
+      $state.go('login');
+    };
   }
 })();

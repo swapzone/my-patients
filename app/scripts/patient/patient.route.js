@@ -15,25 +15,29 @@
     $stateProvider.state('patient.list', {
       url: 'patient/list',
       templateUrl: 'app/templates/patient/list.html',
-      controller: 'PatientCtrl'
+      controller: 'PatientCtrl',
+      controllerAs: 'vm'
     });
 
     $stateProvider.state('patient.details', {
       url: 'patient/details?:active:previousState',
       templateUrl: 'app/templates/patient/detail.html',
-      controller: 'PatientDetailCtrl'
+      controller: 'PatientDetailCtrl',
+      controllerAs: 'vm'
     });
 
     $stateProvider.state('patient.edit', {
       url: 'patient/edit?:active',
       templateUrl: 'app/templates/patient/edit.html',
-      controller: 'PatientDetailCtrl'
+      controller: 'PatientDetailCtrl',
+      controllerAs: 'vm'
     });
 
     $stateProvider.state('patient.new', {
       url: 'patient/new',
       templateUrl: 'app/templates/patient/new.html',
-      controller: 'PatientCtrl'
+      controller: 'PatientCtrl',
+      controllerAs: 'vm'
     });
   }
 })();

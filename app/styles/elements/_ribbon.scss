@@ -11,5 +11,9 @@
     &.active {
       background-color: #e6e6e6;
     }
+
+    &:last-of-type {
+      float: right;
+    }
   }
 }

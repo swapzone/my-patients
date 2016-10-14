@@ -12,7 +12,8 @@
       url: '/settings',
       parent: 'index',
       templateUrl: 'app/templates/settings/settings.html',
-      controller: 'SettingsCtrl'
+      controller: 'SettingsCtrl',
+      controllerAs: 'vm'
     });
   }
 })();
