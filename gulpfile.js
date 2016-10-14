@@ -2,21 +2,11 @@
 var gulp = require('gulp');
 
 // include core modules
-var path  = require('path');
+var path    = require('path'),
+    process = require('child_process');
 
-// get the dependencies
-var concat 		    = require('gulp-concat'),
-    merge         = require('gulp-merge'),
-    notify		    = require('gulp-notify'),
-    plumber 	    = require('gulp-plumber'),
-    childProcess  = require('child_process'),
-    electron      = require('electron-prebuilt'),
-    sass 		      = require('gulp-ruby-sass'),
-    ngAnnotate    = require('gulp-ng-annotate'),
-    angularTemplateCache
-                  = require('gulp-angular-templatecache'),
-    gulpSequence  = require('gulp-sequence'),
-    liveReload    = require('electron-livereload');
+// include gulp plugin loader
+var $ = require('gulp-load-plugins')({ lazy: true });
 
 // include karma test runner
 var karma = require('karma');
@@ -29,24 +19,18 @@ var releaseWindows = require('./build.windows'),
 /* SETTING UP DEVELOPMENT ENVIRONMENT                                                               */
 /****************************************************************************************************/
 
-// the title and icon that will be used for notifications
-var notifyInfo = {
-  title: 'Gulp',
-  icon: path.join(__dirname, 'gulp.png')
-};
+var electron = require('electron-connect').server.create({
+  path: 'build'
+});
 
 // error notification settings for plumber
 var plumberErrorHandler = {
-  errorHandler: notify.onError({
-    title: notifyInfo.title,
-    icon: notifyInfo.icon,
+  errorHandler: $.notify.onError({
+    title: 'Gulp',
+    icon: path.join(__dirname, 'gulp.png'),
     message: "Error: <%= error.message %>"
   })
 };
-
-var liveServer = liveReload.server({
-  applicationPath: 'build'
-});
 
 /****************************************************************************************************/
 /* BUILD TASKS                                                                                      */
@@ -58,15 +42,15 @@ gulp.task('styles', function() {
   gulp.src([
       'bower_components/font-awesome/fonts/*'
     ])
-    .pipe(gulp.dest("build/styles/fonts"));
+    .pipe(gulp.dest('build/styles/fonts'));
 
   gulp.src([
       'bower_components/angular-material/angular-material.css'
     ])
-    .pipe(concat('vendor.css'))
+    .pipe($.concat('vendor.css'))
     .pipe(gulp.dest('build/styles'));
 
-  return sass('app/styles/**/*.scss', { style: 'expanded' })
+  return $.rubySass('app/styles/**/*.scss', { style: 'expanded' })
     .on('error', function (err) {
       console.error('Error during scss compilation: ', err.message);
     })
@@ -79,24 +63,23 @@ gulp.task('vendor-scripts', function() {
   return gulp.src([
       'bower_components/moment/moment.js',
       'bower_components/angular/angular.js',
+      'bower_components/angular-ui-router/release/angular-ui-router.js',
+      'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-aria/angular-aria.js',
       'bower_components/angular-material/angular-material.js',
-      'bower_components/angular-animate/angular-animate.js',
-      'bower_components/angular-ui-router/release/angular-ui-router.js',
-      'bower_components/angular-translate/angular-translate.js',
       'bower_components/ngstorage/ngStorage.js'
     ])
-    .pipe(plumber(plumberErrorHandler))
-    .pipe(concat('vendor.js'))
+    .pipe($.plumber(plumberErrorHandler))
+    .pipe($.concat('vendor.js'))
     .pipe(gulp.dest('build/scripts'));
 });
 
 gulp.task('custom-scripts', function(done) {
-  return merge(
+  return $.merge(
     gulp.src([
         'app/templates/**/*.html'
       ])
-      .pipe(angularTemplateCache('templates.js', {
+      .pipe($.angularTemplatecache('templates.js', {
         root: 'app/templates/',
         module: 'app.templates',
         standalone: true
@@ -106,14 +89,14 @@ gulp.task('custom-scripts', function(done) {
         'app/scripts/**/*.js'
       ])
     )
-    .pipe(plumber(plumberErrorHandler))
-    .pipe(concat('script.js'))
-    .pipe(ngAnnotate())
+    .pipe($.plumber(plumberErrorHandler))
+    .pipe($.concat('script.js'))
+    .pipe($.ngAnnotate())
     .pipe(gulp.dest('build/scripts'));
 });
 
 gulp.task('scripts', function(done) {
-  gulpSequence('vendor-scripts', 'custom-scripts')(done);
+  $.sequence('vendor-scripts', 'custom-scripts')(done);
 });
 
 // copy html files
@@ -145,25 +128,31 @@ gulp.task('pre-process', function() {
     .pipe(gulp.dest('build/node_modules/'));
 });
 
-gulp.task('electron-reload', function() {
-  liveServer.reload();
+// copy html files
+gulp.task('reload-electron', function() {
+  electron.reload();
 });
 
 /****************************************************************************************************/
 /* GULP TASK SUITES                                                                                 */
 /****************************************************************************************************/
 
+gulp.task('start', function () {
+  electron.start();
+});
+
+
 gulp.task('live', ['pre-process', 'scripts', 'styles'], function() {
-  liveServer.start();
+  // Start browser process
+  electron.start();
 
   gulp.watch(['app/*.html'], ['pre-process']);
-  gulp.watch(['app/styles/**/*.scss'], ['styles']);
-  gulp.watch(['app/templates/**/*.html', 'app/scripts/**/*.js'], ['scripts']);
-  gulp.watch(['build/scripts/*.js', 'build/styles/*.css', 'build/index.html', 'build/main.js'], ['electron-reload'])
+  gulp.watch(['app/styles/**/*.scss'], ['styles', 'reload-electron']);
+  gulp.watch(['app/templates/**/*.html', 'app/scripts/**/*.js'], ['scripts', 'reload-electron']);
 });
 
 gulp.task('debug', function () {
-  childProcess.spawn(electron, ['--debug=5858', './build'], { stdio: 'inherit' });
+  process.spawn(electron, ['--debug=5858', './build'], { stdio: 'inherit' });
 });
 
 gulp.task('release', ['pre-process', 'scripts', 'styles'], function () {
