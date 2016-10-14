@@ -6,9 +6,10 @@
 
   angular
     .module('app.settings')
-    .service('settingsService', ['$rootScope', '$q', 'storageService', SettingsService]);
+    .service('settingsService', settingsService);
 
-  function SettingsService($rootScope, $q, storageService) {
+  /* @ngInject */
+  function settingsService($rootScope, $q, storageService) {
 
     // Create NeDB database containers
     //var settingsStore = new Datastore({ filename: __dirname + '/data/settings.db', autoload: true });

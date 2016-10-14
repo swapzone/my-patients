@@ -7,11 +7,10 @@
 
   angular
     .module('app.common')
-    .service('storageService', [StorageService]);
+    .service('storageService', StorageService);
 
+  /* @ngInject */
   function StorageService() {
-    var self = this;
-
     return {
       getUserDataDirectory: getUserDataDirectory
     };

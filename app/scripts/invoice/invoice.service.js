@@ -7,9 +7,10 @@
 
   angular
     .module('app.invoice')
-    .service('invoiceService', ['$rootScope', '$q', 'storageService', InvoiceService]);
+    .service('invoiceService', invoiceService);
 
-  function InvoiceService($rootScope, $q, storageService) {
+  /* @ngInject */
+  function invoiceService($rootScope, $q, storageService) {
 
     // Create NeDB database containers
     var invoiceStore = new Datastore({

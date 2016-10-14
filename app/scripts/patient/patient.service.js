@@ -6,8 +6,9 @@
 
   angular
     .module('app.patient')
-    .service('patientService', ['$rootScope', '$q', 'storageService', PatientService]);
+    .service('patientService', PatientService);
 
+  /* @ngInject */
   function PatientService($rootScope, $q, storageService) {
 
     // Create NeDB database containers

@@ -11,12 +11,20 @@ module.exports = function(config) {
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['jasmine'],
 
-
     // list of files / patterns to load in the browser
     files: [
+      'bower_components/moment/moment.js',
+      'bower_components/angular/angular.js',
+      'bower_components/angular-ui-router/release/angular-ui-router.js',
+      'bower_components/angular-animate/angular-animate.js',
+      'bower_components/angular-aria/angular-aria.js',
+      'bower_components/angular-material/angular-material.js',
+      'bower_components/ngstorage/ngStorage.js',
       'bower_components/angular-mocks/angular-mocks.js',
-      'app/scripts/**/*.js',
-      'test/**/*js'
+      'test/helper.js',
+      'app/scripts/**/*.module.js',
+      'app/scripts/**/*!(spec).js',
+      'app/scripts/**/*.spec.js',
     ],
 
 
@@ -29,13 +37,24 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-        'scripts/**/*.html': 'ng-html2js'
+      'app/scripts/**/*.js': ['electron'],
+      'app/templates/**/*.html': ['ng-html2js']
     },
 
     ngHtml2JsPreprocessor: {
       moduleName: 'app.templates'
     },
 
+    failOnEmptyTestSuite: false,
+
+    // we use an iFrame because with the window module object, the preprocessor
+    // throws an error. Actually in Electron, iframes don't get `nodeIntegration`
+    // privileges yet windows do
+    client: {
+      __filenameOverride: __dirname + '/app/index.html',
+      loadScriptsViaRequire: false,
+      useIframe: true
+    },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
@@ -57,7 +76,7 @@ module.exports = function(config) {
 
 
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
+    autoWatch: false,
 
 
     // start these browsers

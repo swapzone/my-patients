@@ -1,14 +1,14 @@
-(function () {
+(function (moment) {
 
   'use strict';
 
-  var shortId = require("shortid");
-  var moment = require("moment");
+  var shortId = require('shortid');
 
   angular
     .module('app.patient')
-    .controller('patientDetailCtrl', ['$rootScope', '$scope', 'patientService', '$mdDialog', '$state', '$stateParams', 'postalService', PatientDetailController]);
+    .controller('PatientDetailCtrl', PatientDetailController);
 
+  /* @ngInject */
   function PatientDetailController($rootScope, $scope, patientService, $mdDialog, $state, $stateParams, postalService) {
 
     $scope.users = $rootScope.users;
@@ -285,4 +285,4 @@
       }
     };
   }
-})();
+})(window.moment);

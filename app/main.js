@@ -17,7 +17,7 @@ function createWindow () {
   Menu.setApplicationMenu(menu);
 
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.loadURL('file://' + __dirname + '/index.html');
 
   if(!production) {
     var client = require('electron-connect').client;
@@ -37,16 +37,12 @@ function createWindow () {
     mainWindow = null;
   })
 }
-
-
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
   if (process.platform != 'darwin') {
     app.quit();
   }
 });
-
-
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

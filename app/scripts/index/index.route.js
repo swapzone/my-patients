@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('app.index', [])
+    .module('app.index')
     .config(routerConfig);
 
   function routerConfig($urlRouterProvider, $stateProvider) {
@@ -15,12 +15,11 @@
       templateUrl: 'app/templates/index/index.html',
       controller: 'indexCtrl',
       resolve: {
-        users: loadUsers
+        /* @ngInject */
+        users: function loadUsers(settingsService) {
+          return settingsService.getUsers();
+        }
       }
     });
-  }
-
-  function loadUsers(settingsService) {
-    return settingsService.getUsers();
   }
 })();

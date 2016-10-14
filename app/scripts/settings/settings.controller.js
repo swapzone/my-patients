@@ -4,8 +4,9 @@
 
   angular
     .module('app.settings')
-    .controller('settingsCtrl', ['$rootScope', '$scope', 'settingsService', '$mdDialog', SettingsController]);
+    .controller('SettingsCtrl', SettingsController);
 
+  /* @ngInject */
   function SettingsController($rootScope, $scope, settingsService, $mdDialog) {
     $scope.users = [];
     $scope.invoiceTemplates = [];

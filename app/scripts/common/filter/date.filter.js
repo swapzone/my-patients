@@ -8,11 +8,11 @@
 
       return function (input) {
         if(!input)
-          return "";
+          return '';
 
         var date = new Date(input);
         var month = date.getMonth() + 1;
-        return date.getDate() + "." + month + "." + date.getFullYear();
+        return date.getDate() + '.' + month + '.' + date.getFullYear();
       };
     });
 })();

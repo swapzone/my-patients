@@ -1,16 +1,16 @@
-(function () {
+(function (moment) {
 
   'use strict';
 
   var fs = require('fs');
   var os = require('os');
   var Docxtemplater = require('docxtemplater');
-  var moment = require('moment');
 
   angular
     .module('app.invoice')
-    .controller('invoiceCtrl', ['$scope', 'INSURANCE_TYPE', 'INVOICE_TYPE', 'patientService', 'settingsService', 'invoiceService', '$state', '$mdDialog', InvoiceController]);
+    .controller('InvoiceCtrl', InvoiceController);
 
+  /* @ngInject */
   function InvoiceController($scope, INSURANCE_TYPE, INVOICE_TYPE, patientService, settingsService, invoiceService, $state, $mdDialog) {
     $scope.selectedInvoices = undefined;
 
@@ -648,4 +648,4 @@
         });
     }
   }
-})();
+})(window.moment);

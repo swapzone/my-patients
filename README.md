@@ -10,3 +10,10 @@ A minimal patient administration solution for small doctor's offices.
 * [Kristian Poslek](https://medium.com/developers-writing/building-a-desktop-application-with-electron-204203eeb658#.esm7kpuaz) describes how to create a full application with Electron.js
 * [How to](http://electron.atom.io/docs/v0.36.0/api/menu/) create a proper menu bar for Electron.js
 * Gulp.js [replacement library](https://www.npmjs.com/package/gulp-replace-task) that could be used for preparing the code for production 
+
+
+## Problems
+If there is a problem with 'minimatch' not found, clean up npm.
+```
+sudo rm -rf /usr/local/bin/npm /usr/local/share/man/man1/node* /usr/local/lib/dtrace/node.d 
+```

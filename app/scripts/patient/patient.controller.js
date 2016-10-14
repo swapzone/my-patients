@@ -4,8 +4,9 @@
 
   angular
     .module('app.patient')
-    .controller('patientCtrl', ['$rootScope', '$scope', 'patientService', 'postalService', '$mdDialog', '$state', '$sessionStorage', '$location', '$anchorScroll', PatientController]);
+    .controller('PatientCtrl', PatientController);
 
+  /* @ngInject */
   function PatientController($rootScope, $scope, patientService, postalService, $mdDialog, $state, $sessionStorage, $location, $anchorScroll) {
     var _this = this;
 

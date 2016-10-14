@@ -20,7 +20,10 @@ var releaseWindows = require('./build.windows'),
 /****************************************************************************************************/
 
 var electron = require('electron-connect').server.create({
-  path: 'build'
+  useGlobalElectron: true,
+  path: 'build/',
+  logLevel: 1,
+  stopOnClose: true
 });
 
 // error notification settings for plumber
@@ -74,19 +77,20 @@ gulp.task('vendor-scripts', function() {
     .pipe(gulp.dest('build/scripts'));
 });
 
-gulp.task('custom-scripts', function(done) {
+gulp.task('custom-scripts', function() {
   return $.merge(
-    gulp.src([
-        'app/templates/**/*.html'
-      ])
-      .pipe($.angularTemplatecache('templates.js', {
-        root: 'app/templates/',
-        module: 'app.templates',
-        standalone: true
-      })),
-    gulp.src([
-        'app/scripts/**/_*.js',
-        'app/scripts/**/*.js'
+      gulp.src([
+          'app/scripts/**/*.html'
+        ])
+        .pipe($.angularTemplatecache('templates.js', {
+          root: 'app/templates/',
+          module: 'app.templates',
+          standalone: true
+        })),
+      gulp.src([
+        'app/scripts/**/*.module.js',
+        'app/scripts/**/*.js',
+        '!app/scripts/**/*.spec.js'
       ])
     )
     .pipe($.plumber(plumberErrorHandler))
@@ -170,10 +174,6 @@ gulp.task('release', ['pre-process', 'scripts', 'styles'], function () {
 });
 
 gulp.task('test', function (done) {
-
-  // TODO Read the following for testing Electron.js apps
-  // http://jbavari.github.io/blog/2015/08/12/writing-unit-tests-for-electron-and-angularjs/
-
   var server = new karma.Server({
     configFile: __dirname + '/karma.conf.js',
     autoWatch: false,

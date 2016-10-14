@@ -1,18 +1,17 @@
-(function () {
-
+(function (moment) {
   'use strict';
 
   var fs = require('fs');
   var os = require('os');
   var Path = require('path');
   var archiver = require('archiver');
-  var moment = require('moment');
-  var yauzl = require("yauzl");
+  var yauzl = require('yauzl');
 
   angular
     .module('app.backup')
-    .controller('backupCtrl', ['$rootScope', '$scope', '$mdDialog', '$state', 'storageService', BackupController]);
+    .controller('backupCtrl', BackupController);
 
+  /* @ngInject */
   function BackupController($rootScope, $scope, $mdDialog, $state, storageService) {
     $scope.backupFile = null;
     $scope.error = "";
@@ -159,4 +158,4 @@
       });
     }
   }
-})();
+})(window.moment);
