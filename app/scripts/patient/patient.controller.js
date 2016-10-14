@@ -4,21 +4,11 @@
 
   angular
     .module('app.patient')
-    .controller('PatientCtrl', PatientController);
+    .controller('PatientController', PatientController);
 
   /* @ngInject */
-  function PatientController($rootScope, $scope, patientService, postalService, $mdDialog, $state, $sessionStorage, $location, $anchorScroll) {
-    var _this = this;
-
-    if($sessionStorage['newPatient'])
-      $scope.newPatient = $sessionStorage['newPatient'];
-    else
-      $scope.newPatient = {
-        insurance: {},
-        history: {},
-        risks: {},
-        treatments: []
-      };
+  function PatientController($scope, $state, $location, $anchorScroll, patientService, users) {
+    let vm = this;
 
     $scope.activeAnchors = [];
 
@@ -26,191 +16,71 @@
       'A', 'D', 'G', 'J', 'M', 'P', 'S', 'V', 'Y'
     ];
 
-    $scope.users = $rootScope.users;
-    $scope.patientSaved = false;
-    $scope.showFilter = false;
-    $scope.filter = null;
+    vm.users = users;
+    vm.showFilter = false;
+    vm.filter = null;
 
-    $scope.toggleFilter = function() {
-      $scope.showFilter = !$scope.showFilter;
+    vm.toggleFilter = function() {
+      vm.showFilter = !vm.showFilter;
 
-      if(!$scope.showFilter) {
-        $scope.filter = null;
+      if(!vm.showFilter) {
+        vm.filter = null;
       }
     };
 
-    $scope.$watch('showFilter', function() {
+    $scope.$watch('vm.showFilter', function() {
       // the variable must be watched since it can be set from the
       // watchMe directive
-      if($scope.showFilter == false)
-        $scope.filter = null;
+      if(vm.showFilter == false)
+        vm.filter = null;
     });
 
-    $scope.abort = abort;
-    $scope.selectPatient = selectPatient;
-    $scope.savePatient = savePatient;
-    $scope.filterPatient = filterPatient;
+    vm.selectPatient = selectPatient;
+    vm.filterPatient = filterPatient;
+    vm.setAnchor = setAnchor;
+    vm.scrollTo = scrollTo;
 
-    $scope.setAnchor = setAnchor;
-    $scope.scrollTo = scrollTo;
+    vm.$onInit = () => {
+      vm.patients = patientService.patients;
+      vm.patients.sort(function(a, b) {
+        if(a['lastname'] > b['lastname'])
+          return 1;
+        if(a['lastname'] < b['lastname'])
+          return -1;
 
-    $scope.postalService = postalService;
-
-    // Load initial data
-    getAllPatients();
-
-    $scope.$on('$stateChangeStart',
-      function(event, toState, toParams, fromState) {
-        if(fromState['name'] == "patient.new") {
-
-          if(!$scope.patientSaved)
-            $sessionStorage['newPatient'] = $scope.newPatient;
-          else {
-            resetNewPatient();
-            $scope.patientSaved = false;
-          }
-        }
+        return 0;
       });
+    };
 
     /**
-     *
-     *
-     * @param $event
-     */
-    function abort($event) {
-
-      var confirm = $mdDialog.confirm()
-        .parent(angular.element(document.body))
-        .title('Sicher?')
-        .content('Willst du den Vorgang wirklich abbrechen?')
-        .targetEvent($event)
-        .ok('Ja')
-        .cancel('Oh. Nein!');
-
-      $mdDialog.show(confirm).then(function() {
-        resetNewPatient();
-
-        $state.go("patient.list", {});
-      }, function() { });
-    }
-
-    /**
-     *
-     */
-    function resetNewPatient() {
-
-      delete $sessionStorage["newPatient"];
-
-      $scope.newPatient = {
-        insurance: {},
-        history: {},
-        risks: {},
-        treatments: []
-      };
-    }
-
-    /**
-     *
+     * Select one patient and show details.
      *
      * @param index
      */
     function selectPatient(index) {
-      $state.go("patient.details", { active: angular.toJson($scope.patients[index]) });
+      $state.go("patient.details", { active: angular.toJson(vm.patients[index]) });
     }
 
     /**
-     *
-     *
-     * @param $event
-     */
-    function savePatient($event) {
-
-      if ($scope.newPatient['firstname'] && $scope.newPatient['lastname']) {
-
-        if($scope.newPatient['birthday']) {
-          var dateFormat = /\d{2}.\d{2}.\d{4}/;
-
-          if(!dateFormat.test($scope.newPatient['birthday'])) {
-            $mdDialog.show(
-              $mdDialog
-                .alert()
-                .clickOutsideToClose(true)
-                .title('Fehler')
-                .content('Der Geburtstag muss dem Format tt.mm.jjjj entsprechen!')
-                .ok('Ok')
-                .targetEvent($event)
-              )
-              .finally(function () {
-              });
-
-            return;
-          }
-        }
-
-        patientService.create($scope.newPatient).then(function () {
-          $mdDialog.show(
-            $mdDialog
-              .alert()
-              .clickOutsideToClose(true)
-              .title('Super!')
-              .content('Patient wurde erfolgreich angelegt!')
-              .ok('Ok')
-              .targetEvent($event)
-          ).then(function() {
-            $scope.patientSaved = true;
-            $state.go("patient.list", {});
-          });
-        });
-      }
-      else {
-        $mdDialog.show(
-          $mdDialog
-            .alert()
-            .clickOutsideToClose(true)
-            .title('Nicht vollständig')
-            .content('Vor- und Nachname müssen ausgefüllt werden!')
-            .ok('Ok')
-            .targetEvent($event)
-        );
-      }
-    }
-
-    /**
-     *
+     * Filter the patient list.
      *
      * @param patient
      * @returns {boolean}
      */
     function filterPatient(patient) {
 
-      if(!$scope.filter)
+      if(!vm.filter)
         return true;
 
       var firstname = patient.lastname.toLowerCase();
       var lastname = patient.firstname.toLowerCase();
-      var filter = $scope.filter.toLowerCase();
+      var filter = vm.filter.toLowerCase();
 
       return firstname.indexOf(filter) > -1 || lastname.indexOf(filter) > -1;
     }
 
     /**
-     *
-     */
-    function getAllPatients() {
-      patientService.getPatients().then(function (patients) {
-        $scope.patients = patients.sort(function(a, b) {
-          if(a['lastname'] > b['lastname'])
-            return 1;
-          if(a['lastname'] < b['lastname'])
-            return -1;
-
-          return 0;
-        });
-      });
-    }
-
-    /**
-     *
+     * Calculate the fast link anchors.
      *
      * @param patient
      * @returns {boolean}
@@ -221,17 +91,17 @@
       if(!_this.lastLetter) {
         _this.lastLetter = newLetter;
 
-        if($scope.anchors.indexOf(newLetter) > -1) {
-          if($scope.activeAnchors.indexOf(newLetter) === -1)
-            $scope.activeAnchors.push(newLetter);
+        if(vm.anchors.indexOf(newLetter) > -1) {
+          if(vm.activeAnchors.indexOf(newLetter) === -1)
+            vm.activeAnchors.push(newLetter);
 
           return true;
         }
       }
       else {
-        if(_this.lastLetter != newLetter && $scope.anchors.indexOf(newLetter) > -1) {
-          if($scope.activeAnchors.indexOf(newLetter) === -1)
-            $scope.activeAnchors.push(newLetter);
+        if(_this.lastLetter != newLetter && vm.anchors.indexOf(newLetter) > -1) {
+          if(vm.activeAnchors.indexOf(newLetter) === -1)
+            vm.activeAnchors.push(newLetter);
 
           return true;
         }
@@ -241,7 +111,7 @@
     }
 
     /**
-     *
+     * Scroll to the given anchor.
      *
      * @param anchor
      */

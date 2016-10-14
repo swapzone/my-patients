@@ -40,21 +40,15 @@
     function init(doctor) {
       $scope.doctor = doctor;
 
-      patientService.getPatients()
-        .then(function(patients) {
-          // reference needed for reloading of old invoices
-          $scope.patients = patients;
+      // reference needed for reloading of old invoices
+      $scope.patients = patientService.patients;
 
-          extractInvoices(patients, doctor);
-          extractReceipts(patients, doctor);
+      extractInvoices($scope.patients, doctor);
+      extractReceipts($scope.patients, doctor);
 
-          extractOldInvoices(patients, doctor)
-            .then(function() {
-              selectInvoiceType($state.current.data.invoiceType);
-            });
-        }, function(err) {
-          console.error("Could not initialize invoice module: ");
-          console.error(err);
+      extractOldInvoices($scope.patients, doctor)
+        .then(function() {
+          selectInvoiceType($state.current.data.invoiceType);
         });
     }
 

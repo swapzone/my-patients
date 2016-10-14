@@ -13,13 +13,7 @@
 
     $stateProvider.state('root', {
       abstract: true,
-      template: '<div ui-view></div>',
-      resolve: {
-        /* @ngInject */
-        users: function loadUsers(settingsService) {
-          return settingsService.getUsers();
-        }
-      }
+      template: '<div ui-view></div>'
     });
   }
 

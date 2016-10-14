@@ -6,7 +6,7 @@
 
   angular
     .module('app.patient')
-    .controller('PatientDetailCtrl', PatientDetailController);
+    .controller('PatientDetailController', PatientDetailController);
 
   /* @ngInject */
   function PatientDetailController($rootScope, $scope, patientService, $mdDialog, $state, $stateParams, postalService) {
@@ -43,7 +43,7 @@
         controller: DialogCtrl,
         scope: $scope.$new(),
         controllerAs: 'treatmentCtrl',
-        templateUrl: 'app/templates/patient/treatment.html',
+        templateUrl: 'app/templates/patient/detail/treatment.html',
         parent: angular.element(document.body),
         targetEvent: $event,
         clickOutsideToClose: false

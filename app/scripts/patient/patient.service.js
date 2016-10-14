@@ -10,6 +10,9 @@
 
   /* @ngInject */
   function PatientService($rootScope, $q, storageService) {
+    let service = this;
+
+    service.patients = [];
 
     // Create NeDB database containers
     var patientStore = new Datastore({ filename: storageService.getUserDataDirectory('patients.db'), autoload: true });
@@ -18,40 +21,39 @@
       patientStore.loadDatabase();
     });
 
-    return {
-      getPatients: getPatients,
-      getPatientById: getPatientById,
-      create: createPatient,
-      delete: deletePatient,
-      update: updatePatient,
-      addTreatment: addTreatment,
-      updateTreatment: updateTreatment
-    };
-
     /**
-     *
+     * Retrieve all patients from database or cache.
      *
      * @returns {*}
      */
-    function getPatients() {
+    function initializePatients() {
       var deferred = $q.defer();
 
-      patientStore.find({}, function (err, docs) {
-        if (err) deferred.reject(err);
+      if (service.patients.length) {
+        deferred.resolve();
+      }
+      else {
+        patientStore.find({}, function (err, docs) {
+          if (err) deferred.reject(err);
 
-        deferred.resolve(docs);
-      });
+          service.patients = docs;
+          deferred.resolve();
+        });
+      }
 
       return deferred.promise;
     }
 
     /**
-     *
+     * Get patient from database by patientId.
      *
      * @param patientId
      * @returns {*}
      */
     function getPatientById(patientId) {
+
+      // TODO use cache
+
       var deferred = $q.defer();
 
       patientStore.find({_id: patientId}, function (err, docs) {
@@ -64,10 +66,10 @@
     }
 
     /**
-     *
+     * Create new patient in database and add to patient list.
      *
      * @param patient
-     * @returns {*|promise}
+     * @returns {*}
        */
     function createPatient(patient) {
       var deferred = $q.defer();
@@ -76,6 +78,9 @@
         // newDoc is the newly inserted document, including its _id
         if (err) deferred.reject(err);
 
+        if (service.patients) {
+          service.patients.push(newDoc);
+        }
         deferred.resolve(newDoc);
       });
 
@@ -83,7 +88,7 @@
     }
 
     /**
-     *
+     * Add a new treatment to a patient.
      *
      * @param id
      * @param treatment
@@ -96,6 +101,8 @@
       patientStore.update({ _id: id }, { $push: { treatments: treatment } }, {}, function (err) {
         if (err) deferred.reject(err);
 
+        // TODO update cached version
+
         deferred.resolve();
       });
 
@@ -103,7 +110,7 @@
     }
 
     /**
-     *
+     * Update treatment for patient with given patientId.
      *
      * @param patientId
      * @param oldTreatment
@@ -130,6 +137,8 @@
             return;
           }
 
+          // TODO update cached version
+
           deferred.resolve();
         });
       });
@@ -138,7 +147,7 @@
     }
 
     /**
-     *
+     * Delete patient from database.
      *
      * @param id
      * @returns {*}
@@ -151,6 +160,8 @@
       patientStore.remove({ _id: id }, {}, function (err, numRemoved) {
         if (err) deferred.reject(err);
 
+        // TODO update cached version
+
         deferred.resolve(numRemoved);
       });
 
@@ -158,7 +169,7 @@
     }
 
     /**
-     *
+     * Update patient data in database.
      *
      * @param id
      * @param patientDoc
@@ -172,10 +183,23 @@
         // Note that the _id is kept unchanged, and the document has been replaced
         if (err) deferred.reject(err);
 
+        // TODO update cached version
+
         deferred.resolve(numReplaced);
       });
 
       return deferred.promise;
     }
+
+    //
+    // Service API
+    //
+    service.initializePatients = initializePatients;
+    service.getPatientById = getPatientById;
+    service.createPatient = createPatient;
+    service.addTreatment = addTreatment;
+    service.updateTreatment = updateTreatment;
+    service.deletePatient = deletePatient;
+    service.updatePatient = updatePatient;
   }
 })();

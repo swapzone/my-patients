@@ -2,28 +2,28 @@
   <h1 class="header">Alle Patienten</h1>
 
   <span class="patient-filter filter">
-    <input ng-class="{ show: showFilter }" focus-me="showFilter" ng-model="filter" type="text" placeholder="Vor- oder Nachname">
-    <a ng-click="toggleFilter()" class="fa" ng-class="{ 'fa-search' : !showFilter, 'fa-close' : showFilter }"></a>
+    <input ng-class="{ show: vm.showFilter }" focus-me="showFilter" ng-model="filter" type="text" placeholder="Vor- oder Nachname">
+    <a ng-click="toggleFilter()" class="fa" ng-class="{ 'fa-search' : !vm.showFilter, 'fa-close' : vm.showFilter }"></a>
   </span>
 
   <div class="patient-header-controls">
     <nav class="patient-quick-links">
       <ul class="clearfix">
         <li class="label">Quick Links:</li>
-        <li ng-repeat="anchor in activeAnchors">
+        <li ng-repeat="anchor in vm.activeAnchors">
           <a ng-click="scrollTo(anchor)">{{ anchor }}</a>
         </li>
       </ul>
     </nav>
   </div>
 
-  <div ng-if="patients.length == 0">
+  <div ng-if="vm.patients.length === 0">
     Keine Patienten vorhanden.
   </div>
 
-  <ul class="patient-list" ng-if="patients.length > 0">
+  <ul class="patient-list" ng-if="vm.patients.length > 0">
     <li class="table-row"
-        ng-repeat="patient in patients track by patient._id"
+        ng-repeat="patient in vm.patients track by patient._id"
         ng-click="selectPatient($index)"
         ng-if="filterPatient(patient)"
         ng-cloak>
