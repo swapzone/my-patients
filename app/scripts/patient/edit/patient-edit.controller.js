@@ -35,6 +35,25 @@
     vm.postalService = postalService;
 
     /**
+     * Checks if the patient has any open invoices or receipts.
+     *
+     * @returns {boolean}
+     */
+    function hasOpenInvoices() {
+
+      const hasOpenReceipts = vm.patient.treatments.some(
+        treatment => (treatment.payment === 'Quittung') && !treatment.closed);
+
+      const hasTreatments = !!vm.patient.treatments.length;
+      const wasInvoiced = !!vm.patient.hasOwnProperty('last_invoiced');
+
+      const hasOpenInvoice = hasTreatments && wasInvoiced ?
+        vm.patient.treatments[vm.patient.treatments.length - 1].date > vm.patient.last_invoiced.date : false;
+
+      return hasOpenReceipts || !wasInvoiced && hasTreatments || hasOpenInvoice;
+    }
+
+    /**
      * Open treatment dialog.
      *
      * @param $event
@@ -72,32 +91,34 @@
 
     /**
      * Abort editing of patient.
-     *
-     * @param $event
      */
-    function abort($event) {
-
-      var confirm = $mdDialog.confirm()
-        .parent(angular.element(document.body))
-        .title('Sicher?')
-        .content('Willst du den Vorgang wirklich abbrechen?')
-        .targetEvent($event)
-        .ok('Ja')
-        .cancel('Oh. Nein!');
-
-      $mdDialog.show(confirm).then(function() {
-        $state.go("patient.details", { patientId: vm.patient._id });
-      }, function() { });
+    function abort() {
+      $state.go("patient.details", { patientId: vm.patient._id });
     }
-
+    
     /**
      * Delete the patient.
      *
      * @param $event
      */
     function deletePatient($event) {
-      if(!vm.patient) {
+      if (!vm.patient) {
         $log.warn('Patient object is not set.');
+        return;
+      }
+
+      if (hasOpenInvoices()) {
+        $mdDialog.show(
+          $mdDialog
+            .alert()
+            .clickOutsideToClose(true)
+            .title('Fehler')
+            .content('Der Patient hat noch ausstehende Rechnungen und kann nicht gelöscht werden.')
+            .ok('Ok')
+            .targetEvent($event)
+          )
+          .finally(function() {});
+
         return;
       }
 
@@ -129,9 +150,6 @@
               });
           }
         });
-      }, function (err) {
-        $log.error("Patient konnte nicht gelöscht werden.");
-        $log.error(err);
       });
     }
 
