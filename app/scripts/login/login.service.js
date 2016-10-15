@@ -16,6 +16,9 @@
      * @returns {string}
      */
     let activeUser = () => {
+      if (!service.user) {
+        service.user = $sessionStorage['activeUser'];
+      }
       return service.user;
     };
 
@@ -25,6 +28,8 @@
      * @param user
      */
     let login = (user) => {
+      $sessionStorage['activeUser'] = user;
+
       service.user = user;
     };
 
@@ -32,7 +37,9 @@
      * Unset active user.
      */
     let logout = () => {
+      delete $sessionStorage['activeUser'];
       delete $sessionStorage['newPatient'];
+
       service.user = undefined;
     };
 
