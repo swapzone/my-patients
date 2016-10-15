@@ -312,6 +312,7 @@
      *
      *
      * @param invoice
+     * @param old
      */
     function createInvoice(invoice, old) {
 
@@ -336,9 +337,10 @@
        *
        */
       function createDocument() {
-
         settingsService.getInvoiceTemplates()
           .then(function (templates) {
+            const userId = loginService.activeUser()._id;
+            templates = templates.filter((template => template.user === userId));
             vm.templates = templates;
 
             var templateFile;
@@ -514,7 +516,7 @@
         }
 
         /**
-         *
+         * Get template for given insuranceType and userId.
          *
          * @param templates
          * @param insuranceType
@@ -526,25 +528,26 @@
           var stateTemplate = null;
           var privateTemplate = null;
 
-          templates.forEach(function(template) {
-            if(!template.hasOwnProperty("type")) {
-              defaultTemplate = template;
-            }
-            else {
-              switch (template["type"]) {
-                case INSURANCE_TYPE.state:
-                  stateTemplate = template;
-                  break;
-                case INSURANCE_TYPE.private:
-                case INSURANCE_TYPE.privatePlus:
-                  privateTemplate = template;
-                  break;
-                default:
-                  console.warn("Unknown template type in database.");
-                  break;
+          templates
+            .forEach(function(template) {
+              if(!template.hasOwnProperty("type")) {
+                defaultTemplate = template;
               }
-            }
-          });
+              else {
+                switch (template["type"]) {
+                  case INSURANCE_TYPE.state:
+                    stateTemplate = template;
+                    break;
+                  case INSURANCE_TYPE.private:
+                  case INSURANCE_TYPE.privatePlus:
+                    privateTemplate = template;
+                    break;
+                  default:
+                    console.warn("Unknown template type in database.");
+                    break;
+                }
+              }
+            });
 
           switch (insuranceType) {
             case INSURANCE_TYPE.state:

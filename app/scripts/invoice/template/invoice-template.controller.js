@@ -11,7 +11,6 @@
     const vm = this;
 
     vm.templates = items;
-    console.log(vm.templates);
 
     vm.abort = function() {
       $mdDialog.cancel();

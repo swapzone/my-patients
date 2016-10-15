@@ -10,7 +10,8 @@
     .service('invoiceService', invoiceService);
 
   /* @ngInject */
-  function invoiceService($rootScope, $q, storageService) {
+  function invoiceService($log, $rootScope, $q, storageService) {
+    const service = this;
 
     // Create NeDB database containers
     var invoiceStore = new Datastore({
@@ -26,15 +27,15 @@
             }
 
             if(data.trim().length === 0) {
-              console.log("Database is empty, can be reset.");
+              $log.debug("Database is empty, can be reset.");
 
               fs.truncate(storageService.getUserDataDirectory('accounting.db'), 0, function() {
-                console.log('Database was reset.');
+                $log.info('Database was reset.');
                 invoiceStore.loadDatabase();
               });
             }
             else {
-              console.error("Database is not empty. Cannot be reset.");
+              $log.error("Database is not empty. Cannot be reset.");
             }
           });
         }
@@ -44,13 +45,13 @@
       invoiceStore.loadDatabase();
     });
 
-    return {
-      getInvoices: getInvoices,
-      createInvoice: createInvoice
-    };
-
-    function getInvoices() {
-      var deferred = $q.defer();
+    /**
+     * Retrieve all invoices from database.
+     *
+     * @returns {*}
+     */
+    let getInvoices = () => {
+      let deferred = $q.defer();
 
       invoiceStore.find({}, function (err, docs) {
         if (err) deferred.reject(err);
@@ -59,10 +60,16 @@
       });
 
       return deferred.promise;
-    }
+    };
 
-    function createInvoice(invoice) {
-      var deferred = $q.defer();
+    /**
+     * Add invoice to database.
+     *
+     * @param invoice
+     * @returns {*}
+     */
+    let createInvoice = (invoice) => {
+      let deferred = $q.defer();
 
       invoiceStore.insert(invoice, function (err, newDoc) {
         // newDoc is the newly inserted document, including its _id
@@ -72,6 +79,12 @@
       });
 
       return deferred.promise;
-    }
+    };
+
+    //
+    // Service API
+    //
+    service.getInvoices = getInvoices;
+    service.createInvoice = createInvoice;
   }
 })();

@@ -17,7 +17,7 @@
     vm.$onInit = () => {
       settingsService.getInvoiceTemplates()
         .then(function(templates) {
-          vm.invoiceTemplates = templates;
+          vm.invoiceTemplates = templates.filter((template => template.user === vm.currentUser._id));
         });
     };
 
@@ -26,7 +26,7 @@
      *
      * @param $event
      */
-    function addUser($event) {
+    let addUser = ($event) => {
 
       var dialogObject = {
         controller: function() {
@@ -64,7 +64,7 @@
         .finally(function() {
           dialogObject = undefined;
         });
-    }
+    };
 
     /**
      * Delete a user from the database.
@@ -72,7 +72,7 @@
      * @param $event
      * @param id
      */
-    function deleteUser($event, id) {
+    let deleteUser = ($event, id) => {
 
       var confirm = $mdDialog.confirm()
         .parent(angular.element(document.body))
@@ -88,16 +88,15 @@
             $log.debug('User was deleted.');
           });
       }, function() { });
-    }
+    };
 
     /**
      * Open the add template dialog.
      *
      * @param $event
      */
-    function addTemplate($event) {
-
-      var dialogObject = {
+    let addTemplate = ($event) => {
+      let dialogObject = {
         controller: function() {
           $scope.newTemplate = {};
 
@@ -106,8 +105,8 @@
           };
 
           $scope.saveTemplate = function() {
-
             if ($scope.newTemplate['name'] && $scope.newTemplate['file']) {
+              $scope.newTemplate.user = vm.currentUser._id;
               settingsService.addInvoiceTemplate($scope.newTemplate).then(function (template) {
                 $scope.newTemplate = {};
                 $scope.error = "";
@@ -134,7 +133,7 @@
         .finally(function() {
           dialogObject = undefined;
         });
-    }
+    };
 
     /**
      * Delete the template with the given templateId.
@@ -142,7 +141,7 @@
      * @param $event
      * @param templateId
      */
-    function deleteTemplate($event, templateId) {
+    let deleteTemplate = ($event, templateId) => {
 
       var confirm = $mdDialog.confirm()
         .parent(angular.element(document.body))
@@ -162,8 +161,8 @@
             break;
           }
         }
-      }, function() { });
-    }
+      }, function() {});
+    };
 
     //
     // Controller API
