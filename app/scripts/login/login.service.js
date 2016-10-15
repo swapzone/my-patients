@@ -7,7 +7,7 @@
     .service('loginService', loginService);
 
   /* @ngInject */
-  function loginService() {
+  function loginService($sessionStorage) {
     let service = this;
 
     /**
@@ -32,6 +32,7 @@
      * Unset active user.
      */
     let logout = () => {
+      delete $sessionStorage['newPatient'];
       service.user = undefined;
     };
 

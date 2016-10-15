@@ -9,13 +9,15 @@
     .controller('TreatmentController', TreatmentController);
 
   /* @ngInject */
-  function TreatmentController($scope, $mdDialog, patientService) {
+  function TreatmentController($scope, $mdDialog, loginService, patientService) {
     const vm = this;
 
     vm.patient = $scope.patient;
     vm.users = $scope.users;
     vm.showForm = false;
-    vm.treatmentObject = {};
+    vm.treatmentObject = {
+      doctor: loginService.activeUser().name
+    };
     vm.originalTreatmentObject = {};
     vm.originalTreatmentReference = null;
 
@@ -36,10 +38,9 @@
       vm.showForm = !vm.showForm;
       vm.error = null;
 
-      if(vm.treatmentObject.hasOwnProperty('date'))
+      if(vm.treatmentObject.hasOwnProperty('date')) {
         vm.treatmentObject.date = moment(vm.treatmentObject.date, 'DD.MM.YYYY').format();
-
-      vm.treatmentObject = {};
+      }
 
       if(treatment) {
         vm.treatmentObject = treatment;

@@ -3,6 +3,7 @@
 
   angular
     .module('app.login', [
-      'ui.router'
+      'ui.router',
+      'ngStorage'
     ]);
 })();

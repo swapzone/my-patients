@@ -34,9 +34,8 @@
     <label for="treatment-doctor">Behandelnder Arzt</label>
     <select id="treatment-doctor"
             name="treatment-doctor"
-            ng-init="vm.treatmentObject.doctor = 'Victoria Ott'"
-            ng-model="vm.treatmentObject.doctor">
-      <option ng-repeat="user in vm.users track by user._id">{{ user.name }}</option>
+            disabled>
+      <option selected>{{ vm.treatmentObject.doctor }}</option>
     </select>
     <span ng-if="vm.error" class="status-error">{{ vm.error }}</span>
 

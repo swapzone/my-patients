@@ -15,10 +15,8 @@
 
       <label for="firstname">Vorname</label>
       <input type="text" id="firstname" name="firstname" ng-model="vm.newPatient.firstname" />
-
       <label for="lastname">Nachname</label>
       <input type="text" id="lastname" name="lastname" ng-model="vm.newPatient.lastname" />
-
       <label for="street">Straße</label>
       <input type="text" id="street" name="street" ng-model="vm.newPatient.street" />
 
@@ -87,7 +85,6 @@
           </span>
         </span>
       </span>
-
       <label for="profession">Beruf</label>
       <input type="text" id="profession" name="profession" ng-model="vm.newPatient.profession" />
 
@@ -106,7 +103,7 @@
       <select id="doctor"
               name="doctor"
               ng-model="vm.newPatient.doctor">
-        <option ng-repeat="user in users track by user._id">{{ user.name }}</option>
+        <option ng-repeat="user in vm.users track by user._id">{{ user.name }}</option>
       </select>
 
       <input type="checkbox" id="paperfile" name="paperfile" value="paperfile" ng-model="vm.newPatient.paperfile" />
@@ -131,7 +128,6 @@
 
   <div class="patient-abstract">
     <h2 class="sub-header">Krankengeschichte</h2>
-
     <span class="table three">
       <span class="table-row">
         <span class="table-cell">

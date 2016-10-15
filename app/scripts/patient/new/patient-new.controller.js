@@ -7,20 +7,10 @@
     .controller('PatientNewController', PatientNewController);
 
   /* @ngInject */
-  function PatientNewController($scope, $rootScope, patientService, postalService, $mdDialog, $state, $sessionStorage) {
-    let vm = this;
+  function PatientNewController($scope, $mdDialog, $state, $sessionStorage, loginService, patientService, postalService, users) {
+    const vm = this;
 
-    if($sessionStorage['newPatient'])
-      vm.newPatient = $sessionStorage['newPatient'];
-    else
-      vm.newPatient = {
-        insurance: {},
-        history: {},
-        risks: {},
-        treatments: []
-      };
-
-    vm.users = $rootScope.users;
+    vm.users = users;
     vm.patientSaved = false;
     vm.postalService = postalService;
 
@@ -28,9 +18,8 @@
      * Reset new patient data structure.
      */
     let resetNewPatient = () => {
-      delete $sessionStorage["newPatient"];
-
       vm.newPatient = {
+        doctor: loginService.activeUser().name,
         insurance: {},
         history: {},
         risks: {},
@@ -53,6 +42,7 @@
         .cancel('Oh. Nein!');
 
       $mdDialog.show(confirm).then(function() {
+        delete $sessionStorage["newPatient"];
         resetNewPatient();
 
         $state.go("patient.list", {});
@@ -65,7 +55,6 @@
      * @param $event
      */
     let savePatient = ($event) => {
-
       if (vm.newPatient['firstname'] && vm.newPatient['lastname']) {
         if(vm.newPatient['birthday']) {
           var dateFormat = /\d{2}.\d{2}.\d{4}/;
@@ -82,7 +71,6 @@
               )
               .finally(function () {
               });
-
             return;
           }
         }
@@ -116,21 +104,33 @@
     };
 
     vm.$onInit = () => {
-      vm.unbindStateChangeListener = $scope.$on('$stateChangeStart',
+      if($sessionStorage['newPatient']) {
+        vm.newPatient = $sessionStorage['newPatient'];
+      }
+      else {
+        vm.newPatient = {
+          doctor: loginService.activeUser().name,
+          insurance: {},
+          history: {},
+          risks: {},
+          treatments: []
+        };
+      }
+
+      let unbindStateChangeListener = $scope.$on('$stateChangeStart',
         (event, toState, toParams, fromState) => {
-          if (fromState['name'] == "patient.new") {
-            if (!vm.patientSaved)
+          if (fromState['name'] === 'patient.new' && toState['name'] !== 'login') {
+            if (!vm.patientSaved) {
               $sessionStorage['newPatient'] = vm.newPatient;
-            else {
-              resetNewPatient();
-              vm.patientSaved = false;
             }
+            else {
+              delete $sessionStorage["newPatient"];
+              resetNewPatient();
+              vm.patientSaved = true;
+            }
+            unbindStateChangeListener();
           }
         });
-    };
-
-    vm.$onDestroy = () => {
-      vm.unbindStateChangeListener();
     };
 
     //
