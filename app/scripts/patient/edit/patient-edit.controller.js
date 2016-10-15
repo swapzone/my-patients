@@ -7,7 +7,7 @@
     .controller('PatientEditController', PatientEditController);
 
   /* @ngInject */
-  function PatientEditController($log, $mdDialog, $scope, $state, $stateParams, patientService, postalService, settingsService) {
+  function PatientEditController($log, $mdDialog, $state, $stateParams, patientService, postalService, settingsService) {
     let vm = this;
 
     vm.users = settingsService.users;
@@ -54,31 +54,6 @@
     }
 
     /**
-     * Open treatment dialog.
-     *
-     * @param $event
-     */
-    function showTreatment($event) {
-      var dialogObject = {
-        scope: $scope.$new(),
-        controller: 'TreatmentCtrl',
-        controllerAs: 'TreatmentCtrl',
-        templateUrl: 'app/templates/patient/treatment/treatment.html',
-        parent: angular.element(document.body),
-        targetEvent: $event,
-        clickOutsideToClose: false,
-        locals: {
-          patientId: vm.patient._id
-        }
-      };
-
-      $mdDialog.show(dialogObject)
-        .finally(function() {
-          dialogObject = undefined;
-        });
-    }
-
-    /**
      * Go to last state.
      */
     function goBack() {
@@ -95,7 +70,7 @@
     function abort() {
       $state.go("patient.details", { patientId: vm.patient._id });
     }
-    
+
     /**
      * Delete the patient.
      *
@@ -210,7 +185,6 @@
     //
     vm.abort = abort;
     vm.goBack = goBack;
-    vm.showTreatment = showTreatment;
     vm.deletePatient = deletePatient;
     vm.updatePatient = updatePatient;
   }

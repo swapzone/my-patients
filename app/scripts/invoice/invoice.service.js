@@ -10,7 +10,7 @@
     .service('invoiceService', invoiceService);
 
   /* @ngInject */
-  function invoiceService($log, $rootScope, $q, storageService, INSURANCE_TYPE) {
+  function invoiceService($log, $rootScope, $q, storageService, loginService, INSURANCE_TYPE) {
     const service = this;
 
     // Create NeDB database containers
@@ -172,8 +172,11 @@
             return isTreatedByDoctor && isOfTypeInvoice;
           });
 
-          if (patient.hasOwnProperty("last_invoiced") && patient['last_invoiced'].doctor === doctor) {
-            var lastInvoicedDate = new Date(patient['last_invoiced'].date);
+          let lastInvoicedFromUser = patient.last_invoiced && patient.last_invoiced[loginService.activeUser()._id] ?
+            patient.last_invoiced[loginService.activeUser()._id] : undefined;
+
+          if (lastInvoicedFromUser) {
+            var lastInvoicedDate = new Date(lastInvoicedFromUser);
 
             treatments = treatments.filter(function (treatment) {
               var treatmentDate = new Date(treatment.date);
@@ -214,8 +217,11 @@
             return isTreatedByDoctor && isOfTypeInvoice;
           });
 
-          if (patient.hasOwnProperty('last_invoiced') && patient['last_invoiced'].doctor === doctor) {
-            var lastInvoicedDate = new Date(patient['last_invoiced'].date);
+          let lastInvoicedFromUser = patient.last_invoiced && patient.last_invoiced[loginService.activeUser()._id] ?
+            patient.last_invoiced[loginService.activeUser()._id] : undefined;
+
+          if (lastInvoicedFromUser) {
+            var lastInvoicedDate = new Date(lastInvoicedFromUser);
 
             treatments = treatments.filter(function (treatment) {
               var treatmentDate = new Date(treatment.date);

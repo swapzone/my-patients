@@ -279,10 +279,13 @@
         doctor: vm.doctor
       });
 
-      patient['last_invoiced'] = {
-        date: new Date(treatments[treatments.length - 1].date),
-        doctor: vm.doctor
-      };
+      if (!patient.hasOwnProperty('last_invoiced')) {
+        patient.last_invoiced = {};
+      }
+
+      patient.last_invoiced[loginService.activeUser()._id] =
+        new Date(treatments[treatments.length - 1].date);
+
       patientService.updatePatient(patient._id, patient);
 
       // delete invoice from invoices array

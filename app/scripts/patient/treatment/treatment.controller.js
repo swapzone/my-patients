@@ -82,7 +82,10 @@
         return;
       }
 
-      if (treatment && treatment.payment !== 'Quittung' && vm.patient.hasOwnProperty('last_invoiced') && vm.patient.last_invoiced.date >= new Date(treatment.date)) {
+      let lastInvoicedFromUser = vm.patient.last_invoiced && vm.patient.last_invoiced[loginService.activeUser()._id] ?
+        vm.patient.last_invoiced[loginService.activeUser()._id] : undefined;
+
+      if (treatment && treatment.payment !== 'Quittung' && lastInvoicedFromUser && lastInvoicedFromUser >= new Date(treatment.date)) {
         $log.warn('Already invoiced.');
         vm.editError = 'Die Behandlung wurde schon abgerechnet und kann nicht mehr geändert werden.';
 
@@ -125,8 +128,11 @@
             fullDate = moment(vm.treatmentObject.date, 'DD.MM.YYYY').utc().format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z';
           }
 
-          // check of date is before last invoice
-          if (vm.treatmentObject.payment === 'Rechnung' && vm.patient.hasOwnProperty('last_invoiced') && new Date(fullDate) <= vm.patient.last_invoiced.date) {
+          // check if date is before last invoice
+          let lastInvoicedFromUser = vm.patient.last_invoiced && vm.patient.last_invoiced[loginService.activeUser()._id] ?
+            vm.patient.last_invoiced[loginService.activeUser()._id] : undefined;
+
+          if (vm.treatmentObject.payment === 'Rechnung' && lastInvoicedFromUser && new Date(fullDate) <= lastInvoicedFromUser) {
             vm.error = "Du kannst keine Behandlung erstellen, wenn der Zeitraum schon abgerechnet wurde.";
             return;
           }
