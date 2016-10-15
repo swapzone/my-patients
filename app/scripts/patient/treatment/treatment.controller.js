@@ -9,10 +9,10 @@
     .controller('TreatmentController', TreatmentController);
 
   /* @ngInject */
-  function TreatmentController($scope, $mdDialog, loginService, patientService) {
+  function TreatmentController($mdDialog, loginService, patientService, patient) {
     const vm = this;
 
-    vm.patient = $scope.patient;
+    vm.patient = patient;
     vm.showForm = false;
     vm.treatmentObject = {
       doctor: loginService.activeUser().name

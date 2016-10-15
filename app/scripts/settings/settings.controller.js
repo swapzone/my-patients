@@ -27,7 +27,6 @@
      * @param $event
      */
     let addUser = ($event) => {
-
       var dialogObject = {
         controller: function() {
           $scope.newUser = {};
