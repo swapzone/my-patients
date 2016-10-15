@@ -1,0 +1,73 @@
+<div class="patient-treatment ng-cloak" ng-cloak>
+  <a ng-click="vm.closeTreatments()" class="close-button"><i class="fa fa-close"></i></a>
+  <h1 class="header">{{ vm.patient.firstname }} {{ vm.patient.lastname }}</h1>
+  <span class="header-birthday">{{ vm.patient.birthday }}</span>
+
+  <div ng-show="vm.showForm">
+    <h3 class="sub-header">Neue Behandlung</h3>
+
+    <label for="treatment-date">Datum</label>
+    <input type="text" id="treatment-date" name="treatment-date" ng-model="vm.treatmentObject.date" />
+    <span class="table payment">
+      <span class="table-cell">
+        <label for="treatment-payment">Bezahlung</label>
+        <select id="treatment-payment"
+                name="treatment-payment"
+                ng-init="vm.treatmentObject.payment = 'Rechnung'"
+                ng-model="vm.treatmentObject.payment">
+          <option>Rechnung</option>
+          <option>Quittung</option>
+        </select>
+      </span>
+      <span class="table-cell">
+        <label for="treatment-amount">Betrag</label>
+        <input type="text" id="treatment-amount" name="treatment-amount" ng-model="vm.treatmentObject.amount" />
+      </span>
+      <span class="table-cell">
+        <br />
+        <input type="checkbox" id="treatment-postpone" name="treatment-postpone" ng-model="vm.treatmentObject.postpone" />
+        <label for="treatment-postpone">Später abrechnen?</label>
+      </span>
+    </span>
+    <label for="treatment-description">Behandlung</label>
+    <input type="text" id="treatment-description" name="treatment-description" ng-model="vm.treatmentObject.description" />
+    <label for="treatment-doctor">Behandelnder Arzt</label>
+    <select id="treatment-doctor"
+            name="treatment-doctor"
+            ng-init="vm.treatmentObject.doctor = 'Victoria Ott'"
+            ng-model="vm.treatmentObject.doctor">
+      <option ng-repeat="user in vm.users track by user._id">{{ user.name }}</option>
+    </select>
+    <span ng-if="vm.error" class="status-error">{{ vm.error }}</span>
+
+    <a class="button" ng-click="vm.triggerTreatmentForm()">Abbrechen</a>
+    <a class="button" ng-click="vm.saveTreatment()">Speichern</a>
+  </div>
+
+  <span class="table"
+        ng-if="vm.patient.treatments && vm.patient.treatments.length"
+        ng-hide="vm.showForm">
+    <span class="table-heading">
+      <span class="table-cell">Datum</span>
+      <span class="table-cell">Bezahlung</span>
+      <span class="table-cell">Betrag</span>
+      <span class="table-cell">Behandlung</span>
+      <span class="table-cell">Behandelnder Arzt</span>
+    </span>
+    <span class="table-row" ng-repeat="treatment in vm.patient.treatments track by treatment.id" ng-hide="vm.showForm">
+      <span class="table-cell">{{ treatment.date | dateFilter }}</span>
+      <span class="table-cell">{{ treatment.payment }}</span>
+      <span class="table-cell">{{ treatment.amount }}</span>
+      <span class="table-cell">{{ treatment.description }}</span>
+      <span class="table-cell">{{ treatment.doctor }}</span>
+      <span class="table-cell"><a ng-click="vm.triggerTreatmentForm(treatment)"><i class="fa fa-pencil"></i></a></span>
+    </span>
+  </span>
+
+  <div ng-if="!vm.patient.treatments || vm.patient.treatments.length == 0"
+       ng-hide="vm.showForm"
+       style="margin-bottom: 1em;">
+    Noch keine Behandlung vorhanden.
+  </div>
+  <a ng-click="vm.triggerTreatmentForm()" ng-hide="vm.showForm">Neue Behandlung</a>
+</div>

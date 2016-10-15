@@ -8,18 +8,17 @@
 
   angular
     .module('app.common')
-    .service('postalService', ['$q', 'storageService', PostalService]);
+    .service('postalService', postalService);
 
-  function PostalService($q, storageService) {
-    var self = this;
-    self.initialized = false;
+  /* @ngInject */
+  function postalService($q, storageService) {
+    let service = this;
+
+    service.initialized = false;
 
     // Create NeDB database containers
     var postalStore = new Datastore({ filename: storageService.getUserDataDirectory('postals.db'), autoload: true });
 
-    return {
-      getSuggestions: getSuggestions
-    };
 
     /**
      *
@@ -47,14 +46,14 @@
     }
 
     /**
-     *
+     * Initialize postal database.
      *
      * @returns {*}
      */
     function init() {
       var deferred = $q.defer();
 
-      if(!self.initialized) {
+      if(!service.initialized) {
 
         postalStore.find({}, function (err, docs) {
           if (err || docs.length === 0) {
@@ -77,12 +76,12 @@
             });
 
             lineReader.on('close', function () {
-              self.initialized = true;
+              service.initialized = true;
               deferred.resolve();
             });
           }
           else {
-            self.initialized = true;
+            service.initialized = true;
             deferred.resolve();
           }
         });
@@ -92,5 +91,10 @@
 
       return deferred.promise;
     }
+
+    //
+    // Service API
+    //
+    service.getSuggestions = getSuggestions;
   }
 })();

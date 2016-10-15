@@ -22,33 +22,28 @@
 
     vm.users = $rootScope.users;
     vm.patientSaved = false;
-
-    vm.abort = abort;
-    vm.savePatient = savePatient;
-
     vm.postalService = postalService;
 
+    /**
+     * Reset new patient data structure.
+     */
+    let resetNewPatient = () => {
+      delete $sessionStorage["newPatient"];
 
-    $scope.$on('$stateChangeStart',
-      function(event, toState, toParams, fromState) {
-        if(fromState['name'] == "patient.new") {
-
-          if(!vm.patientSaved)
-            $sessionStorage['newPatient'] = vm.newPatient;
-          else {
-            resetNewPatient();
-            vm.patientSaved = false;
-          }
-        }
-      });
+      vm.newPatient = {
+        insurance: {},
+        history: {},
+        risks: {},
+        treatments: []
+      };
+    };
 
     /**
-     *
+     * Abort adding new patient.
      *
      * @param $event
      */
-    function abort($event) {
-
+    let abort = ($event) => {
       var confirm = $mdDialog.confirm()
         .parent(angular.element(document.body))
         .title('Sicher?')
@@ -61,33 +56,17 @@
         resetNewPatient();
 
         $state.go("patient.list", {});
-      }, function() { });
-    }
+      });
+    };
 
     /**
-     *
-     */
-    function resetNewPatient() {
-
-      delete $sessionStorage["newPatient"];
-
-      vm.newPatient = {
-        insurance: {},
-        history: {},
-        risks: {},
-        treatments: []
-      };
-    }
-
-    /**
-     *
+     * Store new patient to database.
      *
      * @param $event
      */
-    function savePatient($event) {
+    let savePatient = ($event) => {
 
       if (vm.newPatient['firstname'] && vm.newPatient['lastname']) {
-
         if(vm.newPatient['birthday']) {
           var dateFormat = /\d{2}.\d{2}.\d{4}/;
 
@@ -108,7 +87,7 @@
           }
         }
 
-        patientService.create(vm.newPatient).then(function () {
+        patientService.createPatient(vm.newPatient).then(function () {
           $mdDialog.show(
             $mdDialog
               .alert()
@@ -134,6 +113,30 @@
             .targetEvent($event)
         );
       }
-    }
+    };
+
+    vm.$onInit = () => {
+      vm.unbindStateChangeListener = $scope.$on('$stateChangeStart',
+        (event, toState, toParams, fromState) => {
+          if (fromState['name'] == "patient.new") {
+            if (!vm.patientSaved)
+              $sessionStorage['newPatient'] = vm.newPatient;
+            else {
+              resetNewPatient();
+              vm.patientSaved = false;
+            }
+          }
+        });
+    };
+
+    vm.$onDestroy = () => {
+      vm.unbindStateChangeListener();
+    };
+
+    //
+    // Controller API
+    //
+    vm.abort = abort;
+    vm.savePatient = savePatient;
   }
 })();

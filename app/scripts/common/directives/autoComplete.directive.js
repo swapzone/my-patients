@@ -38,7 +38,7 @@
          */
         function getSuggestions(event, input) {
 
-          if(input.length < 3) {
+          if(!input || input.length < 3) {
             scope.suggestions = [];
             return;
           }

@@ -7,43 +7,57 @@
     .controller('PatientEditController', PatientEditController);
 
   /* @ngInject */
-  function PatientEditController($scope, $rootScope, patientService, postalService, $mdDialog, $state, $sessionStorage) {
+  function PatientEditController($log, $scope, $stateParams, patientService, postalService, $mdDialog, $state, users) {
     let vm = this;
 
-    if($sessionStorage['newPatient'])
-      vm.newPatient = $sessionStorage['newPatient'];
-    else
-      vm.newPatient = {
-        insurance: {},
-        history: {},
-        risks: {},
-        treatments: []
-      };
-
-    vm.users = $rootScope.users;
-    vm.patientSaved = false;
-
-    vm.abort = abort;
-    vm.savePatient = savePatient;
+    vm.users = users;
+    vm.patient = $stateParams.active ? JSON.parse($stateParams.active) : null;
+    vm.patient.treatments.sort(function(a, b) {
+      return b.date - a.date;
+    });
 
     vm.postalService = postalService;
 
+    /**
+     * Open treatment dialog.
+     *
+     * @param $event
+     */
+    function showTreatment($event) {
+      let formScope = $scope.$new();
+      formScope.patient = vm.patient;
+      formScope.users = users;
 
-    $scope.$on('$stateChangeStart',
-      function(event, toState, toParams, fromState) {
-        if(fromState['name'] == "patient.new") {
+      var dialogObject = {
+        scope: formScope,
+        controller: 'TreatmentCtrl',
+        controllerAs: 'TreatmentCtrl',
+        templateUrl: 'app/templates/patient/treatment/treatment.html',
+        parent: angular.element(document.body),
+        targetEvent: $event,
+        clickOutsideToClose: false
+      };
 
-          if(!vm.patientSaved)
-            $sessionStorage['newPatient'] = vm.newPatient;
-          else {
-            resetNewPatient();
-            vm.patientSaved = false;
-          }
-        }
-      });
+      $mdDialog.show(dialogObject)
+        .finally(function() {
+          dialogObject = undefined;
+        });
+    }
 
     /**
-     *
+     * Go to last state.
+     */
+    function goBack() {
+
+      if($stateParams.previousState) {
+        $state.go($stateParams.previousState, {});
+      }
+      else
+        $state.go('patient.list', {});
+    }
+
+    /**
+     * Abort editing of patient.
      *
      * @param $event
      */
@@ -58,40 +72,68 @@
         .cancel('Oh. Nein!');
 
       $mdDialog.show(confirm).then(function() {
-        resetNewPatient();
-
-        $state.go("patient.list", {});
+        $state.go("patient.details", { active: angular.toJson(vm.patient) });
       }, function() { });
     }
 
     /**
-     *
-     */
-    function resetNewPatient() {
-
-      delete $sessionStorage["newPatient"];
-
-      vm.newPatient = {
-        insurance: {},
-        history: {},
-        risks: {},
-        treatments: []
-      };
-    }
-
-    /**
-     *
+     * Delete the patient.
      *
      * @param $event
      */
-    function savePatient($event) {
+    function deletePatient($event) {
+      if(!vm.patient) {
+        $log.warn('Patient object is not set.');
+        return;
+      }
 
-      if (vm.newPatient['firstname'] && vm.newPatient['lastname']) {
+      var confirm = $mdDialog.confirm()
+        .title('Sicher?')
+        .content('Willst du den Patient wirklich löschen?')
+        .ok('Ja')
+        .cancel('Oh. Nein!')
+        .targetEvent($event);
 
-        if(vm.newPatient['birthday']) {
+      $mdDialog.show(confirm).then(function () {
+        patientService.deletePatient(vm.patient._id).then(function (numRemoved) {
+          if(numRemoved === 1) {
+            vm.patient = null;
+            $state.go("patient.list", {});
+          }
+          else {
+            $mdDialog.show(
+              $mdDialog
+                .alert()
+                .clickOutsideToClose(true)
+                .title('Fehler')
+                .content('Patient konnte nicht gelöscht werden.')
+                .ok('Ok')
+                .targetEvent($event)
+            )
+              .finally(function() {
+                $state.go("patient.details", { active: angular.toJson(vm.patient) });
+              });
+          }
+        });
+      }, function (err) {
+        console.error("Patient konnte nicht gelöscht werden.");
+        console.error(err);
+      });
+    }
+
+    /**
+     * Update the patient.
+     *
+     * @param $event
+     */
+    function updatePatient($event) {
+
+      if (vm.patient != null) {
+
+        if(vm.patient['birthday']) {
           var dateFormat = /\d{2}.\d{2}.\d{4}/;
 
-          if(!dateFormat.test(vm.newPatient['birthday'])) {
+          if(!dateFormat.test(vm.patient['birthday'])) {
             $mdDialog.show(
               $mdDialog
                 .alert()
@@ -100,40 +142,44 @@
                 .content('Der Geburtstag muss dem Format tt.mm.jjjj entsprechen!')
                 .ok('Ok')
                 .targetEvent($event)
-              )
-              .finally(function () {
-              });
+            )
+              .finally(function() {});
 
             return;
           }
         }
 
-        patientService.create(vm.newPatient).then(function () {
+        patientService.updatePatient(vm.patient._id, vm.patient).then(function () {
+          $state.go("patient.details", { active: angular.toJson(vm.patient) });
+        }, function(err) {
+          console.error(err);
+
           $mdDialog.show(
             $mdDialog
               .alert()
               .clickOutsideToClose(true)
-              .title('Super!')
-              .content('Patient wurde erfolgreich angelegt!')
+              .title('Fehler')
+              .content('Patientendaten konnten nicht gespeichert werden.')
               .ok('Ok')
               .targetEvent($event)
-          ).then(function() {
-            vm.patientSaved = true;
-            $state.go("patient.list", {});
-          });
+          )
+            .finally(function() {
+              $state.go("patient.details", { active: angular.toJson(vm.patient) });
+            });
         });
       }
       else {
-        $mdDialog.show(
-          $mdDialog
-            .alert()
-            .clickOutsideToClose(true)
-            .title('Nicht vollständig')
-            .content('Vor- und Nachname müssen ausgefüllt werden!')
-            .ok('Ok')
-            .targetEvent($event)
-        );
+        console.error("Patient-Objekt nicht verfügbar.");
       }
     }
+
+    //
+    // Controller API
+    //
+    vm.abort = abort;
+    vm.goBack = goBack;
+    vm.showTreatment = showTreatment;
+    vm.deletePatient = deletePatient;
+    vm.updatePatient = updatePatient;
   }
 })();

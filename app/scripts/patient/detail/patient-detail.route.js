@@ -9,7 +9,7 @@
 
     $stateProvider.state('patient.details', {
       url: 'patient/details?:active:previousState',
-      templateUrl: 'app/templates/patient/detail.html',
+      templateUrl: 'app/templates/patient/detail/patient-detail.html',
       controller: 'PatientDetailController',
       controllerAs: 'vm'
     });

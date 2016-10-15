@@ -1,8 +1,8 @@
 <div class="patient-details container ng-cloak" ng-cloak>
-  <div ng-if="activePatient == null">
+  <div ng-if="vm.patient == null">
     Es wurde kein Patient ausgewählt!
   </div>
-  <div ng-if="activePatient != null">
+  <div ng-if="vm.patient != null">
     <h1 class="header">Patient</h1>
 
     <div class="clearfix">
@@ -12,59 +12,59 @@
         <span class="table list">
           <span class="table-row">
             <span class="table-cell">Vorname</span>
-            <span class="table-cell">{{ activePatient.firstname }}</span>
+            <span class="table-cell">{{ vm.patient.firstname }}</span>
           </span>
           <span class="table-row">
             <span class="table-cell">Nachname</span>
-            <span class="table-cell">{{ activePatient.lastname }}</span>
+            <span class="table-cell">{{ vm.patient.lastname }}</span>
           </span>
           <span class="table-row">
             <span class="table-cell">Straße</span>
-            <span class="table-cell">{{ activePatient.street }}</span>
+            <span class="table-cell">{{ vm.patient.street }}</span>
           </span>
           <span class="table-row">
             <span class="table-cell">PLZ / Ort</span>
-            <span class="table-cell">{{ activePatient.postal }} {{ activePatient.city }}</span>
+            <span class="table-cell">{{ vm.patient.postal }} {{ vm.patient.city }}</span>
           </span>
         </span>
 
         <span class="table list">
           <span class="table-row">
             <span class="table-cell">Telefon</span>
-            <span class="table-cell">{{ activePatient.phone }}</span>
+            <span class="table-cell">{{ vm.patient.phone }}</span>
           </span>
           <span class="table-row">
             <span class="table-cell">Geschäftlich</span>
-            <span class="table-cell">{{ activePatient.office }}</span>
+            <span class="table-cell">{{ vm.patient.office }}</span>
           </span>
           <span class="table-row">
             <span class="table-cell">Mobil</span>
-            <span class="table-cell">{{ activePatient.mobile }}</span>
+            <span class="table-cell">{{ vm.patient.mobile }}</span>
           </span>
         </span>
 
-        <a ng-click="triggerPersonalDetails()" ng-hide="showPersonalDetails" style="display: block; margin-bottom: 0.3em;">Details anzeigen</a>
-        <a ng-click="triggerPersonalDetails()" ng-show="showPersonalDetails" style="display: block; margin-bottom: 0.3em;">Details verbergen</a>
-        <span class="table list" ng-show="showPersonalDetails">
+        <a ng-click="vm.showPersonalDetails = !vm.showPersonalDetails" ng-hide="vm.showPersonalDetails" style="display: block; margin-bottom: 0.3em;">Details anzeigen</a>
+        <a ng-click="vm.showPersonalDetails = !vm.showPersonalDetails" ng-show="vm.showPersonalDetails" style="display: block; margin-bottom: 0.3em;">Details verbergen</a>
+        <span class="table list" ng-show="vm.showPersonalDetails">
           <span class="table-row">
             <span class="table-cell">Geburtstag</span>
-            <span class="table-cell">{{ activePatient.birthday }}</span>
+            <span class="table-cell">{{ vm.patient.birthday }}</span>
           </span>
           <span class="table-row">
             <span class="table-cell">Familienstatus</span>
-            <span class="table-cell">{{ activePatient.status }}</span>
+            <span class="table-cell">{{ vm.patient.status }}</span>
           </span>
            <span class="table-row">
             <span class="table-cell">Beruf</span>
-            <span class="table-cell">{{ activePatient.profession }}</span>
+            <span class="table-cell">{{ vm.patient.profession }}</span>
           </span>
            <span class="table-row">
             <span class="table-cell">Versicherung</span>
-            <span class="table-cell">{{ activePatient.insurance.type }} {{ activePatient.insurance.name }}</span>
+            <span class="table-cell">{{ vm.patient.insurance.type }} {{ vm.patient.insurance.name }}</span>
           </span>
           <span class="table-row">
             <span class="table-cell">Bemerkungen</span>
-            <span class="table-cell">{{ activePatient.notes }}</span>
+            <span class="table-cell">{{ vm.patient.notes }}</span>
           </span>
         </span>
       </div>
@@ -72,23 +72,23 @@
       <div class="patient-attributes patient-abstract">
         <div class="patient-attention">
           <h2 class="sub-header">Vermerk</h2>
-          <span>{{ activePatient.attention }}</span>
+          <span>{{ vm.patient.attention }}</span>
         </div>
 
         <span class="table list">
           <span class="table-row">
             <span class="table-cell">Referenz durch</span>
-            <span class="table-cell">{{ activePatient.reference }}</span>
+            <span class="table-cell">{{ vm.patient.reference }}</span>
           </span>
           <span class="table-row">
             <span class="table-cell">Behandelnder Arzt</span>
-            <span class="table-cell">{{ activePatient.doctor }}</span>
+            <span class="table-cell">{{ vm.patient.doctor }}</span>
           </span>
           <span class="table-row">
             <span class="table-cell">Papierakte?</span>
             <span class="table-cell">
-              <span ng-if="activePatient.paperfile">Ja</span>
-              <span ng-if="!activePatient.paperfile">Nein</span>
+              <span ng-if="vm.patient.paperfile">Ja</span>
+              <span ng-if="!vm.patient.paperfile">Nein</span>
             </span>
           </span>
         </span>
@@ -101,11 +101,11 @@
       <span class="table list">
         <span class="table-row">
           <span class="table-cell">Befunde</span>
-          <span class="table-cell">{{ activePatient.findings }}</span>
+          <span class="table-cell">{{ vm.patient.findings }}</span>
         </span>
         <span class="table-row">
           <span class="table-cell">Therapie</span>
-          <span class="table-cell">{{ activePatient.therapy }}</span>
+          <span class="table-cell">{{ vm.patient.therapy }}</span>
         </span>
       </span>
     </div>
@@ -116,15 +116,15 @@
       <span class="table list">
         <span class="table-row">
           <span class="table-cell">Operationen </span>
-          <span class="table-cell">{{ activePatient.history.operations }}</span>
+          <span class="table-cell">{{ vm.patient.history.operations }}</span>
         </span>
         <span class="table-row">
           <span class="table-cell">Unfälle</span>
-          <span class="table-cell">{{ activePatient.history.accidents }}</span>
+          <span class="table-cell">{{ vm.patient.history.accidents }}</span>
         </span>
          <span class="table-row">
           <span class="table-cell">Vorerkrankungen</span>
-          <span class="table-cell">{{ activePatient.history.disease }}</span>
+          <span class="table-cell">{{ vm.patient.history.disease }}</span>
         </span>
       </span>
     </div>
@@ -136,11 +136,11 @@
         <span class="table list">
           <span class="table-row">
             <span class="table-cell">Allergien</span>
-            <span class="table-cell">{{ activePatient.risks.allergy }}</span>
+            <span class="table-cell">{{ vm.patient.risks.allergy }}</span>
           </span>
           <span class="table-row">
             <span class="table-cell">Medikation</span>
-            <span class="table-cell">{{ activePatient.risks.medicine }}</span>
+            <span class="table-cell">{{ vm.patient.risks.medicine }}</span>
           </span>
         </span>
       </div>
@@ -148,7 +148,7 @@
   </div>
 </div>
 <div class="footer">
-  <a class="button" ng-click="goBack()">Zurück</a>
-  <a class="button" ng-click="editPatient()">Editieren</a>
-  <a class="button" ng-click="showTreatment()">Behandlungsakte</a>
+  <a class="button" ng-click="vm.goBack()">Zurück</a>
+  <a class="button" ng-click="vm.editPatient()">Editieren</a>
+  <a class="button" ng-click="vm.showTreatment()">Behandlungsakte</a>
 </div>

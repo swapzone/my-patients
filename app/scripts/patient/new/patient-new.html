@@ -6,7 +6,7 @@
       <h2 class="sub-header">Persönliche Daten</h2>
 
       <label for="salutation">Anrede</label>
-      <select id="salutation" name="salutation" ng-model="newPatient.salutation">
+      <select id="salutation" name="salutation" ng-model="vm.newPatient.salutation">
         <option>Herr</option>
         <option>Frau</option>
         <option>Herr Dr.</option>
@@ -14,13 +14,13 @@
       </select>
 
       <label for="firstname">Vorname</label>
-      <input type="text" id="firstname" name="firstname" ng-model="newPatient.firstname" />
+      <input type="text" id="firstname" name="firstname" ng-model="vm.newPatient.firstname" />
 
       <label for="lastname">Nachname</label>
-      <input type="text" id="lastname" name="lastname" ng-model="newPatient.lastname" />
+      <input type="text" id="lastname" name="lastname" ng-model="vm.newPatient.lastname" />
 
       <label for="street">Straße</label>
-      <input type="text" id="street" name="street" ng-model="newPatient.street" />
+      <input type="text" id="street" name="street" ng-model="vm.newPatient.street" />
 
       <span class="table two">
         <span class="table-row">
@@ -28,13 +28,13 @@
             <label for="postal">PLZ</label>
             <auto-complete
               id="postal"
-              model="newPatient"
-              retrieve-suggestions-fn="postalService.getSuggestions(input)">
+              model="vm.newPatient"
+              retrieve-suggestions-fn="vm.postalService.getSuggestions(input)">
             </auto-complete>
           </span>
           <span class="table-cell">
             <label for="city">Ort</label>
-            <input type="text" id="city" name="city" ng-model="newPatient.city" />
+            <input type="text" id="city" name="city" ng-model="vm.newPatient.city" />
           </span>
         </span>
       </span>
@@ -43,15 +43,15 @@
         <span class="table-row">
           <span class="table-cell">
             <label for="phone">Telefon</label>
-            <input type="text" id="phone" name="phone" ng-model="newPatient.phone" />
+            <input type="text" id="phone" name="phone" ng-model="vm.newPatient.phone" />
           </span>
           <span class="table-cell">
             <label for="office">Geschäftlich</label>
-            <input type="text" id="office" name="office" ng-model="newPatient.office" />
+            <input type="text" id="office" name="office" ng-model="vm.newPatient.office" />
           </span>
           <span class="table-cell">
             <label for="mobile">Mobil</label>
-            <input type="text" id="mobile" name="mobile" ng-model="newPatient.mobile" />
+            <input type="text" id="mobile" name="mobile" ng-model="vm.newPatient.mobile" />
           </span>
         </span>
       </span>
@@ -60,11 +60,11 @@
         <span class="table-row">
           <span class="table-cell">
             <label for="birthday">Geburtstag</label>
-            <input type="text" id="birthday" name="birthday" ng-model="newPatient.birthday" />
+            <input type="text" id="birthday" name="birthday" ng-model="vm.newPatient.birthday" />
           </span>
           <span class="table-cell">
             <label for="status">Familienstatus</label>
-            <select id="status" name="status" ng-model="newPatient.status">
+            <select id="status" name="status" ng-model="vm.newPatient.status">
               <option>alleinstehend</option>
               <option>verheiratet</option>
               <option>geschieden</option>
@@ -75,7 +75,7 @@
         <span class="table-row">
           <span class="table-cell">
             <label for="insurance">Versicherung</label>
-            <select id="insurance" name="insurance" ng-model="newPatient.insurance.type">
+            <select id="insurance" name="insurance" ng-model="vm.newPatient.insurance.type">
               <option>Privat</option>
               <option>Privat Zusatz</option>
               <option>Gesetzlich</option>
@@ -83,33 +83,33 @@
           </span>
           <span class="table-cell">
             <label for="insurance-name">Name der Versicherung</label>
-            <input type="text" id="insurance-name" name="insurance-name" ng-model="newPatient.insurance.name" />
+            <input type="text" id="insurance-name" name="insurance-name" ng-model="vm.newPatient.insurance.name" />
           </span>
         </span>
       </span>
 
       <label for="profession">Beruf</label>
-      <input type="text" id="profession" name="profession" ng-model="newPatient.profession" />
+      <input type="text" id="profession" name="profession" ng-model="vm.newPatient.profession" />
 
       <label for="notes">Sonstige Bemerkungen</label>
-      <textarea rows="4" id="notes" name="notes" ng-model="newPatient.notes"></textarea>
+      <textarea rows="4" id="notes" name="notes" ng-model="vm.newPatient.notes"></textarea>
     </span>
 
     <div class="patient-attributes patient-abstract">
       <label for="attention">Vermerk</label>
-      <input type="text" id="attention" name="attention" ng-model="newPatient.attention" />
+      <input type="text" id="attention" name="attention" ng-model="vm.newPatient.attention" />
 
       <label for="reference">Referenz durch</label>
-      <input type="text" id="reference" name="reference" ng-model="newPatient.reference" />
+      <input type="text" id="reference" name="reference" ng-model="vm.newPatient.reference" />
 
       <label for="doctor">Behandelnder Arzt</label>
       <select id="doctor"
               name="doctor"
-              ng-model="newPatient.doctor">
+              ng-model="vm.newPatient.doctor">
         <option ng-repeat="user in users track by user._id">{{ user.name }}</option>
       </select>
 
-      <input type="checkbox" id="paperfile" name="paperfile" value="paperfile" ng-model="newPatient.paperfile" />
+      <input type="checkbox" id="paperfile" name="paperfile" value="paperfile" ng-model="vm.newPatient.paperfile" />
       <label for="paperfile">Papierakte vorhanden</label>
     </div>
   </div>
@@ -119,12 +119,12 @@
       <h2 class="sub-header">Aktuelles</h2>
 
       <label for="findings">Befunde</label>
-      <textarea rows="3" id="findings" name="findings" ng-model="newPatient.findings" >
+      <textarea rows="3" id="findings" name="findings" ng-model="vm.newPatient.findings" >
       </textarea>
     </div>
     <div class="patient-therapy">
       <label for="therapy">Therapie</label>
-      <textarea rows="3" id="therapy" name="therapy" ng-model="newPatient.therapy" >
+      <textarea rows="3" id="therapy" name="therapy" ng-model="vm.newPatient.therapy" >
       </textarea>
     </div>
   </div>
@@ -136,17 +136,17 @@
       <span class="table-row">
         <span class="table-cell">
           <label for="operations">Operationen</label>
-           <textarea rows="4" id="operations" name="operations" ng-model="newPatient.history.operations" >
+           <textarea rows="4" id="operations" name="operations" ng-model="vm.newPatient.history.operations" >
           </textarea>
         </span>
         <span class="table-cell">
           <label for="accidents">Unfälle</label>
-          <textarea rows="4" id="accidents" name="accidents" ng-model="newPatient.history.accidents" >
+          <textarea rows="4" id="accidents" name="accidents" ng-model="vm.newPatient.history.accidents" >
           </textarea>
         </span>
         <span class="table-cell">
           <label for="disease">Vorerkrankungen</label>
-          <textarea rows="4" id="disease" name="disease" ng-model="newPatient.history.disease" >
+          <textarea rows="4" id="disease" name="disease" ng-model="vm.newPatient.history.disease" >
           </textarea>
         </span>
       </span>
@@ -158,16 +158,16 @@
       <h2 class="sub-header">Risikofaktoren</h2>
 
       <label for="allergy">Allergien</label>
-      <textarea rows="3" id="allergy" name="allergy" ng-model="newPatient.risks.allergy">
+      <textarea rows="3" id="allergy" name="allergy" ng-model="vm.newPatient.risks.allergy">
       </textarea>
 
       <label for="medicine">Medikation</label>
-      <textarea rows="3" id="medicine" name="medicine" ng-model="newPatient.risks.medicine">
+      <textarea rows="3" id="medicine" name="medicine" ng-model="vm.newPatient.risks.medicine">
       </textarea>
     </div>
   </div>
 </div>
 <div class="footer">
-  <a class="button" ng-click="abort($event)">Abbrechen</a>
-  <a class="button" ng-click="savePatient()">Speichern</a>
+  <a class="button" ng-click="vm.abort($event)">Abbrechen</a>
+  <a class="button" ng-click="vm.savePatient()">Speichern</a>
 </div>
