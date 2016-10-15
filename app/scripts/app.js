@@ -5,7 +5,8 @@
     .module('app', [
       'ui.router',
       'app.index',
-      'app.login'
+      'app.login',
+      'app.settings'
     ])
     .constant('INSURANCE_TYPE', {
       'state': 'Gesetzlich',

@@ -1,35 +1,30 @@
 <div class="settings container ng-cloak" ng-cloak>
   <h1 class="header">Einstellungen</h1>
-
   <div class="settings-section">
     <h2 class="sub-header">Nutzerverwaltung</h2>
 
-    <ul class="settings-user-list" ng-if="users.length">
-      <li ng-repeat="user in users track by user._id"
+    <ul class="settings-user-list" ng-if="vm.users.length">
+      <li ng-repeat="user in vm.users track by user._id"
           ng-mouseover="showDelete = true"
           ng-mouseleave="showDelete = false">
         <span>{{ user.name }}</span>
-        <a ng-show="showDelete" ng-click="deleteUser($event, user._id)">löschen</a>
+        <a ng-show="showDelete && user._id !== vm.currentUser._id" ng-click="vm.deleteUser($event, user._id)">löschen</a>
       </li>
     </ul>
 
-    <div class="settings-user-list empty" ng-if="!users.length">
+    <div class="settings-user-list empty" ng-if="!vm.users.length">
       Es sind noch keine Nutzer vorhanden.
     </div>
-
-    <a ng-click="addUser()" class="button">Neuer Benutzer</a>
+    <a ng-click="vm.addUser()" class="button">Neuer Benutzer</a>
   </div>
 
   <div class="settings-section">
     <h2 class="sub-header">Sprachauswahl</h2>
     <p>Falls mehrere Sprachen installiert sind, können sie hier umgestellt werden.</p>
-
     <label for="settings-language"></label>
     <select id="settings-language"
             name="settings-language"
-            class="settings-dropdown"
-            ng-init="settings.language = 'Deutsch'"
-            ng-model="settings.language">
+            class="settings-dropdown">
       <option>Deutsch</option>
     </select>
   </div>
@@ -40,19 +35,19 @@
       zugeordnet werden. Falls für alle Krankenkassentypen die gleiche Rechnungsvorlage verwendet
       wird, muss die Rechnungsvorlage keinem Typen zugeordnet werden.</p>
 
-    <ul class="settings-template-list" ng-if="invoiceTemplates.length">
-      <li ng-repeat="template in invoiceTemplates track by template._id"
+    <ul class="settings-template-list" ng-if="vm.invoiceTemplates.length">
+      <li ng-repeat="template in vm.invoiceTemplates track by template._id"
           ng-mouseover="showDelete = true"
           ng-mouseleave="showDelete = false">
         <span>{{ template.name }}</span>
-        <a ng-show="showDelete" ng-click="deleteTemplate($event, template._id)">löschen</a>
+        <a ng-show="showDelete" ng-click="vm.deleteTemplate($event, template._id)">löschen</a>
       </li>
     </ul>
 
-    <div class="settings-template-list empty" ng-if="!invoiceTemplates.length">
+    <div class="settings-template-list empty" ng-if="!vm.invoiceTemplates.length">
       Es sind noch keine Rechnungsvorlagen vorhanden.
     </div>
 
-    <a ng-click="addTemplate()" class="button">Neue Rechnungsvorlage</a>
+    <a ng-click="vm.addTemplate()" class="button">Neue Rechnungsvorlage</a>
   </div>
 </div>

@@ -7,10 +7,17 @@
     .controller('PatientNewController', PatientNewController);
 
   /* @ngInject */
-  function PatientNewController($scope, $mdDialog, $state, $sessionStorage, loginService, patientService, postalService, users) {
+  function PatientNewController($scope, $mdDialog, $state, $sessionStorage, loginService, patientService, postalService, settingsService) {
     const vm = this;
 
-    vm.users = users;
+    // $rootScope.$on('backupRestored', function () {
+    //   settingsService.getUsers()
+    //     .then((users) => {
+    //       vm.users = users;
+    //     });
+    // });
+
+    vm.users = settingsService.users;
     vm.patientSaved = false;
     vm.postalService = postalService;
 

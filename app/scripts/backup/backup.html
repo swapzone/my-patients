@@ -1,17 +1,13 @@
 <div class="backup container">
   <h1 class="header">Sichern und Wiederherstellen</h1>
-
   <div class="backup-section">
-    <a ng-click="createBackupFile()" class="button">Sicherungsdatei erstellen</a>
+    <a ng-click="vm.createBackupFile()" class="button">Sicherungsdatei erstellen</a>
   </div>
-
   <div class="backup-section">
     <h2 class="sub-header">Wiederherstellen</h2>
-
     <label for="backup-file">Sicherungsdatei laden und auf 'Wiederherstellen' klicken.</label>
-    <input type="file" id="backup-file" name="backup-file" accept=".zip" file-read="backupFile" />
-
-    <span class="status-error" ng-if="error">{{ error }}</span>
-    <a ng-click="restoreBackup($event)" class="button">Wiederherstellen</a>
+    <input type="file" id="backup-file" name="backup-file" accept=".zip" file-read="vm.backupFile" />
+    <span class="status-error" ng-if="vm.error">{{ vm.error }}</span>
+    <a ng-click="vm.restoreBackup($event)" class="button">Wiederherstellen</a>
   </div>
 </div>

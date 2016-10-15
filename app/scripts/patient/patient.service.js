@@ -10,7 +10,7 @@
 
   /* @ngInject */
   function PatientService($rootScope, $q, storageService) {
-    let service = this;
+    const service = this;
 
     service.patients = [];
 
@@ -19,17 +19,19 @@
 
     $rootScope.$on('backupRestored', function () {
       patientStore.loadDatabase();
+      initializePatients(true);
     });
 
     /**
      * Retrieve all patients from database or cache.
      *
+     * @param force
      * @returns {*}
      */
-    function initializePatients() {
+    function initializePatients(force) {
       var deferred = $q.defer();
 
-      if (service.patients.length) {
+      if (service.patients.length && !force) {
         deferred.resolve();
       }
       else {

@@ -7,10 +7,17 @@
     .controller('PatientEditController', PatientEditController);
 
   /* @ngInject */
-  function PatientEditController($log, $scope, $stateParams, patientService, postalService, $mdDialog, $state, users) {
+  function PatientEditController($log, $mdDialog, $scope, $state, $stateParams, patientService, postalService, settingsService) {
     let vm = this;
 
-    vm.users = users;
+    // $rootScope.$on('backupRestored', function () {
+    //   settingsService.getUsers()
+    //     .then((users) => {
+    //       vm.users = users;
+    //     });
+    //});
+
+    vm.users = settingsService.users;
     vm.patient = $stateParams.active ? JSON.parse($stateParams.active) : null;
     vm.patient.treatments.sort(function(a, b) {
       return b.date - a.date;

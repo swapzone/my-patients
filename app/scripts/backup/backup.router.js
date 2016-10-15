@@ -12,7 +12,8 @@
       url: '/backup',
       parent: 'index',
       templateUrl: 'app/templates/backup/backup.html',
-      controller: 'backupCtrl'
+      controller: 'BackupController',
+      controllerAs: 'vm'
     });
   }
 })();

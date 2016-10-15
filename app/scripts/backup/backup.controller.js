@@ -9,18 +9,20 @@
 
   angular
     .module('app.backup')
-    .controller('backupCtrl', BackupController);
+    .controller('BackupController', BackupController);
 
   /* @ngInject */
-  function BackupController($rootScope, $scope, $mdDialog, $state, storageService) {
-    $scope.backupFile = null;
-    $scope.error = "";
+  function BackupController($rootScope, $mdDialog, $state, storageService) {
+    const vm = this;
+    
+    vm.backupFile = null;
+    vm.error = "";
 
-    $scope.createBackupFile = createBackupFile;
-    $scope.restoreBackup = restoreBackup;
+    vm.createBackupFile = createBackupFile;
+    vm.restoreBackup = restoreBackup;
 
     /**
-     *
+     * Create backup file and offer as download.
      */
     function createBackupFile() {
       var archive = archiver.create('zip', {});
@@ -64,12 +66,12 @@
     }
 
     /**
-     *
+     * Restore application data from backup file.
      */
     function restoreBackup($event) {
 
-      if($scope.backupFile) {
-        $scope.error = "";
+      if(vm.backupFile) {
+        vm.error = "";
 
         var confirm = $mdDialog.confirm()
           .parent(angular.element(document.body))
@@ -96,7 +98,7 @@
         }, function() { });
       }
       else {
-        $scope.error = "Es muss zuerst eine Sicherungsdatei ausgewählt werden.";
+        vm.error = "Es muss zuerst eine Sicherungsdatei ausgewählt werden.";
       }
     }
 
@@ -104,7 +106,7 @@
 
       var filePath = Path.join(path, 'backup.zip');
 
-      fs.writeFile(filePath, new Buffer($scope.backupFile, 'binary'), function (err) {
+      fs.writeFile(filePath, new Buffer(vm.backupFile, 'binary'), function (err) {
         if (err) throw err;
 
         restoreBackupFile(filePath);
@@ -116,8 +118,8 @@
      */
     function restoreBackupFile(filePath) {
 
-      if($scope.backupFile == null) {
-        $scope.error = "Die Sicherungsdatei konnte nicht gelesen werden.";
+      if(vm.backupFile == null) {
+        vm.error = "Die Sicherungsdatei konnte nicht gelesen werden.";
         return;
       }
 
@@ -139,6 +141,8 @@
           });
         })
         .on('close', function() {
+          $rootScope.$broadcast('backupRestored');
+
           $mdDialog.show(
               $mdDialog
                   .alert()
@@ -147,13 +151,12 @@
                   .content('Die Wiederherstellung war erfolgreich!')
                   .ok('Ok')
           ).then(function() {
-            $rootScope.$broadcast('backupRestored');
             $state.go("patient.list", {});
           });
         })
         .on('error', function(err) {
           console.error(err);
-          $scope.error = "Die Wiederherstellung war leider nicht erfolgreich.";
+          vm.error = "Die Wiederherstellung war leider nicht erfolgreich.";
         });
       });
     }

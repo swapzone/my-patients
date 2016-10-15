@@ -13,22 +13,26 @@
 
     $stateProvider.state('root', {
       abstract: true,
-      template: '<div ui-view></div>'
+      template: '<div ui-view></div>',
+      resolve: {
+        /* @ngInject */
+        patients: function (patientService) {
+          return patientService.initializePatients();
+        },
+        /* @ngInject */
+        users: function loadUsers(settingsService) {
+          return settingsService.initializeUsers();
+        }
+    }
     });
   }
 
   /* @ngInject */
   function run($rootScope, $state, loginService) {
-
-    if (loginService.activeUser()) {
-      $rootScope.user = loginService.activeUser();
-    }
-
     $rootScope.$on('$stateChangeStart',
       function (event, toState, toParams, fromState, fromParams) {
-
         // prevent user from going to the login page if the user is already authenticated
-        if (!$rootScope.user && toState.name !== 'login') {
+        if (!loginService.activeUser() && toState.name !== 'login') {
           event.preventDefault();
           $state.go('login');
         }

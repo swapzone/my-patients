@@ -6,6 +6,7 @@
       'ngMaterial',
       'ngStorage',
       'ui.router',
-      'app.common'
+      'app.common',
+      'app.settings'
     ]);
 })();

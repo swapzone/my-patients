@@ -7,7 +7,7 @@
     .controller('PatientDetailController', PatientDetailController);
 
   /* @ngInject */
-  function PatientDetailController($scope, $state, $stateParams, $mdDialog, users) {
+  function PatientDetailController($scope, $state, $stateParams, $mdDialog) {
     let vm = this;
     
     vm.patient = $stateParams.active ? JSON.parse($stateParams.active) : null;

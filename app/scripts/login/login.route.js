@@ -12,13 +12,7 @@
       parent: 'root',
       templateUrl: 'app/templates/login/login.html',
       controller: 'LoginCtrl',
-      controllerAs: 'vm',
-      resolve: {
-        /* @ngInject */
-        users: function loadUsers(settingsService) {
-          return settingsService.getUsers();
-      }
-    }
+      controllerAs: 'vm'
     });
   }
 })();

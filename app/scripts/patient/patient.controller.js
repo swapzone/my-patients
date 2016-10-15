@@ -7,7 +7,7 @@
     .controller('PatientController', PatientController);
 
   /* @ngInject */
-  function PatientController($scope, $state, $location, $anchorScroll, patientService, users) {
+  function PatientController($scope, $state, $location, $anchorScroll, patientService, settingsService) {
     const vm = this;
 
     vm.activeAnchors = [];
@@ -15,13 +15,19 @@
       'A', 'D', 'G', 'J', 'M', 'P', 'S', 'V', 'Y'
     ];
 
-    vm.users = users;
+    // $rootScope.$on('backupRestored', function () {
+    //   settingsService.getUsers()
+    //     .then((users) => {
+    //       vm.users = users;
+    //     });
+    // });
+
+    vm.users = settingsService.users;
     vm.showFilter = false;
     vm.filter = null;
 
     $scope.$watch('vm.showFilter', function() {
-      // the variable must be watched since it can be set from the
-      // watchMe directive
+      // the variable must be watched since it can be set from the watchMe directive
       if(vm.showFilter == false)
         vm.filter = null;
     });

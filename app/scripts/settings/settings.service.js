@@ -10,43 +10,63 @@
 
   /* @ngInject */
   function settingsService($rootScope, $q, storageService) {
+    const service = this;
+
+    service.users = [];
 
     // Create NeDB database containers
-    //var settingsStore = new Datastore({ filename: __dirname + '/data/settings.db', autoload: true });
     var settingsStore = new Datastore({ filename: storageService.getUserDataDirectory('settings.db'), autoload: true });
 
     $rootScope.$on('backupRestored', function () {
       settingsStore.loadDatabase();
+      service.users.splice(0, service.users.length);
+      initializeUsers();
     });
 
-    return {
-      getUsers: getUsers,
-      deleteUser: deleteUser,
-      addUser: addUser,
-      getInvoiceTemplates: getInvoiceTemplates,
-      deleteInvoiceTemplate: deleteInvoiceTemplate,
-      addInvoiceTemplate: addInvoiceTemplate
-    };
-
-    function getUsers() {
+    /**
+     * Initialize all available users.
+     */
+    function initializeUsers() {
       var deferred = $q.defer();
 
-      settingsStore.find({ key: 'user' }, function (err, docs) {
-        if (err) deferred.reject(err);
+      if (service.users.length) {
+        deferred.resolve(service.users);
+      }
+      else {
+        settingsStore.find({key: 'user'}, function (err, docs) {
+          if (err) deferred.reject(err);
 
-        deferred.resolve(docs);
-      });
+          docs.forEach(doc => {
+            service.users.push(doc);
+          });
+
+          deferred.resolve();
+        });
+      }
 
       return deferred.promise;
     }
 
-    function deleteUser(id) {
+    /**
+     * Delete user from database.
+     *
+     * @param userId
+     */
+    function deleteUser(userId) {
       var deferred = $q.defer();
 
       // Remove one document from the collection
       // options set to {} since the default for multi is false
-      settingsStore.remove({ key: 'user', _id: id }, {}, function (err, numRemoved) {
+      settingsStore.remove({ key: 'user', _id: userId }, {}, function (err, numRemoved) {
         if (err) deferred.reject(err);
+
+        // update cached version
+        for (let i=0; i<service.users.length; i++) {
+          if (service.users[i]._id === userId) {
+            service.users.splice(i, 1);
+            break;
+          }
+        }
 
         deferred.resolve(numRemoved);
       });
@@ -54,6 +74,11 @@
       return deferred.promise;
     }
 
+    /**
+     *
+     *
+     * @param user
+     */
     function addUser(user) {
       var deferred = $q.defer();
 
@@ -67,6 +92,7 @@
             // newDoc is the newly inserted document, including its _id
             if (err) deferred.reject(err);
 
+            service.users.push(newDoc);
             deferred.resolve(newDoc);
           });
         }
@@ -78,7 +104,10 @@
       return deferred.promise;
     }
 
-     function getInvoiceTemplates() {
+    /**
+     *
+     */
+    function getInvoiceTemplates() {
       var deferred = $q.defer();
 
       settingsStore.find({ key: 'template' }, function (err, docs) {
@@ -90,12 +119,17 @@
       return deferred.promise;
     }
 
-    function deleteInvoiceTemplate(id) {
+    /**
+     * Delete template with given templateId.
+     *
+     * @param templateId
+     */
+    function deleteInvoiceTemplate(templateId) {
       var deferred = $q.defer();
 
       // Remove one document from the collection
       // options set to {} since the default for multi is false
-      settingsStore.remove({ key: 'template', _id: id }, {}, function (err, numRemoved) {
+      settingsStore.remove({ key: 'template', _id: templateId }, {}, function (err, numRemoved) {
         if (err) deferred.reject(err);
 
         deferred.resolve(numRemoved);
@@ -104,6 +138,11 @@
       return deferred.promise;
     }
 
+    /**
+     * Add new invoice template to database.
+     *
+     * @param template
+     */
     function addInvoiceTemplate(template) {
       var deferred = $q.defer();
 
@@ -118,5 +157,15 @@
 
       return deferred.promise;
     }
+
+    //
+    // Service API
+    //
+    service.initializeUsers = initializeUsers;
+    service.deleteUser = deleteUser;
+    service.addUser = addUser;
+    service.getInvoiceTemplates = getInvoiceTemplates;
+    service.deleteInvoiceTemplate =  deleteInvoiceTemplate;
+    service.addInvoiceTemplate = addInvoiceTemplate;
   }
 })();

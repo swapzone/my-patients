@@ -12,17 +12,7 @@
       parent: 'root',
       templateUrl: 'app/templates/index/index.html',
       controller: 'IndexCtrl',
-      controllerAs: 'vm',
-      resolve: {
-        /* @ngInject */
-        patients: function (patientService) {
-          return patientService.initializePatients();
-        },
-        /* @ngInject */
-        users: function loadUsers(settingsService) {
-          return settingsService.getUsers();
-        }
-      }
+      controllerAs: 'vm'
     });
   }
 })();
