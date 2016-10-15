@@ -9,7 +9,7 @@
     .service('patientService', PatientService);
 
   /* @ngInject */
-  function PatientService($rootScope, $q, storageService) {
+  function PatientService($log, $rootScope, $q, storageService) {
     const service = this;
 
     service.patients = [];
@@ -107,7 +107,10 @@
 
       // $push inserts new elements at the end of the array
       patientStore.update({ _id: patientId }, { $push: { treatments: treatment } }, {}, function (err) {
-        if (err) deferred.reject(err);
+        if (err) {
+          $log.error(err);
+          return deferred.reject(err);
+        }
 
         // update cached version
         for (let i=0; i<service.patients.length; i++) {
@@ -142,10 +145,19 @@
 
         var patient = docs[0];
 
-        patient.treatments.splice(patient.treatments.indexOf(oldTreatment));
+        let index = -1;
+        patient.treatments.some((treatment, elementIndex) => {
+          if (treatment.id === oldTreatment.id) {
+            index = elementIndex;
+            return true;
+          }
+          return false;
+        });
+
+        patient.treatments.splice(index, 1);
         patient.treatments.push(newTreatment);
 
-        patientStore.update({ _id: patientId }, patient, { }, function (err) {
+        patientStore.update({ _id: patientId }, patient, { }, function (err, numReplaced) {
           if (err) {
             deferred.reject(err);
             return;
@@ -154,7 +166,7 @@
           // update cached version
           for (let i=0; i<service.patients.length; i++) {
             if (service.patients[i]._id === patientId) {
-              service.patients[i].treatments = patient.treatments.map(treatment => treatment);
+              service.patients[i].treatments = patient.treatments;
               break;
             }
           }

@@ -9,23 +9,38 @@
     .controller('TreatmentController', TreatmentController);
 
   /* @ngInject */
-  function TreatmentController($mdDialog, loginService, patientService, patient) {
+  function TreatmentController($log, $mdDialog, $timeout, loginService, patientService, patient) {
     const vm = this;
 
     vm.patient = patient;
+    vm.patient.treatments.sort((a, b) => {
+      return new Date(a.date) - new Date(b.date);
+    });
+
     vm.showForm = false;
     vm.treatmentObject = {
       doctor: loginService.activeUser().name
     };
-    vm.originalTreatmentObject = {};
-    vm.originalTreatmentReference = null;
+    vm.originalTreatmentObject = undefined;
 
     /**
      * Close treatment form.
      */
     vm.closeTreatments = function() {
-      vm.treatmentObject = {};
+      if (vm.originalTreatmentObject) {
+        vm.treatmentObject.date = vm.originalTreatmentObject.date;
+      }
       $mdDialog.cancel();
+    };
+
+    /**
+     * Stop editing treatments.
+     */
+    vm.stopEdit = () => {
+      if (vm.originalTreatmentObject) {
+        vm.treatmentObject.date = vm.originalTreatmentObject.date;
+      }
+      vm.showForm = false;
     };
 
     /**
@@ -34,12 +49,18 @@
      * @param treatment
      */
     vm.triggerTreatmentForm = function(treatment) {
+      if (treatment && vm.patient.hasOwnProperty('last_invoiced') && vm.patient.last_invoiced.date > treatment.date) {
+        $log.warn('Already invoiced.');
+        vm.editError = 'Die Behandlung wurde schon abgerechnet und kann nicht mehr geändert werden.';
+
+        $timeout(() => {
+          vm.editError = '';
+        }, 2000);
+        return;
+      }
+
       vm.showForm = !vm.showForm;
       vm.error = null;
-
-      if(vm.treatmentObject.hasOwnProperty('date')) {
-        vm.treatmentObject.date = moment(vm.treatmentObject.date, 'DD.MM.YYYY').format();
-      }
 
       if(treatment) {
         vm.treatmentObject = treatment;
@@ -48,13 +69,18 @@
         var dateObject = moment(treatment.date);
         vm.treatmentObject.date = dateObject.format("DD.MM.YYYY");
       }
+      else {
+        // new treatment form
+        vm.treatmentObject = {
+          doctor: loginService.activeUser().name
+        };
+      }
     };
 
     /**
      * Save treatment to database.
      */
     vm.saveTreatment = function() {
-
       if (vm.treatmentObject['date'] && vm.treatmentObject['payment'] && vm.treatmentObject['description'] && vm.treatmentObject['doctor']) {
         var dateFormat = /\d{2}.\d{2}.\d{4}/;
         var complexDateFormat = /\d{4}-\d{2}-\d{2}/;
@@ -62,8 +88,7 @@
         if(dateFormat.test(vm.treatmentObject['date']) || complexDateFormat.test(vm.treatmentObject['date'].substring(0, 10))) {
 
           if(dateFormat.test(vm.treatmentObject['date'])) {
-            var dateArray = vm.treatmentObject.date.split('.');
-            vm.treatmentObject.date = new Date(dateArray[2], dateArray[1] - 1, dateArray[0]);
+            vm.treatmentObject.date = moment(vm.treatmentObject.date, 'DD.MM.YYYY').utc().format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z';
           }
 
           if(!vm.treatmentObject.hasOwnProperty('id')) {
@@ -72,14 +97,7 @@
 
             patientService.addTreatment(vm.patient._id, vm.treatmentObject)
               .then(function () {
-                if (!vm.patient.treatments)
-                  vm.patient.treatments = [];
-
-                vm.patient.treatments.push(vm.treatmentObject);
-                vm.treatmentObject = {
-                  doctor: loginService.activeUser().name
-                };
-                vm.triggerTreatmentForm();
+                vm.stopEdit();
               }, function(err) {
                 console.error("Could not add treatment: ");
                 console.error(err);
@@ -89,13 +107,7 @@
             // update treatment
             patientService.updateTreatment(vm.patient._id, vm.originalTreatmentObject, vm.treatmentObject)
               .then(function () {
-                vm.treatmentObject = {
-                  doctor: loginService.activeUser().name
-                };
-                vm.originalTreatmentObject = {
-                  doctor: loginService.activeUser().name
-                };
-                vm.triggerTreatmentForm();
+                vm.stopEdit();
               }, function(err) {
                 console.error("Could not update treatment: ");
                 console.error(err);

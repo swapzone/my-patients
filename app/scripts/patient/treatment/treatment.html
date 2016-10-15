@@ -5,7 +5,6 @@
 
   <div ng-show="vm.showForm">
     <h3 class="sub-header">Neue Behandlung</h3>
-
     <label for="treatment-date">Datum</label>
     <input type="text" id="treatment-date" name="treatment-date" ng-model="vm.treatmentObject.date" />
     <span class="table payment">
@@ -38,11 +37,9 @@
       <option selected>{{ vm.treatmentObject.doctor }}</option>
     </select>
     <span ng-if="vm.error" class="status-error">{{ vm.error }}</span>
-
-    <a class="button" ng-click="vm.triggerTreatmentForm()">Abbrechen</a>
+    <a class="button" ng-click="vm.stopEdit()">Abbrechen</a>
     <a class="button" ng-click="vm.saveTreatment()">Speichern</a>
   </div>
-
   <span class="table"
         ng-if="vm.patient.treatments && vm.patient.treatments.length"
         ng-hide="vm.showForm">
@@ -62,7 +59,7 @@
       <span class="table-cell"><a ng-click="vm.triggerTreatmentForm(treatment)"><i class="fa fa-pencil"></i></a></span>
     </span>
   </span>
-
+  <div ng-if="vm.editError" class="patient-treatment-error">{{ vm.editError }}</div>
   <div ng-if="!vm.patient.treatments || vm.patient.treatments.length == 0"
        ng-hide="vm.showForm"
        style="margin-bottom: 1em;">

@@ -61,6 +61,12 @@
     margin-bottom: 0.5em;
     margin-top: 0.1em;
   }
+
+  .patient-treatment-error {
+    color: $c-status-error;
+    font-size: 0.9em;
+    margin-bottom: 1em;
+  }
 }
 
 .patient-treatment {
