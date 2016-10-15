@@ -13,7 +13,6 @@
     const vm = this;
 
     vm.patient = $scope.patient;
-    vm.users = $scope.users;
     vm.showForm = false;
     vm.treatmentObject = {
       doctor: loginService.activeUser().name

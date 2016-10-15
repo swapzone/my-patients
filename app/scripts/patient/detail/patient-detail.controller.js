@@ -43,18 +43,17 @@
      * @param $event
      */
     function showTreatment($event) {
-      let formScope = $scope.$new();
-      formScope.patient = vm.patient;
-      formScope.users = users;
-
       var dialogObject = {
-        scope: formScope,
+        scope: $scope.$new(),
         controller: 'TreatmentController',
         controllerAs: 'vm',
         templateUrl: 'app/templates/patient/treatment/treatment.html',
         parent: angular.element(document.body),
         targetEvent: $event,
-        clickOutsideToClose: false
+        clickOutsideToClose: false,
+        locals: {
+          patient: vm.patient
+        }
       };
 
       $mdDialog.show(dialogObject)

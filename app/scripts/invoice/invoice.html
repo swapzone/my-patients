@@ -1,0 +1,82 @@
+<div class="invoice container ng-cloak" ng-cloak>
+  <h1 class="header">Abrechnungen</h1>
+
+  <a ui-sref="invoice({ type: {{ vm.INVOICE_TYPE.open }}})"
+     ui-sref-active="active"
+     class="button">Offene Rechnungen</a>
+  <a ui-sref="invoice({ type: {{ vm.INVOICE_TYPE.due }}})"
+     ui-sref-active="active"
+     class="button">Fällige Rechnungen</a>
+  <a ui-sref="invoice({ type: {{ vm.INVOICE_TYPE.receipt }}})"
+     ui-sref-active="active"
+     class="button">Offene Quittungen</a>
+  <a ui-sref="invoice({ type: {{ vm.INVOICE_TYPE.old }}})"
+     ui-sref-active="active"
+     class="button">Alte Rechnungen</a>
+
+  <div class="invoice-instructions">
+    <span ng-if="vm.selectedInvoices === undefined">
+      Bitte eine Rechnungskategorie wählen.
+    </span>
+    <span ng-if="vm.selectedInvoices && vm.selectedInvoices.length === 0">
+      <span ng-if="vm.invoiceType === vm.INVOICE_TYPE.open">
+         Es sind keine offenen Rechnungen vorhanden.
+      </span>
+      <span ng-if="vm.invoiceType === vm.INVOICE_TYPE.due">
+        Schade, es sind keine Rechnungen fällig.
+      </span>
+      <span ng-if="vm.invoiceType === vm.INVOICE_TYPE.receipt">
+         Es sind keine offenen Quittungen vorhanden.
+      </span>
+      <span ng-if="vm.invoiceType === vm.INVOICE_TYPE.old">
+         Es sind keine alten Rechnungen vorhanden.
+      </span>
+    </span>
+  </div>
+
+  <ul class="invoice-list table" ng-if="vm.selectedInvoices.length && vm.invoiceType !== vm.INVOICE_TYPE.old">
+  <li class="table-row" ng-repeat="invoice in vm.selectedInvoices" ng-cloak>
+      <span class="table-cell">
+        <a ng-click="vm.goToPatientDetails(invoice.patient._id)">
+          {{ invoice.patient.firstname }} {{ invoice.patient.lastname }}</a>
+        <span style="margin-left: 0.6em;">({{ invoice.patient.birthday }})</span>
+      </span>
+    <span class="table-cell">{{ invoice.amount }} Euro</span>
+      <span class="table-cell">
+        <ul>
+          <li ng-repeat="treatment in invoice.treatments track by treatment.id">
+            <span>{{ treatment.date | dateFilter }}</span>
+            <span>{{ treatment.description }}</span>
+          </li>
+        </ul>
+      </span>
+      <span class="table-cell" ng-if="vm.invoiceType === vm.INVOICE_TYPE.due">
+        <a ng-click="vm.createInvoice(invoice)">Rechnung erstellen</a>
+      </span>
+      <span class="table-cell" ng-if="vm.invoiceType === vm.INVOICE_TYPE.open">
+        <a ng-click="vm.setInvoiceDue(invoice)">Als fällig markieren</a>
+      </span>
+      <span class="table-cell" ng-if="vm.invoiceType === vm.INVOICE_TYPE.receipt">
+        <a ng-click="vm.setReceiptRead(invoice)">entfernen</a>
+      </span>
+    </li>
+  </ul>
+
+  <ul class="invoice-list table" ng-if="vm.selectedInvoices.length && vm.invoiceType === vm.INVOICE_TYPE.old">
+    <li class="table-row" ng-repeat="invoice in vm.selectedInvoices" ng-cloak>
+      <span class="table-cell">
+        {{ invoice.date | dateFilter }}
+        <a ng-click="vm.goToPatientDetails(invoice.patient._id)"
+           style="margin-left: 1em;">
+          {{ invoice.patient.firstname }} {{ invoice.patient.lastname }}</a>
+      </span>
+      <span class="table-cell">
+
+      </span>
+      <span class="table-cell">{{ invoice.amount }} Euro</span>
+      <span class="table-cell" ng-if="vm.invoiceType === vm.INVOICE_TYPE.old">
+        <a ng-click="vm.createInvoice(invoice, true)">Neu erstellen</a>
+      </span>
+    </li>
+  </ul>
+</div>

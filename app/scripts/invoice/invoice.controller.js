@@ -8,52 +8,46 @@
 
   angular
     .module('app.invoice')
-    .controller('InvoiceCtrl', InvoiceController);
+    .controller('InvoiceController', InvoiceController);
 
   /* @ngInject */
-  function InvoiceController($scope, INSURANCE_TYPE, INVOICE_TYPE, patientService, settingsService, invoiceService, $state, $mdDialog) {
-    $scope.selectedInvoices = undefined;
+  function InvoiceController($scope, $stateParams, INSURANCE_TYPE, INVOICE_TYPE, loginService, patientService, settingsService, invoiceService, $state, $mdDialog) {
+    const vm = this;
 
-    $scope.openInvoices = [];
-    $scope.dueInvoices = [];
-    $scope.oldInvoices = [];
-    $scope.openReceipts = [];
+    vm.selectedInvoices = undefined;
 
-    $scope.invoiceType = $state.current.data.invoiceType;
+    vm.openInvoices = [];
+    vm.dueInvoices = [];
+    vm.oldInvoices = [];
+    vm.openReceipts = [];
 
-    $scope.INVOICE_TYPE = INVOICE_TYPE;
+    vm.INVOICE_TYPE = INVOICE_TYPE;
 
-    $scope.createInvoice = createInvoice;
-    $scope.setInvoiceDue = setInvoiceDue;
-    $scope.setReceiptRead = setReceiptRead;
+    vm.invoiceType = $stateParams.type % 1 === 0 ? parseInt($stateParams.type, 10) : undefined;
 
-    $scope.$on('$stateChangeStart',
-      function(event, toState) {
-        if(toState.name.indexOf('invoice')== 0) {
-          $scope.invoiceType = toState.data.invoiceType;
-          selectInvoiceType(toState.data.invoiceType);
-        }
-      });
+    vm.createInvoice = createInvoice;
+    vm.setInvoiceDue = setInvoiceDue;
+    vm.setReceiptRead = setReceiptRead;
+    
+    vm.$onInit = () => {
+      vm.doctor = loginService.activeUser().name;
+      vm.patients = patientService.patients;
 
-    init("Victoria Ott");
+      extractInvoices(vm.patients, vm.doctor);
+      extractReceipts(vm.patients, vm.doctor);
 
-    function init(doctor) {
-      $scope.doctor = doctor;
-
-      // reference needed for reloading of old invoices
-      $scope.patients = patientService.patients;
-
-      extractInvoices($scope.patients, doctor);
-      extractReceipts($scope.patients, doctor);
-
-      extractOldInvoices($scope.patients, doctor)
+      extractOldInvoices(vm.patients, vm.doctor)
         .then(function() {
-          selectInvoiceType($state.current.data.invoiceType);
+          selectInvoiceType(parseInt($stateParams.type, 10));
         });
-    }
+    };
 
-    $scope.goToPatientDetails = function(patientId) {
-
+    /**
+     *
+     *
+     * @param patientId
+     */
+    vm.goToPatientDetails = function(patientId) {
       patientService.getPatientById(patientId)
         .then(function(patient) {
 
@@ -74,17 +68,17 @@
      */
     function selectInvoiceType(invoiceType) {
 
-      if(invoiceType == INVOICE_TYPE.due) {
-        $scope.selectedInvoices = $scope.dueInvoices;
+      if(invoiceType === INVOICE_TYPE.due) {
+        vm.selectedInvoices = vm.dueInvoices;
       }
-      else if(invoiceType == INVOICE_TYPE.open) {
-        $scope.selectedInvoices = $scope.openInvoices;
+      else if(invoiceType === INVOICE_TYPE.open) {
+        vm.selectedInvoices = vm.openInvoices;
       }
-      else if(invoiceType == INVOICE_TYPE.receipt) {
-        $scope.selectedInvoices = $scope.openReceipts;
+      else if(invoiceType === INVOICE_TYPE.receipt) {
+        vm.selectedInvoices = vm.openReceipts;
       }
-      else if(invoiceType == INVOICE_TYPE.old) {
-        $scope.selectedInvoices = $scope.oldInvoices;
+      else if(invoiceType === INVOICE_TYPE.old) {
+        vm.selectedInvoices = vm.oldInvoices;
       }
     }
 
@@ -113,7 +107,7 @@
             };
           });
 
-          $scope.openReceipts = $scope.openReceipts.concat(treatmentsWithReceipt).sort(receiptSort);
+          vm.openReceipts = vm.openReceipts.concat(treatmentsWithReceipt).sort(receiptSort);
         }
       });
     }
@@ -129,7 +123,7 @@
       return invoiceService.getInvoices()
         .then(function(invoices) {
 
-          $scope.oldInvoices = invoices.filter(function(invoice) {
+          vm.oldInvoices = invoices.filter(function(invoice) {
             return invoice.doctor == doctor;
           }).map(function(invoice) {
               var patient = getPatientforInvoice(invoice.patientId);
@@ -167,7 +161,6 @@
     function extractInvoices(patients, doctor) {
 
       patients.forEach(function(patient) {
-
         if(patient.treatments) {
           var treatments = patient.treatments.filter(function (treatment) {
 
@@ -193,8 +186,8 @@
         }
       });
 
-      $scope.openInvoices.sort(invoiceSort);
-      $scope.dueInvoices.sort(invoiceSort);
+      vm.openInvoices.sort(invoiceSort);
+      vm.dueInvoices.sort(invoiceSort);
     }
 
     /**
@@ -232,7 +225,7 @@
           return parseFloat(oldValue) + parseFloat(newValue);
         });
 
-        $scope.openInvoices.push({
+        vm.openInvoices.push({
           patient: patient,
           amount: amount,
           treatments: openLiabilities.map(function(openLiability) {
@@ -248,7 +241,7 @@
           return parseFloat(oldValue) + parseFloat(newValue);
         });
 
-        $scope.dueInvoices.push({
+        vm.dueInvoices.push({
           patient: patient,
           amount: amount,
           treatments: dueLiabilities.map(function(dueLiability) {
@@ -346,7 +339,7 @@
 
         settingsService.getInvoiceTemplates()
           .then(function (templates) {
-            $scope.templates = templates;
+            vm.templates = templates;
 
             var templateFile;
             if (patient.insurance) {
@@ -359,19 +352,10 @@
             if (!templateFile) {
               // ask user which template to use
               var dialogObject = {
-                controller: function(items) {
-                  $scope.templates = items;
-
-                  $scope.abort = function() {
-                    $mdDialog.cancel();
-                  };
-
-                  $scope.chooseTemplate = function(template) {
-                    $mdDialog.hide(template.file);
-                  };
-                },
+                controller: 'InvoiceTemplateController',
+                controllerAs: 'vm',
                 scope: $scope.$new(),
-                templateUrl: 'app/templates/invoice/template.html',
+                templateUrl: 'app/templates/invoice/template/template.html',
                 parent: angular.element(document.body),
                 clickOutsideToClose: false,
                 locals: {
@@ -471,13 +455,8 @@
 
           // show invoice details in popup before writing data to database
           var dialogObject = {
-            controller: function(items) {
-              $scope.treatments = items;
-
-              $scope.close = function() {
-                $mdDialog.hide();
-              };
-            },
+            controller: 'InvoicePositionsController',
+            controllerAs: 'vm',
             scope: $scope.$new(),
             templateUrl: 'app/templates/invoice/positions.html',
             parent: angular.element(document.body),
@@ -491,7 +470,7 @@
             .then(function () {
               if(!old) {
                 createInvoiceRecord(patient, treatments, invoice);
-                extractOldInvoices($scope.patients, $scope.doctor);
+                extractOldInvoices(vm.patients, vm.doctor);
               }
             }, function () { })
             .finally(function() {
@@ -516,21 +495,21 @@
               return treatment.id;
             }),
             invoice_amount: amount,
-            doctor: $scope.doctor
+            doctor: vm.doctor
           });
 
           patient['last_invoiced'] = new Date(treatments[treatments.length - 1].date);
           patientService.update(patient._id, patient);
 
           // delete invoice from invoices array
-          var invoiceIndex = $scope.dueInvoices.indexOf(invoice);
+          var invoiceIndex = vm.dueInvoices.indexOf(invoice);
           if(invoiceIndex > -1)
-            $scope.dueInvoices.splice(invoiceIndex, 1);
+            vm.dueInvoices.splice(invoiceIndex, 1);
           else {
-            invoiceIndex = $scope.openInvoices.indexOf(invoice);
+            invoiceIndex = vm.openInvoices.indexOf(invoice);
 
             if(invoiceIndex > -1)
-              $scope.openInvoices.splice(invoiceIndex, 1);
+              vm.openInvoices.splice(invoiceIndex, 1);
           }
         }
 
@@ -612,8 +591,8 @@
 
       patientService.updateTreatment(invoice.patient._id, oldTreatmentDoc, newTreatmentDoc)
         .then(function() {
-          $scope.dueInvoices.push(invoice);
-          $scope.openInvoices.splice($scope.openInvoices.indexOf(invoice), 1);
+          vm.dueInvoices.push(invoice);
+          vm.openInvoices.splice(vm.openInvoices.indexOf(invoice), 1);
         }, function(err) {
           console.error(err);
         });
@@ -636,7 +615,7 @@
 
       patientService.updateTreatment(invoice.patient._id, oldTreatmentDoc, newTreatmentDoc)
         .then(function() {
-          $scope.openReceipts.splice($scope.openReceipts.indexOf(invoice), 1);
+          vm.openReceipts.splice(vm.openReceipts.indexOf(invoice), 1);
         }, function(err) {
           console.error(err);
         });

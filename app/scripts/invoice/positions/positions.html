@@ -1,25 +1,21 @@
 <div class="invoice ng-cloak" ng-cloak>
   <div class="new-dialog">
     <h1 class="header">Rechnungspositionen</h1>
-
-    <div ng-if="!treatments || treatments.length == 0" class="invoice-positions-empty">
+    <div ng-if="!vm.treatments || vm.treatments.length == 0" class="invoice-positions-empty">
       Es können keine Rechnungspositionen angezeigt werden.
     </div>
-
-    <div ng-if="treatments && treatments.length">
+    <div ng-if="vm.treatments && vm.treatments.length">
       <span>
         Folgende Rechnungspositionen sind Bestandteil der gerade erstellten Rechnung:
       </span>
-
       <ul class="invoice-positions-list">
-        <li ng-repeat="treatment in treatments track by treatment.id">
+        <li ng-repeat="treatment in vm.treatments track by treatment.id">
           <span>{{ treatment.date | dateFilter }}</span><span>{{ treatment.description }}</span>
         </li>
       </ul>
     </div>
-
     <div class="dialog-action-bar">
-      <a ng-click="close()" class="button">Schließen</a>
+      <a ng-click="vm.close()" class="button">Schließen</a>
     </div>
   </div>
 </div>
