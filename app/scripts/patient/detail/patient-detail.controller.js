@@ -7,10 +7,25 @@
     .controller('PatientDetailController', PatientDetailController);
 
   /* @ngInject */
-  function PatientDetailController($scope, $state, $stateParams, $mdDialog) {
-    let vm = this;
-    
-    vm.patient = $stateParams.active ? JSON.parse($stateParams.active) : null;
+  function PatientDetailController($log, $scope, $state, $stateParams, $mdDialog, patientService) {
+    const vm = this;
+
+    let patientIndex = -1;
+    if ($stateParams.patientId) {
+      patientService.patients.some((patient, index) =>  {
+        if (patient._id === $stateParams.patientId) {
+          patientIndex = index;
+          return true;
+        }
+        return false;
+      });
+    }
+    else {
+      $log.error('PatientId is mandatory in detail view.');
+      return;
+    }
+
+    vm.patient = patientService.patients[patientIndex];
     vm.patient.treatments.sort(function(a, b) {
       return b.date - a.date;
     });
@@ -21,7 +36,7 @@
      * Go to edit patient screen.
      */
     function editPatient() {
-      $state.go("patient.edit", { active: angular.toJson(vm.patient) });
+      $state.go("patient.edit", { patientId: vm.patient._id });
     }
 
     /**
@@ -52,7 +67,7 @@
         targetEvent: $event,
         clickOutsideToClose: false,
         locals: {
-          patient: vm.patient
+          patientId: vm.patient._id
         }
       };
 

@@ -9,10 +9,25 @@
     .controller('TreatmentController', TreatmentController);
 
   /* @ngInject */
-  function TreatmentController($log, $mdDialog, $timeout, loginService, patientService, patient) {
+  function TreatmentController($log, $mdDialog, $timeout, loginService, patientService, patientId) {
     const vm = this;
 
-    vm.patient = patient;
+    let patientIndex = -1;
+    if (patientId) {
+      patientService.patients.some((patient, index) =>  {
+        if (patient._id === patientId) {
+          patientIndex = index;
+          return true;
+        }
+        return false;
+      });
+    }
+    else {
+      $log.error('PatientId is mandatory in Treatment Controller.');
+      return;
+    }
+
+    vm.patient = patientService.patients[patientIndex];
     vm.patient.treatments.sort((a, b) => {
       return new Date(a.date) - new Date(b.date);
     });
@@ -21,14 +36,14 @@
     vm.treatmentObject = {
       doctor: loginService.activeUser().name
     };
-    vm.originalTreatmentObject = undefined;
+    vm.originalTreatmentDate = undefined;
 
     /**
      * Close treatment form.
      */
     vm.closeTreatments = function() {
-      if (vm.originalTreatmentObject) {
-        vm.treatmentObject.date = vm.originalTreatmentObject.date;
+      if (vm.originalTreatmentDate) {
+        vm.treatmentObject.date = vm.originalTreatmentDate;
       }
       $mdDialog.cancel();
     };
@@ -37,8 +52,8 @@
      * Stop editing treatments.
      */
     vm.stopEdit = () => {
-      if (vm.originalTreatmentObject) {
-        vm.treatmentObject.date = vm.originalTreatmentObject.date;
+      if (vm.originalTreatmentDate) {
+        vm.treatmentObject.date = vm.originalTreatmentDate;
       }
       vm.showForm = false;
     };
@@ -49,13 +64,31 @@
      * @param treatment
      */
     vm.triggerTreatmentForm = function(treatment) {
-      if (treatment && vm.patient.hasOwnProperty('last_invoiced') && vm.patient.last_invoiced.date > treatment.date) {
+      if (treatment && treatment.payment === 'Quittung' && treatment.closed) {
+        vm.editError = 'Du kannst eine geschlossene Quittung nicht bearbeiten.';
+
+        $timeout(() => {
+          vm.editError = '';
+        }, 2500);
+        return;
+      }
+
+      if (treatment && treatment.doctor !== loginService.activeUser().name) {
+        vm.editError = 'Du kannst nur deine eigenen Behandlungen bearbeiten.';
+
+        $timeout(() => {
+          vm.editError = '';
+        }, 2500);
+        return;
+      }
+
+      if (treatment && treatment.payment !== 'Quittung' && vm.patient.hasOwnProperty('last_invoiced') && vm.patient.last_invoiced.date >= new Date(treatment.date)) {
         $log.warn('Already invoiced.');
         vm.editError = 'Die Behandlung wurde schon abgerechnet und kann nicht mehr geändert werden.';
 
         $timeout(() => {
           vm.editError = '';
-        }, 2000);
+        }, 2500);
         return;
       }
 
@@ -64,7 +97,7 @@
 
       if(treatment) {
         vm.treatmentObject = treatment;
-        vm.originalTreatmentObject = JSON.parse(JSON.stringify(treatment));
+        vm.originalTreatmentDate = treatment.date;
 
         var dateObject = moment(treatment.date);
         vm.treatmentObject.date = dateObject.format("DD.MM.YYYY");
@@ -86,31 +119,42 @@
         var complexDateFormat = /\d{4}-\d{2}-\d{2}/;
 
         if(dateFormat.test(vm.treatmentObject['date']) || complexDateFormat.test(vm.treatmentObject['date'].substring(0, 10))) {
+          let fullDate = vm.treatmentObject.date;
 
-          if(dateFormat.test(vm.treatmentObject['date'])) {
-            vm.treatmentObject.date = moment(vm.treatmentObject.date, 'DD.MM.YYYY').utc().format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z';
+          if (dateFormat.test(vm.treatmentObject.date)) {
+            fullDate = moment(vm.treatmentObject.date, 'DD.MM.YYYY').utc().format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z';
           }
 
-          if(!vm.treatmentObject.hasOwnProperty('id')) {
+          // check of date is before last invoice
+          if (vm.treatmentObject.payment === 'Rechnung' && vm.patient.hasOwnProperty('last_invoiced') && new Date(fullDate) <= vm.patient.last_invoiced.date) {
+            vm.error = "Du kannst keine Behandlung erstellen, wenn der Zeitraum schon abgerechnet wurde.";
+            return;
+          }
+
+          vm.treatmentObject.date = fullDate;
+
+          if (!vm.treatmentObject.hasOwnProperty('id')) {
             // new treatment
             vm.treatmentObject.id = shortId.generate();
 
             patientService.addTreatment(vm.patient._id, vm.treatmentObject)
               .then(function () {
+                vm.originalTreatmentDate = undefined;
                 vm.stopEdit();
               }, function(err) {
-                console.error("Could not add treatment: ");
-                console.error(err);
+                $log.error("Could not add treatment: ");
+                $log.error(err);
               });
           }
           else {
             // update treatment
-            patientService.updateTreatment(vm.patient._id, vm.originalTreatmentObject, vm.treatmentObject)
+            patientService.updateTreatment(vm.patient._id, vm.treatmentObject.id, vm.treatmentObject)
               .then(function () {
+                vm.originalTreatmentDate = undefined;
                 vm.stopEdit();
               }, function(err) {
-                console.error("Could not update treatment: ");
-                console.error(err);
+                $log.error("Could not update treatment: ");
+                $log.error(err);
               });
           }
         }

@@ -50,17 +50,10 @@
      * @param patientId
      */
     vm.goToPatientDetails = function(patientId) {
-      patientService.getPatientById(patientId)
-        .then(function(patient) {
-
-          $state.go("patient.details", {
-            active: angular.toJson(patient),
-            previousState: $state.current.name
-          });
-        }, function(err) {
-          $log.error("Could not get patient by id: ");
-          $log.error(err);
-        });
+      $state.go("patient.details", {
+        patientId: patientId,
+        previousState: $state.current.name
+      });
     };
 
     /**
@@ -325,14 +318,13 @@
     function setInvoiceDue(invoice) {
 
       // set postpone to false
-      var oldTreatmentDoc = JSON.parse(JSON.stringify(invoice.treatments[invoice.treatments.length - 1]));
-      oldTreatmentDoc.date = new Date(oldTreatmentDoc.date); // Date object must be re-initialized
+      let treatmentId = invoice.treatments[invoice.treatments.length - 1].id;
 
       var newTreatmentDoc = JSON.parse(JSON.stringify(invoice.treatments[invoice.treatments.length - 1]));
       newTreatmentDoc.date = new Date(newTreatmentDoc.date); // Date object must be re-initialized
       newTreatmentDoc.postpone = false;
 
-      patientService.updateTreatment(invoice.patient._id, oldTreatmentDoc, newTreatmentDoc)
+      patientService.updateTreatment(invoice.patient._id, treatmentId, newTreatmentDoc)
         .then(function() {
           vm.dueInvoices.push(invoice);
           vm.openInvoices.splice(vm.openInvoices.indexOf(invoice), 1);
@@ -349,14 +341,13 @@
     function setReceiptRead(invoice) {
 
       // set closed to true
-      var oldTreatmentDoc = JSON.parse(JSON.stringify(invoice.treatments[0]));
-      oldTreatmentDoc.date = new Date(oldTreatmentDoc.date); // Date object must be re-initialized
+      let treatmentId = invoice.treatments[0].id;
 
       var newTreatmentDoc = JSON.parse(JSON.stringify(invoice.treatments[0]));
       newTreatmentDoc.date = new Date(newTreatmentDoc.date); // Date object must be re-initialized
       newTreatmentDoc.closed = true;
 
-      patientService.updateTreatment(invoice.patient._id, oldTreatmentDoc, newTreatmentDoc)
+      patientService.updateTreatment(invoice.patient._id, treatmentId, newTreatmentDoc)
         .then(function() {
           vm.openReceipts.splice(vm.openReceipts.indexOf(invoice), 1);
         }, function(err) {

@@ -20,7 +20,7 @@
   <ul class="patient-list" ng-if="vm.patients.length > 0">
     <li class="table-row"
         ng-repeat="patient in vm.patients track by patient._id"
-        ng-click="vm.selectPatient($index)"
+        ng-click="vm.selectPatient(patient._id)"
         ng-if="vm.filterPatient(patient)"
         ng-cloak>
       <span class="table-cell">

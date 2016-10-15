@@ -10,15 +10,24 @@
   function PatientEditController($log, $mdDialog, $scope, $state, $stateParams, patientService, postalService, settingsService) {
     let vm = this;
 
-    // $rootScope.$on('backupRestored', function () {
-    //   settingsService.getUsers()
-    //     .then((users) => {
-    //       vm.users = users;
-    //     });
-    //});
-
     vm.users = settingsService.users;
-    vm.patient = $stateParams.active ? JSON.parse($stateParams.active) : null;
+
+    let patientIndex = -1;
+    if ($stateParams.patientId) {
+      patientService.patients.some((patient, index) =>  {
+        if (patient._id === $stateParams.patientId) {
+          patientIndex = index;
+          return true;
+        }
+        return false;
+      });
+    }
+    else {
+      $log.error('PatientId is mandatory in edit view.');
+      return;
+    }
+
+    vm.patient = patientService.patients[patientIndex];
     vm.patient.treatments.sort(function(a, b) {
       return b.date - a.date;
     });
@@ -40,7 +49,7 @@
         targetEvent: $event,
         clickOutsideToClose: false,
         locals: {
-          patient: vm.patient
+          patientId: vm.patient._id
         }
       };
 
@@ -54,8 +63,7 @@
      * Go to last state.
      */
     function goBack() {
-
-      if($stateParams.previousState) {
+      if ($stateParams.previousState) {
         $state.go($stateParams.previousState, {});
       }
       else
@@ -78,7 +86,7 @@
         .cancel('Oh. Nein!');
 
       $mdDialog.show(confirm).then(function() {
-        $state.go("patient.details", { active: angular.toJson(vm.patient) });
+        $state.go("patient.details", { patientId: vm.patient._id });
       }, function() { });
     }
 
@@ -117,13 +125,13 @@
                 .targetEvent($event)
             )
               .finally(function() {
-                $state.go("patient.details", { active: angular.toJson(vm.patient) });
+                $state.go("patient.details", { patientId: vm.patient._id });
               });
           }
         });
       }, function (err) {
-        console.error("Patient konnte nicht gelöscht werden.");
-        console.error(err);
+        $log.error("Patient konnte nicht gelöscht werden.");
+        $log.error(err);
       });
     }
 
@@ -156,9 +164,9 @@
         }
 
         patientService.updatePatient(vm.patient._id, vm.patient).then(function () {
-          $state.go("patient.details", { active: angular.toJson(vm.patient) });
+          $state.go("patient.details", { patientId: vm.patient._id });
         }, function(err) {
-          console.error(err);
+          $log.error(err);
 
           $mdDialog.show(
             $mdDialog
@@ -170,12 +178,12 @@
               .targetEvent($event)
           )
             .finally(function() {
-              $state.go("patient.details", { active: angular.toJson(vm.patient) });
+              $state.go("patient.details", { patientId: vm.patient._id });
             });
         });
       }
       else {
-        console.error("Patient-Objekt nicht verfügbar.");
+        $log.error("Patient-Objekt nicht verfügbar.");
       }
     }
 

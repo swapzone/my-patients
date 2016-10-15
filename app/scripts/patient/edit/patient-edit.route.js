@@ -7,7 +7,7 @@
 
   function routerConfig($stateProvider) {
     $stateProvider.state('patient.edit', {
-      url: 'patient/edit?:active',
+      url: 'patient/edit?:patientId',
       templateUrl: 'app/templates/patient/edit/patient-edit.html',
       controller: 'PatientEditController',
       controllerAs: 'vm'

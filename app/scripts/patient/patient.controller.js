@@ -15,13 +15,6 @@
       'A', 'D', 'G', 'J', 'M', 'P', 'S', 'V', 'Y'
     ];
 
-    // $rootScope.$on('backupRestored', function () {
-    //   settingsService.getUsers()
-    //     .then((users) => {
-    //       vm.users = users;
-    //     });
-    // });
-
     vm.users = settingsService.users;
     vm.showFilter = false;
     vm.filter = null;
@@ -48,10 +41,10 @@
     /**
      * Select one patient and show details.
      *
-     * @param index
+     * @param patientId
      */
-    let selectPatient = (index) => {
-      $state.go("patient.details", { active: angular.toJson(vm.patients[index]) });
+    let selectPatient = (patientId) => {
+      $state.go('patient.details', { patientId: patientId });
     };
 
     /**

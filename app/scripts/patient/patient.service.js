@@ -130,49 +130,50 @@
      * Update treatment for patient with given patientId.
      *
      * @param patientId
-     * @param oldTreatment
+     * @param treatmentId
      * @param newTreatment
      * @returns {*|promise}
        */
-    function updateTreatment(patientId, oldTreatment, newTreatment) {
+    function updateTreatment(patientId, treatmentId, newTreatment) {
       var deferred = $q.defer();
 
-      patientStore.find({ _id: patientId}, function (err, docs) {
+      let patientIndex = -1;
+      service.patients.some((patient, elementIndex) => {
+        if (patient._id === patientId) {
+          patientIndex = elementIndex;
+          return true;
+        }
+        return false;
+      });
+
+      let patient = service.patients[patientIndex];
+
+      let treatmentIndex = -1;
+      patient.treatments.some((treatment, elementIndex) => {
+        if (treatment.id === treatmentId) {
+          treatmentIndex = elementIndex;
+          return true;
+        }
+        return false;
+      });
+
+      patient.treatments.splice(treatmentIndex, 1, newTreatment);
+
+      patientStore.update({ _id: patientId }, patient, { }, function (err) {
         if (err) {
           deferred.reject(err);
           return;
         }
 
-        var patient = docs[0];
+        // update cached version
+        // for (let i=0; i<service.patients.length; i++) {
+        //   if (service.patients[i]._id === patientId) {
+        //     service.patients[i].treatments = patient.treatments;
+        //     break;
+        //   }
+        // }
 
-        let index = -1;
-        patient.treatments.some((treatment, elementIndex) => {
-          if (treatment.id === oldTreatment.id) {
-            index = elementIndex;
-            return true;
-          }
-          return false;
-        });
-
-        patient.treatments.splice(index, 1);
-        patient.treatments.push(newTreatment);
-
-        patientStore.update({ _id: patientId }, patient, { }, function (err, numReplaced) {
-          if (err) {
-            deferred.reject(err);
-            return;
-          }
-
-          // update cached version
-          for (let i=0; i<service.patients.length; i++) {
-            if (service.patients[i]._id === patientId) {
-              service.patients[i].treatments = patient.treatments;
-              break;
-            }
-          }
-
-          deferred.resolve();
-        });
+        deferred.resolve();
       });
 
       return deferred.promise;
