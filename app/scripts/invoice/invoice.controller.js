@@ -147,7 +147,7 @@
                   createDocumentWithTemplate(templateFile, invoice, old);
                 }
                 else {
-                  console.warn("Could not select template file.");
+                  $log.warn("Could not select template file.");
                 }
               }, function () {})
               .finally(function() {
@@ -286,7 +286,10 @@
         doctor: vm.doctor
       });
 
-      patient['last_invoiced'] = new Date(treatments[treatments.length - 1].date);
+      patient['last_invoiced'] = {
+        date: new Date(treatments[treatments.length - 1].date),
+        doctor: vm.doctor
+      };
       patientService.updatePatient(patient._id, patient);
 
       // delete invoice from invoices array
@@ -334,7 +337,7 @@
           vm.dueInvoices.push(invoice);
           vm.openInvoices.splice(vm.openInvoices.indexOf(invoice), 1);
         }, function(err) {
-          console.error(err);
+          $log.error(err);
         });
     }
 
@@ -357,7 +360,7 @@
         .then(function() {
           vm.openReceipts.splice(vm.openReceipts.indexOf(invoice), 1);
         }, function(err) {
-          console.error(err);
+          $log.error(err);
         });
     }
   }

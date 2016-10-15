@@ -19,11 +19,11 @@
       autoload: true,
       onload: function(err) {
         if(err && err.indexOf("the data file is corrupt") > -1) {
-          console.log("Database is corrupt.");
+          $log.warn("Database is corrupt.");
 
           fs.readFile(storageService.getUserDataDirectory('accounting.db'), 'utf8', function (err, data) {
             if (err) {
-              return console.error("Database cannot be read: " + err);
+              return $log.error("Database cannot be read: " + err);
             }
 
             if(data.trim().length === 0) {
@@ -172,8 +172,8 @@
             return isTreatedByDoctor && isOfTypeInvoice;
           });
 
-          if (patient.hasOwnProperty("last_invoiced")) {
-            var lastInvoicedDate = new Date(patient['last_invoiced']);
+          if (patient.hasOwnProperty("last_invoiced") && patient['last_invoiced'].doctor === doctor) {
+            var lastInvoicedDate = new Date(patient['last_invoiced'].date);
 
             treatments = treatments.filter(function (treatment) {
               var treatmentDate = new Date(treatment.date);
@@ -214,8 +214,8 @@
             return isTreatedByDoctor && isOfTypeInvoice;
           });
 
-          if (patient.hasOwnProperty("last_invoiced")) {
-            var lastInvoicedDate = new Date(patient['last_invoiced']);
+          if (patient.hasOwnProperty('last_invoiced') && patient['last_invoiced'].doctor === doctor) {
+            var lastInvoicedDate = new Date(patient['last_invoiced'].date);
 
             treatments = treatments.filter(function (treatment) {
               var treatmentDate = new Date(treatment.date);
@@ -389,7 +389,7 @@
                 privateTemplate = template;
                 break;
               default:
-                console.warn("Unknown template type in database.");
+                $log.warn("Unknown template type in database.");
                 break;
             }
           }

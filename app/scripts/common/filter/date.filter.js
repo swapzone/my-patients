@@ -11,8 +11,18 @@
           return '';
 
         var date = new Date(input);
+
+        var day = date.getDate();
+        if (day < 10) {
+          day = '0' + day;
+        }
+
         var month = date.getMonth() + 1;
-        return date.getDate() + '.' + month + '.' + date.getFullYear();
+        if (month < 10) {
+          month = '0' + month;
+        }
+
+        return day + '.' + month + '.' + date.getFullYear();
       };
     });
 })();
