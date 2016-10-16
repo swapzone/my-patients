@@ -7,7 +7,7 @@
     .controller('PatientEditController', PatientEditController);
 
   /* @ngInject */
-  function PatientEditController($log, $mdDialog, $state, $stateParams, patientService, postalService, settingsService) {
+  function PatientEditController($log, $scope, $mdDialog, $state, $stateParams, patientService, postalService, settingsService) {
     let vm = this;
 
     vm.users = settingsService.users;
@@ -31,8 +31,27 @@
     vm.patient.treatments.sort(function(a, b) {
       return b.date - a.date;
     });
-
+    vm.patientBackup = undefined;
     vm.postalService = postalService;
+
+    vm.$onInit = () => {
+      vm.patientBackup = JSON.parse(JSON.stringify(patientService.patients[patientIndex]));
+
+      let unbindStateChangeListener = $scope.$on('$stateChangeStart',
+        (event, toState, toParams, fromState) => {
+          if (fromState['name'] === 'patient.edit') {
+            if (vm.patientBackup) {
+              for (let prop in vm.patientBackup) {
+                if (vm.patientBackup.hasOwnProperty(prop)) {
+                  vm.patient[prop] = vm.patientBackup[prop];
+                }
+              }
+              vm.patientBackup = undefined;
+            }
+          }
+          unbindStateChangeListener();
+        });
+    };
 
     /**
      * Checks if the patient has any open invoices or receipts.
@@ -68,6 +87,15 @@
      * Abort editing of patient.
      */
     function abort() {
+      if (vm.patientBackup) {
+        for (let prop in vm.patientBackup) {
+          if (vm.patientBackup.hasOwnProperty(prop)) {
+            vm.patient[prop] = vm.patientBackup[prop];
+          }
+        }
+        vm.patientBackup = undefined;
+      }
+
       $state.go("patient.details", { patientId: vm.patient._id });
     }
 

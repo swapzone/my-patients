@@ -1,4 +1,4 @@
-(function () {
+(function (moment) {
 
   'use strict';
 
@@ -36,14 +36,19 @@
     vm.treatmentObject = {
       doctor: loginService.activeUser().name
     };
-    vm.originalTreatmentDate = undefined;
+    vm.treatmentBackup = undefined;
 
     /**
      * Close treatment form.
      */
     vm.closeTreatments = function() {
-      if (vm.originalTreatmentDate) {
-        vm.treatmentObject.date = vm.originalTreatmentDate;
+      if (vm.treatmentBackup) {
+        for (let prop in vm.treatmentBackup) {
+          if (vm.treatmentBackup.hasOwnProperty(prop)) {
+            vm.treatmentObject[prop] = vm.treatmentBackup[prop];
+          }
+        }
+        vm.treatmentBackup = undefined;
       }
       $mdDialog.cancel();
     };
@@ -52,8 +57,13 @@
      * Stop editing treatments.
      */
     vm.stopEdit = () => {
-      if (vm.originalTreatmentDate) {
-        vm.treatmentObject.date = vm.originalTreatmentDate;
+      if (vm.treatmentBackup) {
+        for (let prop in vm.treatmentBackup) {
+          if (vm.treatmentBackup.hasOwnProperty(prop)) {
+            vm.treatmentObject[prop] = vm.treatmentBackup[prop];
+          }
+        }
+        vm.treatmentBackup = undefined;
       }
       vm.showForm = false;
     };
@@ -100,7 +110,7 @@
 
       if(treatment) {
         vm.treatmentObject = treatment;
-        vm.originalTreatmentDate = treatment.date;
+        vm.treatmentBackup = JSON.parse(JSON.stringify(treatment));
 
         var dateObject = moment(treatment.date);
         vm.treatmentObject.date = dateObject.format("DD.MM.YYYY");
@@ -128,6 +138,11 @@
             fullDate = moment(vm.treatmentObject.date, 'DD.MM.YYYY').utc().format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z';
           }
 
+          if (!moment(fullDate, 'YYYY-MM-DDTHH:mm:ss.SSS').isValid()) {
+            vm.error = "Bitte gebe ein gültiges Datum ein.";
+            return;
+          }
+
           // check if date is before last invoice
           let lastInvoicedFromUser = vm.patient.last_invoiced && vm.patient.last_invoiced[loginService.activeUser()._id] ?
             vm.patient.last_invoiced[loginService.activeUser()._id] : undefined;
@@ -145,7 +160,8 @@
 
             patientService.addTreatment(vm.patient._id, vm.treatmentObject)
               .then(function () {
-                vm.originalTreatmentDate = undefined;
+                vm.treatmentBackup = undefined;
+
                 vm.stopEdit();
               }, function(err) {
                 $log.error("Could not add treatment: ");
@@ -156,7 +172,8 @@
             // update treatment
             patientService.updateTreatment(vm.patient._id, vm.treatmentObject.id, vm.treatmentObject)
               .then(function () {
-                vm.originalTreatmentDate = undefined;
+                vm.treatmentBackup = undefined;
+
                 vm.stopEdit();
               }, function(err) {
                 $log.error("Could not update treatment: ");
@@ -173,4 +190,4 @@
       }
     };
   }
-})();
+})(window.moment);
