@@ -84,9 +84,9 @@ function storeToFile(patients) {
 	let patientsStringArray = patients.map(patient => JSON.stringify(patient))
 	let patientsString = patientsStringArray.join('\n');
 
-	let content = '[' + patientsString + ']';
+	let content = patientsString;
 
-	fs.writeFile("./newPatients.json", content, function(err) {
+	fs.writeFile("./newPatients.db", content, function(err) {
 	    if(err) {
 	        return console.error(err);
 	    }
