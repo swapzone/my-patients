@@ -25,6 +25,7 @@ function init() {
 
   // angular application's package.json file
   manifest = appDir.read('./package.json', 'json');
+  manifest.name = 'Meine Patienten';
 
   return Q();
 }
@@ -36,7 +37,7 @@ function init() {
  * @returns {*}
  */
 function copyElectron() {
-  return projectDir.copyAsync('./node_modules/electron-prebuilt/dist', buildDir.path(), { overwrite: true });
+  return projectDir.copyAsync('./node_modules/electron/dist', buildDir.path(), { overwrite: true });
 }
 
 /**

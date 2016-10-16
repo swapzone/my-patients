@@ -24,10 +24,10 @@ function createWindow () {
 
     // Connect to server process
     client.create(mainWindow);
-  }
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools();
+  }
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
