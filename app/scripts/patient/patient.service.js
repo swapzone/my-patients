@@ -2,7 +2,7 @@
 
   'use strict';
 
-  var Datastore = require('nedb');
+	const Datastore = require('nedb');
 
   angular
     .module('app.patient')
@@ -15,7 +15,7 @@
     service.patients = [];
 
     // Create NeDB database containers
-    var patientStore = new Datastore({ filename: storageService.getUserDataDirectory('patients.db'), autoload: true });
+		const patientStore = new Datastore({ filename: storageService.getUserDataDirectory('patients.db'), autoload: true });
 
     $rootScope.$on('backupRestored', function () {
       patientStore.loadDatabase();
@@ -29,7 +29,7 @@
      * @returns {*}
      */
     function initializePatients(force) {
-      var deferred = $q.defer();
+			const deferred = $q.defer();
 
       if (service.patients.length && !force) {
         deferred.resolve();
@@ -53,7 +53,7 @@
      * @returns {*}
      */
     function getPatientById(patientId) {
-      var deferred = $q.defer();
+			const deferred = $q.defer();
 
       if (service.patients.length) {
         // load from cache
@@ -80,7 +80,7 @@
      * @returns {*}
        */
     function createPatient(patient) {
-      var deferred = $q.defer();
+			const deferred = $q.defer();
 
       patientStore.insert(patient, function (err, newDoc) {
         // newDoc is the newly inserted document, including its _id
@@ -103,7 +103,7 @@
      * @returns {*|promise}
        */
     function addTreatment(patientId, treatment) {
-      var deferred = $q.defer();
+			const deferred = $q.defer();
 
       // $push inserts new elements at the end of the array
       patientStore.update({ _id: patientId }, { $push: { treatments: treatment } }, {}, function (err) {
@@ -135,7 +135,7 @@
      * @returns {*|promise}
        */
     function updateTreatment(patientId, treatmentId, newTreatment) {
-      var deferred = $q.defer();
+			const deferred = $q.defer();
 
       let patientIndex = -1;
       service.patients.some((patient, elementIndex) => {
@@ -186,7 +186,7 @@
      * @returns {*}
      */
     function deletePatient(patientId) {
-      var deferred = $q.defer();
+			const deferred = $q.defer();
 
       // Remove one document from the collection
       // options set to {} since the default for multi is false
@@ -215,12 +215,12 @@
      * @returns {*}
      */
     function updatePatient(patientId, patientDoc) {
-      var deferred = $q.defer();
+      const deferred = $q.defer();
 
       // Replace a document by another
       patientStore.update({ _id: patientId }, patientDoc, {}, function (err, numReplaced) {
         // Note that the _id is kept unchanged, and the document has been replaced
-        if (err) deferred.reject(err);
+        if (err) return deferred.reject(err);
 
         // update cached version
         for (let i=0; i<service.patients.length; i++) {

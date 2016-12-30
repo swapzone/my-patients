@@ -64,7 +64,7 @@
         treatment => (treatment.payment === 'Quittung') && !treatment.closed);
 
       const hasTreatments = !!vm.patient.treatments.length;
-      const wasInvoiced = !!vm.patient.hasOwnProperty('last_invoiced');
+      const wasInvoiced = vm.patient.hasOwnProperty('last_invoiced');
 
       const hasOpenInvoice = hasTreatments && wasInvoiced ?
         vm.patient.treatments[vm.patient.treatments.length - 1].date > vm.patient.last_invoiced.date : false;
@@ -125,7 +125,7 @@
         return;
       }
 
-      var confirm = $mdDialog.confirm()
+      let confirm = $mdDialog.confirm()
         .title('Sicher?')
         .content('Willst du den Patient wirklich löschen?')
         .ok('Ja')
@@ -166,7 +166,7 @@
       if (vm.patient != null) {
 
         if(vm.patient['birthday']) {
-          var dateFormat = /\d{2}.\d{2}.\d{4}/;
+          let dateFormat = /\d{2}.\d{2}.\d{4}/;
 
           if(!dateFormat.test(vm.patient['birthday'])) {
             $mdDialog.show(
@@ -178,13 +178,14 @@
                 .ok('Ok')
                 .targetEvent($event)
             )
-              .finally(function() {});
+						.finally(function() {});
 
             return;
           }
         }
 
         patientService.updatePatient(vm.patient._id, vm.patient).then(function () {
+					vm.patientBackup = undefined;
           $state.go("patient.details", { patientId: vm.patient._id });
         }, function(err) {
           $log.error(err);
@@ -198,9 +199,10 @@
               .ok('Ok')
               .targetEvent($event)
           )
-            .finally(function() {
-              $state.go("patient.details", { patientId: vm.patient._id });
-            });
+					.finally(function() {
+						vm.patientBackup = undefined;
+						$state.go("patient.details", { patientId: vm.patient._id });
+					});
         });
       }
       else {
